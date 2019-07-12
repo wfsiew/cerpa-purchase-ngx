@@ -1,0 +1,145 @@
+<app-tab [tabs]="tabs" [selected]="'monetization_on'"></app-tab>
+<mat-toolbar>
+  <span>
+    <button *ngIf="user_role" class="custom-btn icon" [routerLink]="['/add-product']">
+      <mat-icon class="icon-align">add</mat-icon>
+    </button>
+  </span>
+  <span class="example-spacer"></span>
+  <div class="custom-search-input">
+    <input class="search-box" placeholder="Search" (keyup)="searchProducts($event)" [value]="keyword">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+</mat-toolbar>
+<mat-toolbar *ngIf="hasError" class="error-message">
+  <app-error></app-error>
+</mat-toolbar>
+<div class="custom-section">
+  <mat-card class="custom-card">
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <mat-select class="selected-box" (change)="setSortOption($event.value)"
+          placeholder="{{'purchase.product-pricing.sort.title' | translate}}">
+          <mat-option *ngFor="let sort of sortList" [value]="sort.id">
+            <span
+              *ngIf="sort.name === 'CHEAPEST_FIRST'">{{'purchase.product-pricing.sort.sort-options.cheapest_first'| translate}}
+            </span>
+            <span
+              *ngIf="sort.name === 'CHEAPEST_LAST'">{{'purchase.product-pricing.sort.sort-options.cheapest_last'| translate}}</span>
+          </mat-option>
+        </mat-select>
+      </div>
+    </div>
+    <div class="custom-card-border">
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <!-- <div *ngFor="let x of filterSelectionList; let i=index">
+            <mat-checkbox (input)="setSearchFilter($event.target.checked, i)" name="i" color="primary"
+              class="example-margin" [value]="x.key" [checked]="getFilterSelected(i)">
+              <div class="cc">{{x.value}}</div>
+            </mat-checkbox>
+          </div> -->
+          <span class="custom-chip-list" *ngFor="let x of filterSelectionList; let i=index">
+            <mat-chip color="accent" (click)="setTermSort($event, i)" [selected]="getFilterSelected(i)">
+              <span class="custom-chip-text">{{x.value}}</span>
+            </mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div *ngIf="!isvendor" class="custom-card-border">
+      <div class="custom-card-title">
+        <p>{{ 'purchase.product-pricing.payment-term.title' | translate }}</p>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <span class="custom-chip-list" *ngFor="let x of termSelectionList; let i = index">
+            <mat-chip color="accent" (click)="setTermFilter(i)" [selected]="getTermSelected(i)"><span
+                class="custom-chip-text">{{x.value}}</span></mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <div class="custom-search-input">
+          <input class="search-box-outline" (keyup)="searchCategory($event)" [(ngModel)]="filterName" name="filterName"
+            [matAutocomplete]="auto" placeholder="Search Category">
+          <mat-icon class="search-icon-outline">search</mat-icon>
+        </div>
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let x of categoryList" [value]="x" matInput (click)="selectCategory($event)">{{x}}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <span class="custom-chip-list" *ngFor="let x of categoryList; let i = index">
+            <mat-chip color="accent" (click)="setCategories(i)" [selected]="getCategoriesSelected(i)"><span
+                class="custom-chip-text">{{ x }}</span>
+            </mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div *ngIf="isSearch">
+      <button class="custom-btn outline" (click)="resetFilter()">
+        {{ 'app.action.reset_filter' | translate}}
+      </button>
+    </div>
+  </mat-card>
+
+  <div class="cerpa-container">
+    <mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+    <div class="cerpa-card-list" *ngIf="productPricingData.length > 0; else elseBlock">
+      <mat-card class="cerpa-card" *ngFor="let list of productPricingData"
+        (click)="ViewCard($event,{'options': 'view','value': list})">
+        
+        <mat-card-header class="cerpa-more-icon">
+          <div>
+            <button mat-icon-button [matMenuTriggerFor]="menu"
+              (click)="manageItems($event,{'options': 'manage','value': list})">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item *ngIf="user_role" (click)="deleteItem($event,{'options': 'delete','value': list})">{{'app.action.delete'
+                | translate}}</button>
+              <button mat-menu-item *ngIf="user_role" (click)="editItem($event,{'options': 'edit','value': list})">{{'app.action.edit'
+                | translate}}</button>
+              <button mat-menu-item *ngIf="!user_role" (click)="viewItem($event,{'options': 'view','value': list})">{{'app.action.view'
+                | translate}}</button>
+            </mat-menu>
+          </div>
+        </mat-card-header>
+        <img class="mat-card-img" *ngIf="list.material.material_picture != null" [src]="list.material.material_picture">
+        <img class="mat-card-img" *ngIf="list.material.material_picture == null" [src]="defaultImage">
+        
+        <span *ngIf="list.is_promo" class="promo-badge">{{ 'purchase.product-pricing.product-pricing-list.promo' | translate }}
+          </span>
+        <mat-card-content class="card-desc">      
+          <p class="card-title" style="margin-bottom:1px">{{list.material.name |titlecase}}</p>
+          <span *ngIf="!user_role">
+            <p class="card-title listing">{{list.vendor.company_name |titlecase}}</p>
+          </span>
+          <p class="card-price"><sub>{{'purchase.currency.type.ringgit' | translate}}</sub>{{list.price.split('.')[0]}}<sup>{{list.price.split('.')[1]}}</sup></p>
+          <!-- <span>
+            <small *ngIf="list.tax_scheme == 0">
+              {{'purchase.product-pricing.add_product_pricing.tax_scheme.listed_price_is_tax_inclusive'
+              | translate}}</small>
+            <small *ngIf="list.tax_scheme == 1">
+              {{'purchase.product-pricing.add_product_pricing.tax_scheme.subject_to_tax'
+              | translate}}
+            </small>
+            <small *ngIf="list.tax_scheme == 2">
+              {{'purchase.product-pricing.add_product_pricing.tax_scheme.non_taxable_item'
+              | translate}}
+            </small>
+          </span> -->
+        </mat-card-content>
+
+      </mat-card>
+    </div>
+    <ng-template #elseBlock>&nbsp;&nbsp;{{ noRecordMsg }}</ng-template>
+  </div>
+</div>

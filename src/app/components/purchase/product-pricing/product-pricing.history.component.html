@@ -1,0 +1,212 @@
+<div class="close-icon" (click)="onNoClick({'confirm': false})">
+    <mat-icon>close</mat-icon>
+</div>
+<mat-toolbar>
+    <span class="example-spacer"></span>
+    {{'purchase.product-pricing.history.title' | translate}}
+    <span class="example-spacer"></span>
+</mat-toolbar>
+<br>
+
+<!-- ****** SECTION 1 ***** -->
+<section *ngIf="!isDisplayAll" id="section-1">
+    <div *ngFor="let list of historyList let inx = index">
+        <mat-toolbar>
+            <small> 
+                {{'purchase.product-pricing.history.labels.updated-date' | translate}} :&nbsp; {{list.modified_date |date : 'short'}}</small>
+            <span class="example-spacer"></span>
+            <small> {{'purchase.product-pricing.history.labels.updated-by' | translate}} :&nbsp; {{list.modified_by.name | titlecase}}</small>
+            <span class="example-spacer"></span>
+            <!-- default_price -->
+            <small> {{'purchase.product-pricing.history.labels.price' | translate}} :&nbsp; {{list.default_price.price | currency : "MYR"}} </small> &nbsp;
+                <span *ngIf="list.default_price.changed ===0" style="color:green"><mat-icon>check_circle_outline</mat-icon></span>
+                <span *ngIf="list.default_price.changed ===1" style="color:yellow"><mat-icon>check_circle_outline</mat-icon></span>
+                <span *ngIf="list.default_price.changed ===2" style="color:red"><mat-icon>check_circle_outline</mat-icon></span>
+                <span *ngIf="list.default_price.changed ===null" style="color: gray"><mat-icon>check_circle_outline</mat-icon></span>
+        </mat-toolbar>
+        <mat-accordion>
+            <mat-expansion-panel (click)='pricingHistory(1,list, inx)' [expanded]="isExpandedTier === inx">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span class="example-spacer"></span> {{'purchase.product-pricing.history.tier.labels.title' | translate}} <span class="example-spacer"></span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <!-- table  -->
+                <table>
+                    <thead>
+                        <th>{{'purchase.product-pricing.history.tier.labels.from-quantity' | translate}}</th>
+                        <th>{{'purchase.product-pricing.history.tier.labels.to-quantity' | translate}}</th>
+                        <th>{{'purchase.product-pricing.history.tier.labels.price' | translate}}</th>
+                    </thead>
+                    <tbody *ngFor="let item of tierPricingList">
+                        <tr *ngIf="item.changed ===0" style="background-color:green; color: white">
+                            <td>{{item.from_quantity}}</td>
+                            <td>{{item.to_quantity}}</td>
+                            <td>{{item.price | currency: "MYR"}}</td>
+                        </tr>
+                        <tr *ngIf="item.changed ===1" style="background-color:yellow">
+                            <td>{{item.from_quantity}}</td>
+                            <td>{{item.to_quantity}}</td>
+                            <td>{{item.price | currency: "MYR"}}</td>
+                        </tr>
+                        <tr *ngIf="item.changed ===2" style="background-color:red; color: white">
+                            <td>{{item.from_quantity}}</td>
+                            <td>{{item.to_quantity}}</td>
+                            <td>{{item.price | currency: "MYR"}}</td>
+                        </tr>
+                        <tr *ngIf="item.changed===null">
+                            <td>{{item.from_quantity}}</td>
+                            <td>{{item.to_quantity}}</td>
+                            <td>{{item.price | currency: "MYR"}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- end table -->
+                <mat-toolbar-row>
+                    <span class="example-spacer"></span>
+                    <a (click)="viewAll(list, {type:'tier'})"> {{'purchase.product-pricing.history.labels.view-all' | translate}} </a>
+                    <span class="example-spacer"></span>
+                </mat-toolbar-row>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel (click)='promotionHistory(1, list, inx)' [expanded]="isExpandedPromo === inx">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <span class="example-spacer"></span> {{'purchase.product-pricing.history.promotion.labels.title' | translate}} <span class="example-spacer"></span>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <!-- table  -->
+                <table>
+                    <thead>
+                        <th>{{'purchase.product-pricing.history.promotion.labels.from-date' | translate}}</th>
+                        <th>{{'purchase.product-pricing.history.promotion.labels.to-date' | translate}}</th>
+                        <th>{{'purchase.product-pricing.history.promotion.labels.price' | translate}}</th>
+                    </thead>
+                    <tbody *ngFor="let item of promotionList">
+                        <tr *ngIf="item.changed ===0" style="background-color:green; color: white">
+                            <td>{{item.from_date | date}}</td>
+                            <td>{{item.to_date | date}}</td>
+                            <td>{{item.price | currency:'MYR'}}</td>
+                        </tr>
+                        <tr *ngIf="item.changed ===1" style="background-color:yellow">
+                            <td>{{item.from_date | date}}</td>
+                            <td>{{item.to_date | date}}</td>
+                            <td>{{item.price | currency: 'MYR'}}</td>
+                        </tr>
+                        <tr *ngIf="item.changed ===2" style="background-color:red; color: white">
+                            <td>{{item.from_date | date}}</td>
+                            <td>{{item.to_date | date}}</td>
+                            <td>{{item.price | currency: 'MYR'}}</td>
+                        </tr>
+                        <tr *ngIf="item.changed ===null">
+                            <td>{{item.from_date | date}}</td>
+                            <td>{{item.to_date | date}}</td>
+                            <td>{{item.price | currency: 'MYR'}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <mat-toolbar-row>
+                    <span class="example-spacer"></span>
+                    <a (click)="viewAll(list, {type:'promo'})"> {{'purchase.product-pricing.history.labels.view-all' | translate}} </a>
+                    <span class="example-spacer"></span>
+                </mat-toolbar-row>
+            </mat-expansion-panel>
+            <br>
+        </mat-accordion>
+    </div>
+</section>
+
+<!-- ****** SECTION 2 ***** -->
+<section *ngIf="isDisplayAll">
+    <button class="custom-btn icon" (click)="back()">
+        <mat-icon class="icon-align">arrow_back</mat-icon>
+    </button>
+
+    <div *ngIf="isTier">
+        <mat-toolbar-row>
+            <span class="example-spacer"></span>
+            <span>{{'purchase.product-pricing.history.tier.labels.title' | translate}}</span>
+            <span class="example-spacer"></span>
+        </mat-toolbar-row>
+
+        <table class="history-table">
+            <thead>
+                <th># No</th>
+                <th>{{'purchase.product-pricing.history.tier.labels.from-quantity' | translate}}</th>
+                <th>{{'purchase.product-pricing.history.tier.labels.to-quantity' | translate}}</th>
+                <th>{{'purchase.product-pricing.history.tier.labels.price' | translate}}</th>
+            </thead>
+            <tbody *ngFor="let item of listAllTier  let i = index">
+                <tr *ngIf="item.changed ===0" style="background-color:green; color: white">
+                    <td>{{i+1}}</td>
+                    <td>{{item.from_quantity}}</td>
+                    <td>{{item.to_quantity}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+                <tr *ngIf="item.changed ===1" style="background-color:yellow">
+                    <td>{{i+1}}</td>
+                    <td>{{item.from_quantity}}</td>
+                    <td>{{item.to_quantity}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+                <tr *ngIf="item.changed ===2" style="background-color:red; color: white">
+                    <td>{{i+1}}</td>
+                    <td>{{item.from_quantity}}</td>
+                    <td>{{item.to_quantity}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+                <tr *ngIf="item.changed ===null">
+                    <td>{{i+1}}</td>
+                    <td>{{item.from_quantity}}</td>
+                    <td>{{item.to_quantity}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="!isTier">
+        <mat-toolbar-row>
+            <span class="example-spacer"></span>
+            <span>{{'purchase.product-pricing.history.promotion.labels.title' | translate}}</span>
+            <span class="example-spacer"></span>
+        </mat-toolbar-row>
+
+        <table class="history-table">
+            <thead>
+                <th>#No</th>
+                <th>{{'purchase.product-pricing.history.promotion.labels.from-date' | translate}}</th>
+                <th>{{'purchase.product-pricing.history.promotion.labels.to-date' | translate}}</th>
+                <th>{{'purchase.product-pricing.history.promotion.labels.price' | translate}}</th>
+            </thead>
+            <tbody *ngFor="let item of listAllPromotion let i = index">
+                <tr *ngIf="item.changed ===0" style="background-color:green; color: white">
+                    <td>{{i+1}} {{item.changed}}</td>
+                    <td>{{item.from_date | date}}</td>
+                    <td>{{item.to_date | date}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+                <tr *ngIf="item.changed ===1" style="background-color:yellow">
+                    <td>{{i+1}} {{item.changed}} </td>
+                    <td>{{item.from_date | date}}</td>
+                    <td>{{item.to_date | date}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+                <tr *ngIf="item.changed ===2" style="background-color:red; color: white">
+                    <td>{{i+1}} {{item.changed}}</td>
+                    <td>{{item.from_date | date}}</td>
+                    <td>{{item.to_date | date}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+                <tr *ngIf="item.changed === null">
+                    <td>{{i+1}} {{item.changed}}</td> 
+                    <td>{{item.from_date | date}}</td>
+                    <td>{{item.to_date | date}}</td>
+                    <td>{{item.price | currency: 'MYR'}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1" [showFirstLastButtons]="true"
+  (page)="goto($event)"></mat-paginator>

@@ -1,0 +1,6 @@
+.codes{
+  text-align: center;
+}
+.qrcode >img{
+  width: 100px
+}

@@ -1,0 +1,58 @@
+<!-- <app-tab id="main-tab" [tabs]="tabs" [selected]="'view_list'"></app-tab> -->
+<mat-toolbar>
+    <span>
+      <button class="custom-btn icon" [routerLink]="['/product-list']">
+        <mat-icon class="icon-align">arrow_back</mat-icon>
+      </button>
+    </span>
+  <span>
+    <button class="custom-btn icon" (click)="addProductBatch()">
+      <mat-icon class="icon-align">add</mat-icon>
+    </button>
+  </span>
+  <span class="example-spacer"></span> {{productName}} <span class="example-spacer"></span>
+  <!-- <div class="custom-search-input">
+    <input class="search-box" placeholder="Search">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div> -->
+</mat-toolbar>
+
+<mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+<table matSort (matSortChange)="sortData($event)" class="table table-light table-bordered">
+    <thead style=" text-align: center">
+      <tr>
+        <th style="width:155px">Code</th>
+        <th mat-sort-header="qty">Quantity</th>
+        <th mat-sort-header="expiry_date">Expire Date</th>
+        <th style="width: 60px;">Action</th>
+      </tr> 
+    </thead>
+    <tbody *ngIf = "batchList">
+      <tr *ngFor = "let o of batchList" class="codes">
+        <td scope="row" >
+          <div >
+              <div class="qrcode">
+                <img [src]="o.qr_code">
+              </div>
+          </div>
+        </td>
+        <td>{{o.quantity}}</td>
+        <td>{{o.expiry_date}}</td>
+        <td style="text-align: center">
+          <mat-icon style="cursor: pointer;" class="icon-align" [matMenuTriggerFor]="menu">more_horiz</mat-icon>
+          <mat-menu #menu="matMenu">
+              <button (click) = "editProductBatch(o.id)" mat-menu-item>
+                <span>Edit</span>
+              </button>
+              <button mat-menu-item>
+                <span>Transfer</span>
+              </button>
+              <button (click)="dispose()" mat-menu-item>
+                <span>Dispose</span>
+              </button>
+            </mat-menu>
+        </td>
+      </tr>
+    </tbody>
+  </table>

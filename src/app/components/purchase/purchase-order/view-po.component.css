@@ -1,0 +1,29 @@
+.view-po-container>table{
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .view-po-toolbar{
+    padding: 3%!important;
+  }
+
+  .reason-resp-btn >button{
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+
+  .view-po-container{
+    padding: 3%;
+  }
+  .view-po-container> table, td, th {  
+    padding: 1%;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  .example-full-width {
+    width: 100%;
+  }
+  .example-full-width>*{
+    width: 100%!important;
+  }

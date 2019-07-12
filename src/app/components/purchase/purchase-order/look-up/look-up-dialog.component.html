@@ -1,0 +1,67 @@
+<div style="float: right; cursor: pointer;">
+  <a (click)="onNoClick({'confirm': false})">
+    <mat-icon>close</mat-icon>
+  </a>
+</div>
+
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span class="example-spacer"></span>
+    <span> {{'purchase.purchase-order.look-up.title' | translate}} </span>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<br>
+<mat-card-subtitle>{{'purchase.purchase-order.look-up.ph' | translate}}</mat-card-subtitle>
+
+<!-- autocomplate  -->
+  <!-- <input > -->
+
+  <!-- <mat-form-field style="width:100%">
+    <input matInput (keyup)="searchVendor($event)" type="text" placeholder="{{'purchase.purchase-order.look-up.labels.name' | translate}}">
+  </mat-form-field> -->
+
+  <!-- <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngIf="isSearching" value=''> {{'purchase.purchase-order.look-up.labels.is-seaching' | translate}}</mat-option>
+    <mat-option *ngIf="isEmpty" value=''> {{'purchase.product-pricing.look-up.labels.no-result' | translate}}
+    </mat-option>
+    <mat-option *ngFor="let item of searchResult" [value]="item">{{ item }}</mat-option>
+  </mat-autocomplete> -->
+ 
+  <form class="example-form" (ngSubmit)="searchVendor()" #frm = "ngForm">
+    <mat-form-field class="example-full-width search">
+      <input type="text" (keyup)="keyUpSearch($event)" placeholder="{{'purchase.product-pricing.look-up.content.search.search-pl' | translate}}"
+        aria-label="Number" matInput [formControl]="searchTerm" [matAutocomplete]="auto">
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngIf = "searching" value=''> {{'purchase.product-pricing.look-up.content.search.searching' | translate}}</mat-option>
+        <mat-option *ngIf = "noResult" value=''> {{'purchase.product-pricing.look-up.content.search.no-result' | translate}} </mat-option>
+        <mat-option *ngFor="let item of searchResult" [value]="item.company_name">{{ item.company_name }}</mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+    <button hidden></button>
+  </form> 
+  
+
+<span style="color: red" *ngIf="haseErr">Please insert text to search</span>
+
+<mat-list *ngIf="lookUpData" role="list">
+    <mat-radio-group id="lookup_id">
+      <mat-list-item *ngFor="let list of lookUpData" role="listitem">
+        <mat-radio-button matListIcon color="primary" (change)="handleSelection(list)" [value]="list"></mat-radio-button>
+        <img matListIcon [src]="list.company_logo" alt="">
+        <h3 matLine> {{list.company_name}}</h3>
+      </mat-list-item>
+    </mat-radio-group>
+  </mat-list>
+
+
+
+
+
+<div style="text-align: center; padding: 2%;">
+  <button [disabled]="isSelected" mat-raised-button color="primary" (click)="onNoClick({'confirm': true})">{{'app.button.ok'
+    | translate}}</button>
+  <br>
+  <mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1" [showFirstLastButtons]="true"
+    (page)="goto($event)"></mat-paginator>
+</div>

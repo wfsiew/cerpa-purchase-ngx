@@ -1,0 +1,13 @@
+<div style="cursor: pointer;" (click) = "onNoClick()" class="text-right">
+<mat-icon>close</mat-icon>
+</div>
+
+<div *ngIf = "success_message" class="success-message">Success</div>
+<mat-toolbar *ngIf="hasError" class="error-message">
+    <app-error></app-error>
+</mat-toolbar>
+<div class="upload-logo">
+    <input id="logo" type="file" (change)="handleFileInput($event.target.files)" accept="image/*" multiple="false"
+        placeholder="Upload Image">
+</div>
+<!-- <button mat-raised-button >Close</button> --> 

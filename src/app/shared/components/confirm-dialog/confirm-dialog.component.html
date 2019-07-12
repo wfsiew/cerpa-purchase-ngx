@@ -1,0 +1,11 @@
+<div class="title">  
+  <strong>{{title |translate}}</strong>
+</div>
+<br>
+<div mat-dialog-content class="mat-typography">
+  <p>{{ content | translate }}</p>
+</div>
+<div style="text-align: center">
+  <button *ngIf = "button_yes !=''" mat-button (click)="submit()" cdkFocusInitial>{{ button_yes | translate }}</button>
+  <button *ngIf = "button_no !='' " mat-button [mat-dialog-close]>{{ button_no | translate }}</button>
+</div>

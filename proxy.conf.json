@@ -1,0 +1,25 @@
+{
+  "/o/token": {
+    "target": "http://192.168.0.154/cerpa-purchase",
+    "secure": false,
+    "pathRewrite": {
+      "^/o/token": "/o/token/"
+    }
+  },
+  "/api/admin": {
+    "target": "http://192.168.0.154/cerpa-purchase",
+    "secure": false,
+    "pathRewrite": {
+      "^/api/admin": "/api/cerpa-admin/"
+    }
+  },
+  "/api/purchase": {
+    "target": "http://192.168.0.154/cerpa-purchase",
+    "secure": false
+  },
+  "/api": {
+    "target": "http://192.168.0.154/cerpa-purchase",
+    "secure": false
+  }
+
+}

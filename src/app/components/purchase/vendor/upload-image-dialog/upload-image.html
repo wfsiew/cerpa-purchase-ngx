@@ -1,0 +1,12 @@
+<mat-toolbar *ngIf="success_message" class="success-message">Success</mat-toolbar>
+<mat-toolbar *ngIf="error_message" class="error-message">
+    <!-- Upload failed -->
+    <app-error></app-error>
+</mat-toolbar>
+
+<!-- <mat-spinner *ngIf="spinner" id="spinner"></mat-spinner> -->
+<div class="upload-logo">
+    <input id="logo" type="file" (change)="handleFileInput($event.target.files)" accept="image/*" multiple="false"
+        placeholder="Upload Image">
+</div>
+<button mat-raised-button (click) = "onNoClick()">Close</button>

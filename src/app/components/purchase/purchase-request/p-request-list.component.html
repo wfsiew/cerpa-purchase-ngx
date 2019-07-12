@@ -1,0 +1,181 @@
+<app-tab id="pr-tabs" [tabs]="tabs" [selected]="'speaker_notes'"></app-tab>
+<mat-toolbar>
+  <button id="add-pr-btn" class="custom-btn icon" (click)="issuePR()">
+    <mat-icon class="icon-align">add</mat-icon>
+  </button>
+  <span class="example-spacer"></span>
+  <div class="custom-search-input">
+    <input id="search-pr-input" class="search-box" placeholder="Search" (keyup)="searchPR($event)" [value]="keyword">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+</mat-toolbar>
+<mat-toolbar id="pr-error-toolbar" *ngIf="hasError" class="error-message">
+  <app-error id="pr-error-msg"></app-error>
+</mat-toolbar>
+<div class="custom-section">
+  <mat-card class="custom-card">
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <p>{{'purchase.purchase-request.list-header.issue-date' | translate}}</p>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-radio-group id="pr-date-group" class="row" name="dtList" fxLayout="column" [(ngModel)]="chosenDate"
+          (change)="setDateType($event)">
+          <mat-radio-button id="pr-date-type-{{i}}" class="col" *ngFor="let dt of dateType; let i=index"
+            [value]="dt.name" name="dtList">{{ dt.name}}
+          </mat-radio-button>
+        </mat-radio-group>
+        <div id="single-date-container" class="custom-date-container" *ngIf="chosenDate === 'Single'">
+          <input id="single-date-input" type="date" class="custom-date"
+            placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
+            (change)="setFromDate($event)" [value]="fromDate">
+        </div>
+        <div id="range-date-container" *ngIf="chosenDate === 'Range'">
+          <div class="custom-date-container">
+            <label for="">From</label>
+            <input id="range-date-from-input" type="date" class="custom-date"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
+              (change)="setFromDate($event)" [value]="fromDate" max="{{toDate}}">
+          </div>
+          <div id="date-to-container" class="custom-date-container" *ngIf="fromDate">
+            <label for="">To</label>
+            <input id="date-to-input" type="date" class="custom-date"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}"
+              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}">
+          </div>
+          <div id="disabled-date-to-container" class="custom-date-container disabled" *ngIf="!fromDate">
+            <label for="">To</label>
+            <input id="disabled-date-to-input" type="date" class="custom-date" disabled
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}"
+              (change)="setToDate($event)" [value]="toDate">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <p>{{'purchase.purchase-request.list-header.status' | translate}}</p>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <span class="custom-chip-list" *ngFor="let x of filterSelectionList; let i = index">
+            <mat-chip *ngIf="x.key !=2" id="pr-status-{{i}}" color="accent" (click)="setSearchFilter(i)"
+              [selected]="getSelected(i)">
+              <span class="custom-chip-text">{{x.value}}</span>
+            </mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div class="custom-card-border">
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <span class="custom-chip-list">
+            <mat-chip id="saved-po-chip" (click)="savedPO($event)" [selected]="getSelectedSave()">
+              <span class="custom-chip-text">Saved Purchase Order</span>
+            </mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div id="pr-reset-container" *ngIf="isSearch">
+      <button id="pr-reset-btn" class="custom-btn outline" (click)="resetFilter()">
+        {{ 'app.action.reset_filter' | translate}}
+      </button>
+    </div>
+  </mat-card>
+
+  <div id="check-pr" class="mat-elevation-z8">
+    <mat-paginator id="pr-paginator" [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+    <div *ngIf="dataSource.data.length==0;">&nbsp;&nbsp;{{ noRecordMsg }}</div>
+    <mat-table *ngIf="dataSource.data.length>0;" id="pr-table" [dataSource]="dataSource" matSort
+      (matSortChange)="sortData($event)" matSortDisableClear>
+      <ng-container matColumnDef="id">
+        <mat-header-cell id="request-id-header" class="request-id-header" *matHeaderCellDef>
+          {{'purchase.purchase-request.list-header.id' | translate}}
+        </mat-header-cell>
+        <mat-cell id="reference-id-{{i}}" class="request-id-cell" *matCellDef="let element; let i = index">
+          {{element.request_id}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="requested_by">
+        <mat-header-cell id="requested-by-header" class="requested-by-header" *matHeaderCellDef
+          mat-sort-header="requested_by">
+          {{'purchase.purchase-request.list-header.requester' | translate}} </mat-header-cell>
+        <mat-cell id="request-by-{{i}}" class="requested-by-cell" *matCellDef="let element; let i = index">
+          {{element.requested_by.first_name |titlecase}}
+          {{element.requested_by.last_name | titlecase}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="issued_date">
+        <mat-header-cell id="issued-date-header" class="issued-date-header" *matHeaderCellDef
+          mat-sort-header="issued_date">
+          {{'purchase.purchase-request.list-header.issue-date' | translate}} </mat-header-cell>
+        <mat-cell id="issued-date-{{i}}" class="issued-date-cell" *matCellDef="let element; let i = index">
+          {{element.issued_date | ago:time_diff }}
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="status">
+        <mat-header-cell id="status-header" class="status-header" *matHeaderCellDef mat-sort-header="status"> {{'purchase.purchase-request.list-header.status'
+            | translate}} </mat-header-cell>
+        <mat-cell id="status-{{i}}" class="status-cell" *matCellDef="let element; let i = index">
+          <span>{{getStatus(element.status) | translate}}</span>
+        </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="action" #actionCell>
+        <mat-header-cell id="action-header" class="action-header" *matHeaderCellDef> &nbsp;
+        </mat-header-cell>
+        <mat-cell id="action-cell-{{i}}" class="action-cell" *matCellDef="let element; let i = index">
+          <button id="action-btn-{{i}}" class="action-btn" mat-button [matMenuTriggerFor]="menu">
+            <mat-icon class="action-icon">more_horiz</mat-icon>
+          </button>
+          <mat-menu id="pr-action-menu" #menu="matMenu">
+            <span *ngIf="element.status === PR_STATUS.IN_PROGRESS">
+              <button id="issue-po-btn" mat-menu-item (click)="issuePO(element.id)"> {{'purchase.purchase-request.contax-box.issue-po'
+                  |translate}}</button>
+              <button id="cancel-pr-btn" mat-menu-item (click)="cancelPR(element.id)">
+                {{'purchase.purchase-request.contax-box.cancel-pr' |translate}}</button>
+            </span>
+
+            <span *ngIf="element.status === PR_STATUS.CANCELLED">
+              <button id="view-po-btn" [disabled]="element.po_id == null" mat-menu-item (click)="viewPO(element.id)">
+                {{'purchase.purchase-request.contax-box.view-po' |translate}}</button>
+            </span>
+
+            <span *ngIf="element.status === PR_STATUS.COMPLETED">
+              <button id="pr-status-btn" mat-menu-item (click)="viewPO(element.id)">
+                {{'purchase.purchase-request.contax-box.view-po' |translate}}</button>
+            </span>
+
+            <span *ngIf="element.status === PR_STATUS.IN_PROGRESS || element.status === PR_STATUS.ISSUED_PO"> </span>
+            <span *ngIf="element.status !== PR_STATUS.IN_PROGRESS">
+              <button id="issue-po-btn" mat-menu-item (click)="viewPR(element.id)"> {{'purchase.purchase-request.contax-box.view-pr'
+                  |translate}}</button>
+            </span>
+
+            <span *ngIf="element.status === PR_STATUS.ISSUED_PO">
+              <button id="view-po-btn" mat-menu-item (click)="viewPO(element.id)"> {{'purchase.purchase-request.contax-box.view-po'
+                  |translate}}</button>
+              <button id="reissue-po-btn" *ngIf="element.can_cancelpo == true" mat-menu-item
+                (click)="reissuePO(element.id)">
+                {{'purchase.purchase-request.contax-box.reissue-po' |translate}}</button>
+              <button id="cancel-po-btn" *ngIf="element.can_cancelpo == true" mat-menu-item
+                (click)="cancelPO(element.id)">
+                {{'purchase.purchase-request.contax-box.cancel-po' |translate}}</button>
+            </span>
+
+            <button id="delete-po-btn" mat-menu-item (click)="deleteSavedPO(element.id)"
+              *ngIf="element.saved_po !== null">
+              {{'app.button.delete_saved_po' |translate}}</button>
+          </mat-menu>
+          <span class="action-btn" *ngIf="element.saved_po !== null"><i id="issue-saved-po"
+              class="action-icon material-icons" (click)="issuePOSaved(element.id,element.saved_po)" matTooltip="{{'purchase.purchase-request.load-saved'
+                | translate}}">save</i></span>
+        </mat-cell>
+
+      </ng-container>
+      <mat-header-row class="header-row" *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row id="pr-row-{{i}}" class="cell-row" *matRowDef="let row; columns: displayedColumns; let i = index">
+      </mat-row>
+    </mat-table>
+  </div>
+</div>

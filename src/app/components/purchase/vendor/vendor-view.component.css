@@ -1,0 +1,78 @@
+.details {
+  font-family: Arial, Helvetica, sans-serif! important;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+header {
+  background: rgb(242, 242, 242);
+  text-align: center;
+  height: 40px;
+}
+
+header > h4 {
+  padding-top: 8px;
+}
+
+.img {
+  float: left;
+  border: 1px solid black;
+  width: 200px;
+  height: 200px;
+  margin-top: 10px;
+}
+
+.imgitem {
+  width: inherit;
+  height: inherit;
+}
+
+.data {
+  clear: right;
+  padding-left: 250px;
+  margin-top: 10px;
+}
+
+.data>div,
+.address>div,
+.contact-inner>div{
+    color: #777777;
+}
+
+.data-inner {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 10px;
+}
+
+.company {
+  clear: both;
+}
+
+.address {
+  clear: both;
+  margin-top: 20px;
+}
+
+.contact {
+  clear: both;
+  margin-top: 20px;
+}
+
+.contacts {
+  border: 1px solid black;
+}
+
+.contact-inner {
+  display: grid;
+  grid-template-columns: 5% auto 10% auto;
+  grid-template-rows: auto auto auto auto;
+  grid-gap: 5px;
+}
+
+label {  
+  font-weight: bold;
+  color: #4E4972;  
+}

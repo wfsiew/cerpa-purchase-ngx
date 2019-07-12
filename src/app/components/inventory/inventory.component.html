@@ -1,0 +1,70 @@
+<app-tab id="main-tab" [tabs]="tabs" [selected]="'view_list'"></app-tab>
+<mat-toolbar>
+  <span>
+    <button class="custom-btn icon" (click)="addNewProduct()">
+      <mat-icon class="icon-align">add</mat-icon>
+    </button>
+  </span>
+  <span class="example-spacer"></span>
+  <div class="custom-search-input">
+    <input class="search-box" placeholder="Search" (keyup)="searchProducts($event)" [value]="term">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+</mat-toolbar>
+<mat-toolbar *ngIf="hasError" class="error-message">
+  <app-error></app-error>
+</mat-toolbar>
+<div class="custom-section">
+
+  <mat-card class="custom-card">
+    <p>Category </p>
+
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <mat-select class="selected-box" (change)="onSortCategory($event.value)" placeholder="Category">
+          <mat-option *ngFor="let o of categoryList" [value]="o.id">
+            <span>{{o.name}}</span>
+          </mat-option>
+        </mat-select>
+      </div>
+    </div>
+
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <mat-select class="selected-box" (change)="onSortCapacity($event.value)" placeholder="Capacity">
+          <mat-option *ngFor="let o of capacityList" [value]="o.id">
+            <span>{{o.name}}</span>
+          </mat-option>
+        </mat-select>
+      </div>
+    </div>
+
+    <div class="custom-card-border card-white-space-text">
+      <div class="custom-card-title">
+        <mat-checkbox [(ngModel)]="belowParLevel">Below Par Level </mat-checkbox>
+      </div>
+
+      <div class="custom-card-title">
+        <mat-checkbox [(ngModel)]="expiredStock">Expired Stock</mat-checkbox>
+      </div>
+
+      <div class="custom-card-title">
+        <mat-checkbox [(ngModel)]="notForSale">Not For Sale </mat-checkbox>
+      </div>
+
+      <div class="custom-card-title">
+        <mat-checkbox [(ngModel)]="currentPromotion">Current Promotion</mat-checkbox>
+      </div>
+    </div>
+
+    <div>
+      <button class="custom-btn outline" (click)="resetFilter()">Reset Filter</button>
+    </div>
+  </mat-card>
+
+  <div class="cerpa-container">
+    <mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+
+  </div>
+</div>

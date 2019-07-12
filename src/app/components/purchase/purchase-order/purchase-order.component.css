@@ -1,0 +1,202 @@
+.container{
+    padding: 10px;
+}
+.mat-elevation-z8{
+    box-shadow:none!important;
+  }
+.cer-row{
+    display: grid;
+    grid-template-columns:15% 75% 10%;
+    text-align: center;
+    /* display: flex;
+    flex-flow: row wrap; */
+}
+.material-image {
+    margin-right: 10px;
+}
+.material-image >img{
+    border: 0.5px solid lightgray;
+    box-shadow: 1px 2px 3px #888888;
+    cursor: pointer;
+    max-width: 90%;
+    min-width: 90%;
+    min-height: 90%;
+    max-height: 200px;
+}
+.save-btn{
+    display: grid;
+    align-items: center;
+}
+.p-request-items{
+    display: flex;
+    flex-flow: row wrap;
+}   
+.p-request-items> .mat-card{
+    width: 200px;
+    height: 200px;
+    margin: 5px;
+}
+.example-content-image{
+    max-width: 40%;
+    min-width: 40%;
+    margin: auto;
+}
+
+.po-thumbnail{
+    /* text-align: center; */
+    /* width: 100px;
+    max-width: 100px; */
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0 3px 0 3px;
+    /* border: 1px solid red; */
+    /* margin: 0 3px 0 px; */
+}
+.po-thumbnail>img{
+    border-radius: 100px;
+    width: 50px;
+    height: 50px;
+    border: 1px solid #dbdbdb;
+}
+
+.show {
+    visibility: visible
+}
+
+.hide {
+    visibility: hidden
+}
+
+.cell-row.mat-row {
+    border-bottom-color: rgba(119, 119, 119, 0.5);
+}
+
+.header-row.mat-header-row {
+    border-bottom-color: rgba(119, 119, 119, 0.5);
+}
+
+.mat-header-cell {
+    font-weight: 600;
+    font-size: 16px;
+    color: #4E4972;
+}
+
+.mat-cell {
+    padding: 10px 0 10px 0;
+    font-size: 16px;
+    color: #777777;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.mat-header-cell.order-id-header {
+    flex: none;
+    text-align: left;
+    width: 30%;
+}
+
+.mat-header-cell.order-id-header-full {
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.mat-header-cell.vendor-header {
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.mat-header-cell.issued-date-header {
+    flex: none;
+    width: 13%;
+}
+
+.issued-date-header ::ng-deep .mat-sort-header-container {
+    justify-content: center;
+}
+
+.mat-header-cell.status-header {
+    flex: none;
+    text-align: center;
+    width: 13%;
+}
+
+.status-header ::ng-deep .mat-sort-header-container {
+    justify-content: center;
+}
+
+.mat-header-cell.action-header {
+    flex: initial;
+    text-align: center;
+    min-width: 56px;
+    max-width: 56px;
+}
+
+.action-header > mat-sort-header-container {
+    justify-content: center;
+}
+
+.order-id-text {
+    padding-right: 5px;
+}
+
+.mat-cell.order-id-cell {
+    width: 30%;
+    text-align: left;
+    flex: none;
+}
+
+.mat-cell.order-id-cell-full {
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.mat-cell.vendor-cell {
+    flex-grow: 1;
+    flex-shrink: 0;
+    text-align: left;
+}
+
+.mat-cell.issued-date-cell {
+    flex: none;
+    width: 13%;
+    text-align: center;
+    padding-right: 18px;
+}
+
+.mat-cell.status-cell {
+    flex: none;
+    width: 13%;
+    text-align: center;
+    padding-right: 18px;
+}
+
+.mat-cell.action-cell {
+    flex: initial;
+    text-align: center;
+}
+
+.action-btn.mat-button {
+    min-width: 56px;
+    max-width: 56px;
+}
+
+.action-btn .action-icon {
+    color: #483D8B;
+}
+
+.more-items-span {
+    display: inline-block;
+    height: 50px;
+    margin: 0 5px 0 5px;
+}
+
+.more-items-span .more-items-icon {
+    display: flex;
+    height:100%;
+    justify-content: center;
+    align-items: center;
+}

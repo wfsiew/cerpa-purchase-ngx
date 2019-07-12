@@ -1,0 +1,90 @@
+<!-- <app-item-listing></app-item-listing> -->
+
+<!-- <button mat-button [matMenuTriggerFor]="menu">Menu</button> -->
+<mat-menu #menu="matMenu"  
+  [overlapTrigger]="false">
+  <button mat-menu-item [matMenuTriggerFor]="newMaterialMenu">New</button>
+  <button mat-menu-item (click)="updateMaterialAction('modifyMaterial')">Modify</button>
+  <button mat-menu-item (click)="updateMaterialAction('viewMaterialStock')">View Stock</button>
+  <button mat-menu-item (click)="updateMaterialAction('viewMaterial')">Details</button>
+  <button mat-menu-item>Cancel</button>
+</mat-menu>
+
+<mat-menu #newMaterialMenu="matMenu">
+  <button mat-menu-item (click)="action.update('newMaterial')">Material</button>
+  <button mat-menu-item (click)="updateMaterialAction('newMaterialStock')">Stock</button>
+</mat-menu>
+
+<div class="example-container mat-elevation-z8 mat-table">
+    <mat-table #table [dataSource]="dataSource" class="mat-table">
+      <!--- Note that these columns can be defined in any order.
+            The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="position">
+        <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+        <mat-cell *matCellDef="let element"
+          mat-button [matMenuTriggerFor]="menu">{{element.position}}</mat-cell>
+      </ng-container>
+
+      <!-- Material Name Column -->
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Material Name </mat-header-cell>
+        <mat-cell *matCellDef="let element"
+          mat-button [matMenuTriggerFor]="menu"
+          (click)="material = element.id">{{element.name}}</mat-cell>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="cat">
+        <mat-header-cell *matHeaderCellDef> Category </mat-header-cell>
+        <mat-cell *matCellDef="let element"
+          mat-button [matMenuTriggerFor]="menu"> {{element.cat}} </mat-cell>
+      </ng-container>
+  
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="qty">
+        <mat-header-cell *matHeaderCellDef> Total Stock Quantity </mat-header-cell>
+        <mat-cell *matCellDef="let element"
+          mat-button [matMenuTriggerFor]="menu"> {{element.qty}} {{element.unit}} </mat-cell>
+      </ng-container>
+      
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row 
+        style="tr:hover { background: yellow; }" 
+        *matRowDef="let row; columns: displayedColumns;">
+      </mat-row>
+
+    </mat-table>
+  
+    <!-- <mat-form-field>
+        List length:
+        <input matInput [(ngModel)]="length">
+      </mat-form-field>
+      
+      <mat-form-field>
+        Page size:
+        <input matInput [(ngModel)]="pageSize">
+      </mat-form-field>
+      
+      <mat-form-field>
+        Page size options:
+        <input matInput
+               [ngModel]="pageSizeOptions"
+               (ngModelChange)="setPageSizeOptions($event)">
+      </mat-form-field>
+       -->
+      <mat-paginator [length]="Element?.length"
+                     [pageSize]="pageSize"
+                     [pageSizeOptions]="pageSizeOptions"
+                     (page)="pageEvent = $event">
+      </mat-paginator>
+      
+      <!-- <div *ngIf="pageEvent">
+        <h5>Page Change Event Properties</h5>
+        <div>List length: {{pageEvent.length}}</div>
+        <div>Page size: {{pageEvent.pageSize}}</div>
+        <div>Page index: {{pageEvent.pageIndex}}</div>
+      </div>
+       -->
+  </div>

@@ -1,0 +1,44 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <button class="custom-btn icon" (click)="back()">
+      <mat-icon class="icon-align">arrow_back</mat-icon>
+    </button>
+    <span class="example-spacer"></span>
+    <div class="example-icon"> {{'purchase.purchase-request.view.title' | translate}} </div>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<br>
+<div class="my-container">
+  <div class="listing-row" *ngIf="lists">
+    <div class="card" *ngFor="let list of lists.pr_materials">
+        <!-- (click)="ViewCard($event,{'options': 'view','value': list})" -->
+      <div class="card-containt">
+        <div class="card-right"></div>
+        <div class="card-body">
+          <img [src]="list.material.picture">
+        </div>
+        <div class="card-left">
+<!-- 
+          <button class="card_option" mat-icon-button [matMenuTriggerFor]="menu">
+             <mat-icon>more_horiz</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngIf="user_role" (click)="deleteItem($event,{'options': 'delete','value': list})">Delete</button>
+            <button mat-menu-item *ngIf="user_role" (click)="editItem($event,{'options': 'edit','value': list})">{{'app.action.edit'
+              |translate}}
+            </button>
+            <button mat-menu-item *ngIf="!user_role" (click)="viewItem($event,{'options': 'view','value': list})">{{'app.action.view'
+              |translate}}
+            </button>
+          </mat-menu>
+  -->
+        </div>
+      </div>
+      <div class="footer">
+        <div><strong> {{list.material.name |titlecase}} </strong></div>
+        <div><p> {{list.quantity}} </p></div>
+      </div>
+    </div>
+  </div>
+</div>

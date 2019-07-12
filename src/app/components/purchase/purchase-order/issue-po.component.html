@@ -1,0 +1,104 @@
+<div class="container-fluid">
+  <mat-toolbar>
+    <mat-toolbar-row>
+      <button class="back-btn" mat-raised-button (click)="back()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+
+      <span class="example-spacer"></span>
+      <div class="example-icon">{{'purchase.purchase-order.issues.issue.title' | translate}}</div>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </mat-toolbar>
+  <br>
+  <div class="alert alert-danger" *ngIf="!hasPrVondor">
+    {{'purchase.purchase-order.issues.issue.vendor-not-exist' | translate}}
+  </div>
+
+  <div>
+    <form [formGroup]="formgroup" #frm="ngForm" (ngSubmit)="submitRequests()">
+      <div class="po-box py-3">
+          <div class="d-flex flex-row">
+              <div class="text-center">
+                  <mat-card class="material-image">
+                      <img *ngIf="company_logo" [src]="company_logo" alt="CERPA-APP">
+                  </mat-card>
+              </div>
+              <div class="lookup-inputs">
+                <mat-form-field aria-readonly="true">
+                    <span class="lookup-icon" (click)="openDialog()"> <mat-icon>search</mat-icon> </span>
+                  <input readonly matInput placeholder="Vendor Name" readonly formControlName="company_name">
+                  <input matInput hidden formControlName="id">
+                </mat-form-field>
+      
+                <div class="total-prices">
+                  <mat-form-field>
+                    <!-- <mat-lebal>Total Price</mat-lebal> -->
+                    <input matInput formControlName="total_price" placeholder="Total Price" readonly>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <!-- <mat-lebal>Total Tax Price</mat-lebal> -->
+                    <input matInput formControlName="total_price_tax" placeholder="Total Price (After Tax) " readonly>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+      </div>
+
+     <div class="po-box p-3">
+        <div *ngIf="issuePoList">
+            <div class="row">
+              <div class="col-12 col-md-6 col-lg-4 m-0 p-0" *ngFor="let item of issuePoList.po_products let i = index">
+                <div class="card">
+                  <div class="row">
+                    <div class="col-2 px-3 pt-3 product-img">
+                      <img src="{{item.vendor_product.material.picture}}">
+                    </div>
+                    <div class="col-10 pt-4 pl-5">
+                      <div class="row">
+                        <div class="col-6 pl-3">Quantity</div>
+                        <div class="col-6">: {{item.quantity}}</div>
+                      </div>
+    
+                      <div class="row">
+                        <div class="col-6 pl-3">Unit Price</div>
+                        <div class="col-6">: {{item.vendor_product.price | currency :'RM'}}</div>
+                      </div>
+    
+                      <div class="row">
+                        <div class="col-6 pl-3">Subtotal Price</div>
+                        <div class="col-6">: {{item.subtotal | currency :'RM'}} </div>
+                      </div>
+                      <div class="row">
+                        <div class="col-6 pl-3">Total Tax</div>
+                        <div class="col-6">: {{item.total_tax | currency :'RM'}}</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-10 ml-2 mb-2 material-name">
+                      {{item.vendor_product.material.name}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <mat-toolbar-row>
+            <span class="example-spacer"></span>
+            <button mat-raised-button type="button" [disabled]="frm.invalid" color="primary" (click)="savePO()">
+              {{ 'app.button.save' | translate }} </button>
+            &nbsp;&nbsp;
+            <button mat-raised-button type="button" [disabled]="frm.invalid" color="primary" (click)="deleteSavedPO()">
+              {{ 'app.action.delete' | translate }} </button>
+            &nbsp;&nbsp;
+            <button mat-raised-button type="submit" [disabled]="frm.invalid" color="primary">
+              {{ 'app.button.submit' | translate }}</button>
+            <!-- <span class="example-spacer"></span> -->
+          </mat-toolbar-row>
+
+     </div>
+    </form>
+  </div>
+</div>

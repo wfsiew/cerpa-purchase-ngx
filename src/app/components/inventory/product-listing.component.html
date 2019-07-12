@@ -1,0 +1,91 @@
+<app-tab id="main-tab" [tabs]="tabs" [selected]="'assignment'"></app-tab>
+<mat-toolbar>
+  <span *ngIf = "isNotAbleToAddProduct">
+    <button class="custom-btn icon" (click)="addNewProduct()">
+      <mat-icon class="icon-align">add</mat-icon>
+    </button>
+  </span>
+  <span class="example-spacer"></span>
+  <div class="custom-search-input">
+    <input class="search-box" placeholder="Search" (keyup)="searchProducts($event)" [value]="term">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+</mat-toolbar>
+<mat-toolbar *ngIf="hasError" class="error-message">
+  <app-error></app-error>
+</mat-toolbar>
+<div class="custom-section">
+
+  <mat-card class="custom-card">
+    
+    <div class="custom-card-border">
+      <div style="text-align: center; font-weight: bold">Category</div>
+      <div class="custom-card-title">
+        <mat-select class="selected-box" (change)="onCategory($event.value)" placeholder="Category">
+          <mat-option *ngFor="let o of categoryList" [value]="o.id">
+            <span>{{o.name}}</span>
+          </mat-option>
+        </mat-select>
+      </div>
+    </div>
+
+    <div class="custom-card-border">
+      <div style="text-align: center; font-weight: bold">Product Type</div>
+      <div class="custom-card-title">
+        <mat-select class="selected-box" (change)="onProductType($event.value)" placeholder="Product Type">
+          <mat-option *ngFor="let o of capacityList" [value]="o.id">
+            <span>{{o.name}}</span>
+          </mat-option>
+        </mat-select>
+      </div>
+    </div>
+
+    <div class="custom-card-border card-white-space-text">
+      <div class="custom-card-title">
+        <mat-checkbox (change) = "belowPar($event)" [(ngModel)]="belowParLevel">Below Par Level </mat-checkbox>
+      </div>
+
+      <div class="custom-card-title">
+        <mat-checkbox (change) = "itemExpiredStock($event)" [(ngModel)]="expiredStock">Expired Stock</mat-checkbox>
+      </div>
+
+      <div class="custom-card-title">
+        <mat-checkbox (change) = "itemNotForSale($event)" [(ngModel)]="notForSale">Not For Sale </mat-checkbox>
+      </div>
+
+      <div class="custom-card-title">
+        <mat-checkbox (change) = "itemCurrentPromotion($event)" [(ngModel)]="currentPromotion">Current Promotion</mat-checkbox>
+      </div>
+    </div>
+
+    <div>
+      <button class="custom-btn outline" (click)="resetFilter()">Reset Filter</button>
+    </div>
+  </mat-card>
+
+  <div class="cerpa-container">
+    <mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+    <div class="cerpa-card-list">
+      <mat-card *ngFor = 'let o of list' class="cerpa-card" (click)="ViewCard($event,{'options': 'view','value': 'list'})">
+        <mat-card-header class="cerpa-more-icon">
+          <div>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon>more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="edit(o.id)">Edit</button>
+              <button mat-menu-item (click)="addProductBatch(o)">Add Product Batch</button>
+              <button mat-menu-item (click)="viewProductBatchList(o)">View Product List</button>
+              <button mat-menu-item (click)="deleteProduct(o.id)">Delete</button>
+            </mat-menu>
+          </div>
+        </mat-card-header>
+          <img class="mat-card-img" [src]="blankPicture(o.pictures)">
+        <mat-card-content class="card-desc">
+          <p class="card-title" style="margin-bottom:1px">{{o.name}}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div> 

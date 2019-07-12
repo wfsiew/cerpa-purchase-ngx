@@ -1,0 +1,132 @@
+<img id="vendor-icon" style="width: 50px;position: absolute;z-index: 2; padding: 3px; margin: 5px 10px"
+  src="assets/images/account-tie-selected.png">
+<app-tab id="main-tab" [tabs]="tabs" [selected]="'account-tie'"></app-tab>
+<mat-toolbar>
+  <div id="add-vendor-container" *ngIf="!isvendor">
+    <button id="add-vendor-btn" class="custom-btn icon" (click)="openDialog()">
+      <mat-icon class="icon-align">add</mat-icon>
+    </button>
+  </div>
+  <span class="example-spacer"></span>
+  <div id="search-vendor-container" *ngIf="!isvendor" class="custom-search-input">
+    <input id="search-vendor-input" class="search-box" placeholder="Search" [(ngModel)]="keyword"
+      (keyup)="searchVendor($event)">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+</mat-toolbar>
+<mat-toolbar id="vendor-error-toolbar" *ngIf="hasError" class="error-message">
+  <app-error id="vendor-error-message"></app-error>
+</mat-toolbar>
+<div id="non-vendor-content" class="custom-section" *ngIf="!isvendor">
+  <mat-card class="custom-card">
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <p>{{ 'purchase.product-pricing.payment-term.title' | translate }}</p>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <span class="custom-chip-list" *ngFor="let x of paymentTermSelectionList; let i = index">
+            <mat-chip id="payment-term-{{i}}" color="accent" (click)="paymentTermOption = x.key"
+              [selected]="isPTermSelected(i)">
+              <span class="custom-chip-text">{{x.value}}</span>
+            </mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <p class="side-title">{{'purchase.purchase-request.list-header.status' | translate}}</p>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <span class="custom-chip-list" *ngFor="let x of statusSelectionList; let i = index">
+            <mat-chip id="vendor-status-{{i}}" color="accent" [selected]="isSelected(i)" (click)="statusOption = x.key">
+              <span class="custom-chip-text">{{x.value}}</span>
+            </mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div id="vendor-reset-container" *ngIf="isSearch">
+      <button id="vendor-reset-btn" class="custom-btn outline" (click)="resetFilter()">
+        {{ 'app.action.reset_filter' | translate}}
+      </button>
+    </div>
+  </mat-card>
+
+  <div class="cerpa-container">
+    <mat-paginator id="vendor-paginator" [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>      
+    <div id="no-record-msg" *ngIf="vendors.length == '0';">&nbsp;&nbsp;{{ noRecordMsg }}</div>
+    <div id="check-vendor" class="cerpa-card-list" *ngIf="vendors.length > 0;">
+      <mat-card id="vendor-list-{{i}}" class="cerpa-card" *ngFor="let vendor of vendors; let i = index">
+        <mat-card-header class="cerpa-more-icon">
+          <div>
+            <button id="non-vendor-menu" mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon color="primary">more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button id="view-vendor-btn" mat-menu-item replaceUrl="true" queryParamsHandling="merge"
+                (click)="goView(vendor.id)">
+                <span>{{ 'app.action.view' | translate }}</span>
+              </button>
+              <button id="remove-vendor-btn" *ngIf="vendor.status != VENDOR_STATUS.ACTIVATED" mat-menu-item
+                (click)="confirmRemoveVendor(vendor)">
+                <span>{{ 'app.action.delete' | translate }}</span>
+              </button>
+              <button id="blacklist-vendor-btn" *ngIf="vendor.status != VENDOR_STATUS.BLACKLISTED" mat-menu-item
+                (click)="confirmBlacklistVendor(vendor)">
+                <span>{{ 'app.action.blacklist' | translate }}</span>
+              </button>
+              <button id="reinvite-vendor-btn"
+                *ngIf="vendor.status == VENDOR_STATUS.INVITED"
+                mat-menu-item (click)="confirmReInviteVendor(vendor)">
+                <span>{{ 'app.action.re_invite' | translate }}</span>
+              </button>
+            </mat-menu>
+          </div>
+        </mat-card-header>
+        <img id="vendor-logo" class="mat-card-img" mat-card-image *ngIf="vendor.company_logo != null"
+          [src]="vendor.company_logo">
+        <img id="default-logo" class="mat-card-img" mat-card-image *ngIf="vendor.company_logo == null"
+          [src]="defaultImage">
+        <mat-card-content class="card-desc">
+          <p id="vendor-name" class="card-title" matTooltip={{vendor.company_name}}>{{ vendor.company_name }}</p>
+          <p id="vendor-status" class="card-status" [ngClass]="vendor.getStatus() == 1 ? 'active-status': 'status'">
+            {{ vendor.getStatusLocale() | translate }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+<div id="vendor-content" class="custom-section vendor" *ngIf="isvendor">
+  <div class="cerpa-container">
+    <div class="cerpa-card-list">
+      <mat-card class="cerpa-card" *ngFor="let vendor of vendors">
+        <mat-card-header class="cerpa-more-icon">
+          <div>
+            <button id="vendor-menu" mat-icon-button [matMenuTriggerFor]="menu">
+              <mat-icon color="primary">more_horiz</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+              <button id="vendor-edit-btn" mat-menu-item replaceUrl="true" queryParamsHandling="merge"
+                (click)="gotoEdit(vendor.id)">
+                <span>{{ 'app.action.edit' | translate }}</span>
+              </button>
+            </mat-menu>
+          </div>
+        </mat-card-header>
+        <img id="vendor-logo" class="mat-card-img" mat-card-image *ngIf="vendor.company_logo != null"
+          [src]="vendor.company_logo">
+        <img id="default-logo" class="mat-card-img" mat-card-image *ngIf="vendor.company_logo == null"
+          [src]="defaultImage">
+        <mat-card-content class="card-desc">
+          <p id="vendor-title" class="card-title" matTooltip={{vendor.company_name}}>{{ vendor.company_name }}</p>
+          <p id="vendor-status" class="card-status" [ngClass]="vendor.getStatus() == 1 ? 'active-status': 'status'">
+            {{ vendor.getStatusLocale() | translate }}</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

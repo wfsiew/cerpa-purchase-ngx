@@ -1,0 +1,18 @@
+table {
+    width: 100%;
+  }
+.close-icon{
+  min-width: 100; 
+  float:right; 
+  padding-bottom: 1%;
+  cursor: pointer;
+}
+.history-table hr{
+  border: 1 solid lightslategray
+}
+table td{
+  padding: 1%;
+}
+table tr td{
+  border: 1px solid lightgray
+}

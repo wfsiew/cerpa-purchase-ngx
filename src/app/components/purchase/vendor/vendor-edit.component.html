@@ -1,0 +1,199 @@
+<mat-toolbar>
+  <button class="custom-btn icon" (click)="back()">
+    <mat-icon class="icon-align">arrow_back</mat-icon>
+  </button>
+  <span class="example-spacer"></span>
+  {{ 'purchase.vendor.profile.header.company_details' | translate }}
+  <span class="example-spacer"></span>
+</mat-toolbar>
+<div class="details">
+  <mat-toolbar *ngIf="success_message" class="success-message">{{ 'purchase.vendor.edit-profile.success.upload-image' |
+    translate }}</mat-toolbar>
+  <mat-toolbar *ngIf="hasError" class="error-message">
+    <!-- {{ 'purchase.vendor.edit-profile.error.vendor-not-exist' |
+    translate }} -->
+    <app-error></app-error>
+  </mat-toolbar>
+
+  <form [formGroup]="mform" novalidate>
+    <section class="company">
+      <div class="img" (click)="openUploadDialog()">
+        <img style="max-width:100%; max-height:100%" *ngIf="company_logo" [src]="company_logo">
+      </div>
+
+      <div class="data">
+        <input readonly matInput formControlName="company_name" maxlength="250">
+
+        <div class="data-inner">
+          <div class="container-form">
+            <mat-form-field>
+              <input matInput onkeyup="this.value = this.value.toUpperCase();" formControlName="biz_reg_num" maxlength="10"
+                [placeholder]="'purchase.vendor.profile.form.business_reg_no.ph' | translate">
+            </mat-form-field>
+          </div>
+          <div class="container-form">
+            <mat-form-field>
+              <input matInput formControlName="gst_number" onkeyup="this.value = this.value.toUpperCase();" maxlength="17"
+                [placeholder]="'purchase.vendor.profile.form.gst_no.ph' | translate">
+            </mat-form-field>
+          </div>
+
+          <div class="container-form">
+            <mat-form-field>
+              <input matInput formControlName="credit_limit"
+                [placeholder]="'purchase.vendor.profile.form.credit_limit.ph' | translate">
+            </mat-form-field>
+          </div>
+          <div class="container-form">
+            <mat-chip-list>
+              <mat-chip [selected]="i == selectedPaymentTerm" *ngFor="let x of paymentTerms; let i = index"
+                (click)="selectedPaymentTerm = x.key" [ngClass]="{'mat-chip-selected': x.key == selectedPaymentTerm}">
+                {{x.value}}</mat-chip>
+            </mat-chip-list>
+          </div>
+
+          <div class="container-form">
+            <mat-form-field *ngIf="bankList">
+              <mat-select [placeholder]="'purchase.vendor.profile.form.bank.ph' | translate"
+                (change)="getBankList($event.value)" [value]="bank_id">
+                <mat-option *ngFor="let o of bankList" [value]="o.id">{{o.name}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="container-form">
+            <!-- <div class="container-plus-minus"> -->
+            <mat-form-field>
+              <input matInput [required]="mform.value.bank != null" formControlName="bank_acct_num"
+                [placeholder]="'purchase.vendor.profile.form.bank_acct_num.ph' | translate">
+            </mat-form-field>
+            <!-- </div> -->
+          </div>
+
+
+          <div class="container-form">
+            <mat-form-field>
+              <input matInput formControlName="office_phone" maxlength="15"
+                [placeholder]="'purchase.vendor.profile.form.office_phone.ph' | translate">
+            </mat-form-field>
+          </div>
+
+          <div class="container-form">
+
+            <mat-form-field>
+              <input matInput formControlName="office_fax" maxlength="15"
+                [placeholder]="'purchase.vendor.profile.form.office_fax.ph' | translate">
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="address">
+      <mat-toolbar>
+        <span class="example-spacer"></span> {{ 'purchase.vendor.profile.header.address' | translate }} <span
+          class="example-spacer"></span>
+      </mat-toolbar>
+      <br>
+      <div formGroupName="address">
+        <div class="container-form">
+          <mat-form-field>
+            <textarea matInput formControlName="addr_line_1" maxlength="255"
+              [placeholder]="'purchase.vendor.profile.form.address.ph.line_1' | translate"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="container-form">
+          <mat-form-field>
+            <input matInput formControlName="addr_line_2" maxlength="255"
+              [placeholder]="'purchase.vendor.profile.form.address.ph.line_2' | translate">
+          </mat-form-field>
+        </div>
+        <div class="container-form">
+          <mat-form-field>
+            <input matInput maxlength="10" formControlName="addr_line_3" [placeholder]="'purchase.vendor.profile.form.address.ph.line_3' | translate">
+          </mat-form-field>
+        </div>
+
+        <div class="data-inner">
+          <div class="container-form">
+            <mat-form-field>
+              <input matInput formControlName="postcode" maxlength="12"
+                [placeholder]="'purchase.vendor.profile.form.postcode.ph' | translate">
+            </mat-form-field>
+          </div>
+          <div class="container-form">
+            <mat-form-field>
+              <input matInput formControlName="city" maxlength="100"
+                [placeholder]="'purchase.vendor.profile.form.city.ph' | translate">
+            </mat-form-field>
+          </div>
+          <div class="container-form">
+            <mat-form-field>
+              <mat-select [placeholder]="'purchase.vendor.profile.form.country.ph' | translate"
+                (change)="getStats($event.value)" [(value)]="selectedCountry">
+                <mat-option *ngFor="let o of countries" [value]="o.id">{{ o.name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="container-form">
+            <mat-form-field>
+              <mat-select [placeholder]="'purchase.vendor.profile.form.state.ph' | translate"
+                (change)="setState($event.value)" [(value)]="selectedState">
+                <mat-option *ngFor="let o of states" [value]="o.id">{{ o.name }}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact">
+      <header>
+        <h4>{{ 'purchase.vendor.profile.header.contact' | translate }}</h4>
+      </header>
+
+      <div class="contacts">
+        <mat-accordion>
+          <mat-expansion-panel formArrayName="contact_persons">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                {{contact_person_email}}
+              </mat-panel-title>
+              <mat-panel-description>
+                Details
+              </mat-panel-description>
+            </mat-expansion-panel-header>
+            <div class="contact-inner">
+              <!-- code here ... -->
+              <div *ngFor="let _price of contact_persons.controls; let i=index" [formGroupName]='i'>
+                <div>
+                    <!-- *ngIf = "_price.id == company_id" -->
+                  <mat-form-field>
+                    <input readonly matInput formControlName="name"
+                      [placeholder]="'purchase.vendor.profile.form.contact_person_name.label' | translate">
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <input matInput formControlName="phone" maxlength="11"
+                      [placeholder]="'purchase.vendor.profile.form.contact_person_phone.label' | translate">
+                  </mat-form-field>
+
+                  <mat-form-field>
+                    <input matInput formControlName="alt_email" maxlength="255"
+                      [placeholder]="'purchase.vendor.profile.form.contact_person_alt_email.label' | translate">
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </div>
+    </section>
+
+    <mat-toolbar-row>
+      <span class="example-spacer"></span>
+      <button type="submit" mat-raised-button color="primary" (click)="submit()" [disabled]="mform.invalid || spinner">{{'app.button.save'
+        | translate }}</button>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </form>
+</div>

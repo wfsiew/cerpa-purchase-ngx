@@ -1,0 +1,101 @@
+<mat-toolbar>
+  <span>
+    <button class="custom-btn icon" (click) = "back()">
+      <mat-icon class="icon-align">arrow_back</mat-icon>
+    </button>
+  </span>
+
+  <span class="example-spacer"></span>
+  <span>{{productName}}</span>
+  <span class="example-spacer"></span>
+</mat-toolbar>
+
+<div class="container-fluid mt-3">
+
+  <div class="container">
+    <form [formGroup]="fGroup" #frm="ngForm">
+
+
+      <div *ngIf = "!isEditMode" class="row mt-md-1 text-left">
+        <div class="col-12 col-sm-3 mb-1 mb-sm-0">Product Name</div>
+        <div class="col-12 col-md-9">
+          <input class="custom-input"
+            [ngClass]="{'in-valid-input':myForm.product_name.invalid && myForm.product_name.touched}" maxlength="100"
+            formControlName="product_name" type="text" placeholder="Product Name"> </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12">
+          <div class="row">
+            <div class="col-12 col-md-3 mb-1 mt-sm-0">Quantity</div>
+            <div class="col-12 col-md-4">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button class="custom-btn icon" (click) = "minQty()" id="minus-btn">
+                    <mat-icon class="icon-align">remove</mat-icon>
+                  </button>
+                </div>
+                <input formControlName="quantity" type="number" [value]="fGroup.value.quantity" required placeholder="Quantity" min="0" id="qty_input"
+                  class="form-control form-control-sm text-center" value="1" min="1">
+                <div class="input-group-prepend">
+                  <button class="custom-btn icon" (click) = "maxQty()" id="plus-btn">
+                    <mat-icon class="icon-align">add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-sm-3 mb-1 mt-sm-0">
+          <span>Cost</span>
+        </div>
+        <div class="col-12 col-md-9 my-2">
+          <!-- RM 43.7 -->
+          <input class="custom-input"
+            [ngClass]="{'in-valid-input':myForm.cost.invalid && myForm.cost.touched}" maxlength="100"
+            formControlName="cost" type="text" placeholder="Cost" required>
+        </div>
+      </div>
+
+      <!-- <div class="row mt-md-1 text-left">
+        <div class="col-12 col-sm-3 mb-1 mt-sm-0">Manufacture Date </div>
+        <div class="col-12 col-md-4"> <input class="custom-input"
+            [ngClass]="{'in-valid-input':myForm.manufactureDate.invalid && myForm.manufactureDate.touched}" maxlength="100"
+            formControlName="manufactureDate" type="date" placeholder="Manufacture Date"> </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-sm-3 mb-1 mt-sm-0">Received Date </div>
+        <div class="col-12 col-md-4"> <input class="custom-input"
+            [ngClass]="{'in-valid-input':myForm.received_date.invalid && myForm.received_date.touched}" maxlength="100"
+            formControlName="received_date" type="date" placeholder="Received Date"> </div>
+      </div> -->
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-sm-3 mb-1 mt-sm-0">Expire Date </div>
+        <div class="col-12 col-md-4"> 
+
+            <div id="single-date-container" class="custom-date-container">
+                <input 
+                id="single-date-input" 
+                type="date"
+                [ngClass]="{'in-valid-input':myForm.expiry_date.invalid && myForm.expiry_date.touched}" maxlength="100"
+                formControlName="expiry_date" [min]="minDate()! | date:'yyyy-MM-dd'"
+                class="custom-date"
+                placeholder="Expire Date">
+              </div>
+          
+          </div>
+      </div>
+
+      <div class="text-center mt-3">
+        <button (click)="submitForm(frm.value)" [disabled]="frm.invalid" class="btn btn-danger">Save</button>
+      </div>
+
+    </form>
+  </div>
+  <br>
+</div>

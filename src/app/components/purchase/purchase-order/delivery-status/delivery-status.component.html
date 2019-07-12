@@ -1,0 +1,87 @@
+<mat-toolbar>
+  <button class="custom-btn icon" (click)="back()">
+    <mat-icon class="icon-align">arrow_back</mat-icon>
+  </button>  
+  <span class="example-spacer"></span>
+  {{'purchase.delivery-order.delivery-status.title' | translate | titlecase}}
+  <span class="example-spacer"></span>
+</mat-toolbar>
+<mat-toolbar *ngIf="hasError" class="error-message">
+  <app-error></app-error>
+</mat-toolbar>
+<section>
+  <div class="container">
+    <div class="grid-container">
+      <div>
+        <span class="main-label">{{'purchase.delivery-order.delivery-status.overall' | translate}}</span>
+      </div>
+      <div>
+        <mat-progress-bar mode="determinate" value="{{ overallPercent }}" class="bar"></mat-progress-bar>
+      </div>
+      <div>{{ overallPercent }}%</div>
+    </div>
+    <div class="grid-container" *ngFor="let po of poProducts; let i = index">
+      <div class="ellipsis">
+        <span>{{ po.material.name | titlecase}}</span>
+      </div>
+      <div>
+        <mat-progress-bar mode="determinate" value="{{ po.percent }}" class="bar"></mat-progress-bar>
+      </div>
+      <div>{{ po.percent }}%</div>
+    </div>
+    <br><br>
+    <div class="section" *ngIf="doProducts">
+      <span style="text-align: center">{{'purchase.delivery-order.delivery-status.accepted-items.title' | translate}}</span>
+    </div>
+    <div *ngFor="let do of doProducts; let i = index"> 
+      <mat-toolbar-row *ngIf="do.accepted_quantity > 0">
+          <!-- || doProducts.status == 0 elseBlock -->
+        <span class="example-spacer"></span>
+        <span class="ellipsis">{{ do.material.name | titlecase}}:</span>
+        <!-- <span *ngIf = "ng-max" id="maxqty">Max 1000</span> -->
+        <mat-form-field class="example-full-width" style="text-align:center;">
+          <button matPrefix mat-raised-button color="primary" (click)="lessQty(i)" [disabled]="doProducts[i].accepted_quantity<=1">
+            <mat-icon matSuffix>remove</mat-icon>
+          </button>
+          <!-- {{doProducts.status}} -->
+          <input min="0" maxlength="4" style="padding-right:3px; padding-left:3px;" type="number" min=0 [max]="do.quantity" matInput [value]="do.accepted_quantity"
+            placeholder="Quantity" (keyup)="updateVal($event,i)">
+          
+            <button matSuffix mat-raised-button color="primary" (click)="addQty(i)" [disabled]="addDisabled">
+              <mat-icon matSuffix>add</mat-icon>
+            </button>
+        </mat-form-field>
+        <!-- <span *ngIf = "ng-max">Min 0</span> -->
+        <span class="example-spacer"></span>
+      </mat-toolbar-row>
+      <!-- <ng-template #elseBlock> Pabding fot acceptance </ng-template> -->
+    </div> 
+    <div class="section" *ngIf="doProducts">
+      <span style="margin-left: 100px"><button mat-raised-button color="primary" (click)="updateAccepted()"> OK </button></span>
+    </div><span class="example-spacer"></span>
+    <br>
+    <div class="mat-container">
+      <div *ngFor="let hist of itemsHistory; let i = index" style="width: 100%">
+        <div class="ellipsis-width"><span class="main-label">{{ hist.material.name | titlecase }}</span></div>
+        <mat-table #table [dataSource]="getDataSource(hist)" class="mat-elevation-z8">
+
+            <!--- Note that these columns can be defined in any order.
+                  The actual rendered columns are set as a property on the row definition" -->
+          
+            <ng-container matColumnDef="date">
+              <mat-header-cell *matHeaderCellDef> {{'purchase.delivery-order.delivery-status.lbs.date' | translate | titlecase}} </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.accepted_date | date:'shortDate' }} </mat-cell>
+            </ng-container>
+        
+            <ng-container matColumnDef="accepted_quantity">
+              <mat-header-cell *matHeaderCellDef> {{'purchase.delivery-order.delivery-status.lbs.accepted-qty' | translate | titlecase}} </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{ element.accepted_quantity | number }} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          </mat-table>
+      </div>
+    </div>
+  </div>
+</section>

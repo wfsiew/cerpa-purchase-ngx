@@ -1,0 +1,6 @@
+syntax: glob
+node_modules/*
+.DS_Store
+.gitignore
+.editorconfig
+.vscode/settings.json

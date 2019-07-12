@@ -1,0 +1,179 @@
+.nopaddingmargin {
+  padding: 0;
+  margin: 0;
+}
+.c-row{
+  display: flex;
+  flex-wrap: wrap;
+}
+.c-col{
+  width: 80px;
+  height: 80px;
+  border: 1px solid;
+  padding: 20px;
+  margin: 1px;
+  background: #483D8B;
+  cursor: pointer;
+
+}
+.c-col-active{
+  width: 80px;
+  height: 80px;
+  border: 1px solid;
+  padding: 20px;
+  margin: 1px;
+  background: rgb(0, 0, 0);
+  cursor: pointer;
+
+}
+.module-icon{
+  margin-left: 2px;
+  margin-top: -12px;
+  padding: 2px;
+  object-fit: cover;
+  max-width: 42px;
+  max-height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+}
+.active-module{
+  background-color: black;
+  color: white;
+}
+.sidenav-container {
+    width: auto;
+    height: max-content;
+    min-height: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.mat-sidenav-left {
+  position: absolute;
+  width: 250px;
+  height: auto;
+  overflow: hidden;
+  background: lightgrey;
+  justify-content: left;
+}
+
+.mat-sidenav-right {
+  width: 30%;
+  height: auto;
+  overflow: hidden;
+  display: inline-block;
+  background: lightgrey;
+  justify-content: left;
+}
+.close-side-nav{
+  text-align: right;
+}
+.sidenav-close-button {
+  background-color: inherit;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  /* float: right; */
+  display: inline-flex;
+}
+
+.grid-list {
+  background: inherit;
+  margin: 25px 14px;
+  margin-top: 40px;
+}
+
+.grid-tile {
+  background: #483D8B;
+  cursor: pointer;
+  width: inherit;
+}
+
+.active-grid-tile {
+  background: black;
+  cursor: pointer;
+  color: white;
+  width: inherit;
+}
+
+.grid-tile:hover {
+  background: #483D8B;
+}
+
+.tile-icon {
+  float: initial;
+  padding: 0;
+  padding-top: 20px;
+  margin: 0;
+  color: rgb(192, 192, 192);
+}
+
+.tile-text {
+  color: rgb(204, 208, 252);
+  font-style: oblique;
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+}
+
+.sidenav-modules-cards {
+  background-color: #483D8B;
+  width: inherit;
+  justify-content: center;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+/* Rules for sizing the icon. */
+.material-icons.md-18 { font-size: 18px; }
+.material-icons.md-24 { font-size: 24px; }
+.material-icons.md-36 { font-size: 36px; }
+.material-icons.md-48 { font-size: 48px; }
+
+/* Rules for using icons as black on a light background. */
+.material-icons.md-dark { color: rgba(0, 0, 0, 0.54); }
+.material-icons.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+
+/* Rules for using icons as white on a dark background. */
+.material-icons.md-light { color: rgba(255, 255, 255, 1); }
+.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+
+
+/* .card {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  width: 40%;
+}
+
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+  padding: 2px 16px;
+} */

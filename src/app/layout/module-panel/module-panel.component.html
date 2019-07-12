@@ -1,0 +1,40 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #leftsidenav class="mat-sidenav-left" mode="side" position="start">
+    <div class="close-side-nav">
+      <span mat-button matSuffix mat-icon-button aria-label="Close" class="sidenav-close-button"
+        (click)="leftsidenav.close()">
+        <mat-icon class="md-dark">close</mat-icon>
+      </span>
+    </div>
+
+    <div class="c-row mt-1">
+      <div *ngFor="let tile of tiles">
+        <div [ngClass]="activeModule(tile.text)" *ngIf="tile.text === currentUser" role="list"
+          (click)="leftsidenav.close(); showApp = tile.text; changeToolbarModuleName();">
+          <a (click)="tileClick()" [routerLink]="tile.link">
+            <span role="listitem">
+              <img class="module-icon" src="{{imgUrl}}/{{tile.icon}}">
+            </span>
+            <p class="tile-text">{{tile.text}}</p>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet (activate)="onActivate()"></router-outlet>
+    <router-outlet name="popup"></router-outlet>
+  </mat-sidenav-content>
+  <mat-sidenav #rightsidenav class="mat-sidenav-right" mode="over" position="end">
+    <button mat-button matSuffix mat-icon-button aria-label="Clear" class="sidenav-close-button"
+      (click)="rightsidenav.close()">
+      <mat-icon class="md-dark">close</mat-icon>
+    </button>
+    <app-search *ngIf="showCommonMenu == 'Search'" [showApp]="showApp" (searchEvent)="handleSearchEvent($event)">
+    </app-search>
+    <app-settings *ngIf="showCommonMenu == 'Settings'"></app-settings>
+    <app-notifications *ngIf="showCommonMenu == 'Notifications'" [showApp]="showApp"></app-notifications>
+    <app-user-profile *ngIf="showCommonMenu == 'UserProfile'" [showApp]="showApp"></app-user-profile>
+  </mat-sidenav>
+</mat-sidenav-container>

@@ -1,0 +1,709 @@
+{
+    "app": {
+        "action": {
+            "edit": "Edit",
+            "view": "View",
+            "delete": "Delete",
+            "blacklist": "Blacklist",
+            "re_invite": "Resend Vendor invitation",
+            "reset_filter": "Reset"
+        },
+        "button": {
+            "cancel": "Cancel",
+            "ok": "OK",
+            "save": "Save",
+            "yes": "Yes",
+            "no": "No",
+            "browse": "Browse",
+            "delete_saved_po": "Delete Saved PO",
+            "submit": "Submit"
+        },
+        "errors": {
+            "general": {
+                "message": "Unexpected error has occured. Please try again.<br/><br/>If the error still persist, please contact our helpdesk.",
+                "title": "Unexpected Error"
+            }
+        },
+        "general": {
+            "all": "All",
+            "no_record": "No record found."
+        }
+    },
+    "login": {
+        "button": {
+            "submit": "Login"
+        },
+        "copyright": "Copyright 2019, FYSS. All Rights Reserved.",
+        "form": {
+            "username": {
+                "ph": "Username"
+            },
+            "password": {
+                "ph": "Password"
+            }
+        },
+        "error": {
+            "lock-account": "Your account has been locked",
+            "username": {
+                "required": "Username or Email is required"
+            },
+            "password": {
+                "required": "Password is required"
+            },
+            "GEN_0001": "Your username or password is incorrect."
+        },
+        "forget_password": {
+            "title": "Forgot Password",
+            "email": "Email Address/Username",
+            "reset": "Reset Password",
+            "message": "A link has been sent to specified email address. Please check your inbox to proceed. This page will redirect in {{countdown}} seconds.",
+            "message-success": "You have successfully reset your password. Please login using the new password.",
+            "hint": "HINT: Must contain at least an alphabet, a number, a special character and at least 8 or more characters",
+            "hint2": "HINT: Must match with the entered password",
+            "info": "Please enter an email address or username that is associated with your CERPA account.",
+            "verifying": "Verifying activation code..."
+        },
+        "reset_password": {
+            "info": "Please enter your new password:",
+            "title": "Password Reset",
+            "message": {
+                "title": "Password must contain the following:",
+                "letter": "A letter",
+                "number": "A number",
+                "special": "A special character: [@$!%*#?&]",
+                "length": "A minimum of 8 characters"
+            }
+        }
+    },
+    "change-password": {
+        "title": "Change Password",
+        "success-message": "Your password has been changed successfully!",
+        "error-message": "Changed password unsuccessfully!"
+    },
+    "purchase": {
+        "vendor": {
+            "title": "Vendor",
+            "status": {
+                "invited": "Invited",
+                "re_invite": "Resend Vendor invitation",
+                "active": "Active",
+                "blacklisted": "Blacklisted"
+            },
+            "confirm": {
+                "delete": "Continue to remove vendor?",
+                "delete-title": "Delete Vendor",
+                "blacklist": "Continue to blacklist vendor?",
+                "blacklist-title": "Blacklist Vendor"
+            },
+            "invite": {
+                "title": "Invite Vendor",
+                "button": {
+                    "submit": "Invite"
+                },
+                "form": {
+                    "company_name": {
+                        "ph": "Company Name"
+                    },
+                    "contact_person": {
+                        "ph": "Contact Person"
+                    },
+                    "email": {
+                        "ph": "Email"
+                    },
+                    "conf_email": {
+                        "ph": "Confirm Email"
+                    }
+                },
+                "message": "Continue to resend vendor invitation?",
+                "success": {
+                    "message": "Vendor has been successfully invited"
+                },
+                "error": {
+                    "title": "Error",
+                    "message": "The email address has already exist.",
+                    "company_name": {
+                        "required": "Company Name is required"
+                    },
+                    "contact_person": {
+                        "required": "Contact Person is required"
+                    },
+                    "email": {
+                        "required": "Email is required",
+                        "invalid": "Email is invalid",
+                        "mismatch_email": "The email dose not matched."
+                    },
+                    "error_code": {
+                        "undefined": "Network Error",
+                        "1": "Network Error",
+                        "2": "Network Error",
+                        "3": "Network Error",
+                        "4": "Network Error",
+                        "5": "Network Error",
+                        "6": "Network Error",
+                        "7": "Network Error",
+                        "GEN_0001": "login failed",
+                        "GEN_0002": "Minimum length of 8",
+                        "GEN_0003": "Not common password",
+                        "GEN_0004": "Not similar with the username",
+                        "GEN_0005": "Combination of alphanumeric and special char (spaces not allowed)",
+                        "GEN_0006": "Activation Link has expired",
+                        "GEN_0007": "Form validation failed",
+                        "GEN_0008": "Upload failed",
+                        "GEN_0009": "Password does not matched",
+                        "VND_0001": "The email address has already exist.",
+                        "VND_0002": "Vendor profile does not exist",
+                        "VND_0003": "Failed blacklist vendor.",
+                        "VND_0004": "Failed delete vendor.",
+                        "VND_0005": "Failed re-invite vendor.",
+                        "VND_0006": "Password already set",
+                        "VND_0007": "Create vendor failed",
+                        "VND_0008": "Create product pricing failed",
+                        "VND_0009": "Update product pricing failed",
+                        "VND_0010": "Vendor product does not exist",
+                        "VND_0011": "Delete vendor product failed",
+                        "VND_0012": "Issue purchase request failed",
+                        "VND_0013": "Update purchase request failed",
+                        "VND_0014": "Purchase request does not exist",
+                        "VND_0015": "Cancel purchase request failed",
+                        "VND_0016": "Material does not exist",
+                        "VND_0017": "PO already issued",
+                        "VND_0018": "Vendor detail not exist",
+                        "VND_0019": "Issue purchase order fail",
+                        "VND_0020": "Total price mismatch in issue purchase order",
+                        "VND_0021": "Purchase order not exist",
+                        "VND_0022": "Product tier pricing not exist",
+                        "VND_0023": "Product promotion pricing not exist",
+                        "VND_0024": "Vendor contact person not exist",
+                        "VND_0025": "Cancel purchase order failed",
+                        "VND_0026": "Accept purchase order failed",
+                        "VND_0027": "Reject purchase order failed",
+                        "VND_0028": "Issue delivery order fail",
+                        "VND_0029": "Invoice already issued",
+                        "VND_0030": "Notifications empty",
+                        "VND_0031": "Delivery order does not exist",
+                        "VND_0032": "Invoice does not exist",
+                        "VND_0033": "Delivery order not complete",
+                        "ADM_0001": "Invalid reset password link.",
+                        "ADM_0002": "Invalid reset password link.",
+                        "ADM_0003": "Reset password: Internal Server Error",
+                        "ADM_0004": "Change password: Internal Server Error"
+                    }
+                }
+            },
+            "set_password": {
+                "title": "Set your password",
+                "form": {
+                    "button": "Set Password",
+                    "password": "Password",
+                    "confirm_password": "Confirm Password"
+                }
+            },
+            "edit-profile": {
+                "success": {
+                    "upload-image": "Successfully updated"
+                },
+                "error": {
+                    "vendor-not-exist": "Vendor profile does not exist"
+                }
+            },
+            "profile": {
+                "header": {
+                    "company_details": "Company Details",
+                    "address": "Address",
+                    "contact": "Contact"
+                },
+                "form": {
+                    "company_name": {
+                        "label": "Company Name",
+                        "ph": "Company Name",
+                        "note": "(Do not continue if you believe this is incorrect)"
+                    },
+                    "business_reg_no": {
+                        "label": "Business Registration Number",
+                        "ph": "Business Registration Number"
+                    },
+                    "gst_no": {
+                        "label": "SST No",
+                        "ph": "SST No"
+                    },
+                    "credit_limit": {
+                        "label": "Credit Limit",
+                        "ph": "Credit Limit (0.00)"
+                    },
+                    "payment_term": {
+                        "label": "Payment Term",
+                        "ph": {
+                            "op1": "Cash on delivery",
+                            "op2": "7 days",
+                            "op3": "15 days",
+                            "op4": "30 days",
+                            "op5": "60 days",
+                            "op6": "90 days"
+                        }
+                    },
+                    "bank": {
+                        "label": "Bank",
+                        "ph": "Bank"
+                    },
+                    "bank_acct_num": {
+                        "label": "Bank Account No",
+                        "ph": "Bank Account No"
+                    },
+                    "office_phone": {
+                        "label": "Office Phone",
+                        "ph": "Office Phone Number"
+                    },
+                    "office_fax": {
+                        "label": "Office Fax",
+                        "ph": "Office Fax Number"
+                    },
+                    "address": {
+                        "label": "Address",
+                        "ph": {
+                            "line_1": "Address Line 1",
+                            "line_2": "Address Line 2",
+                            "line_3": "Address Line 3"
+                        }
+                    },
+                    "postcode": {
+                        "label": "Postcode",
+                        "ph": "Postcode"
+                    },
+                    "city": {
+                        "label": "City",
+                        "ph": "City"
+                    },
+                    "country": {
+                        "label": "Country",
+                        "ph": "Country"
+                    },
+                    "state": {
+                        "label": "State",
+                        "ph": "State"
+                    },
+                    "contact_person_email": {
+                        "label": "Contact Person",
+                        "ph": "Contact Person Email"
+                    },
+                    "contact_person_name": {
+                        "label": "Name",
+                        "ph": "Contact Person Name"
+                    },
+                    "contact_person_phone": {
+                        "label": "Phone",
+                        "ph": "Phone Number"
+                    },
+                    "contact_person_alt_email": {
+                        "label": "Alternate Email",
+                        "ph": "Alternate Email"
+                    }
+                }
+            },
+            "set-password": {
+                "form": {
+                    "password": {
+                        "ph": "Password"
+                    },
+                    "confirm_password": {
+                        "ph": "Confirm Password"
+                    }
+                },
+                "error": {
+                    "password": {
+                        "required": "Password is required"
+                    },
+                    "confirm_password": {
+                        "required": "Confirm Password is required",
+                        "notmatch": "Passwords are not matched"
+                    }
+                }
+            }
+        },
+        "product-pricing": {
+            "title": "Product Pricing",
+            "categories": {
+                "title": "Categories"
+            },
+            "labels": {
+                "add_pricing": "Add Pricing",
+                "add_promotion": "Add Promotion"
+            },
+            "tool-tip": {
+                "tier": "Specify the tier pricing as trade offer for bulk purchase by customer. Note that unspecified range will use default price instead. Example, Quantity ranging start from 100 up to 200, Trade Offer Price: RM150 Quantity ranging start from 201 up to 500, Trade Offer Price: RM148",
+                "promo": "Specify the promotion period as special offer for customer. Note that unspecified promotion period will use default price or Tier Pricing trade offer instead. If Always Use Lowest Price is not checked, then the matching promotion will always take effective. Example, Period start from 1/12/2018 to 31/12/2018, Promotion Price: RM128 Period start from 1/2/2019 to 28/2/2019, Promotion Price RM128"
+            },
+            "product-pricing-list": {
+                "term-option": {
+                    "title": "Term Option",
+                    "label": {
+                        "cash-on-delivery": " Cash on delivery",
+                        "flex-credit": "Flex Credit"
+                    }
+                },
+                "sort-options": {},
+                "promo": "Promotion"
+            },
+            "payment-term": {
+                "title": "Payment Terms",
+                "cash_on_delivery": "Cash on Delivery",
+                "flex_credit": " Flex Credit"
+            },
+            "sort": {
+                "title": "Sort By",
+                "sort-options": {
+                    "cheapest_first": "Cheapest First",
+                    "cheapest_last": "Cheapest Last"
+                }
+            },
+            "add_product_pricing": {
+                "title": {
+                    "add": "Add Product Pricing",
+                    "edit": "Edit Product Pricing"
+                },
+                "tooltips": {
+                    "example": "Example",
+                    "tier-pricing": {
+                        "ln1": "Specify the tier pricing as trade offer for bulk purchase by customer.",
+                        "ln2": "Note that unspecified range will use default price instead.",
+                        "ln3": "Quantity ranging start from 100 up to 200, Trade Offer Price: RM150",
+                        "ln4": "Quantity ranging start from 201 up to 500, Trade Offer Price: RM148"
+                    },
+                    "promotion": {
+                        "ln1": "Specify the promotion period as special offer for customer.",
+                        "ln2": "Note that unspecified promotion period will use default price or Tier Pricing trade offer instead.",
+                        "ln3": "If \"Always Use Lowest Price\" is not checked, then the matching promotion will always take effective.",
+                        "ln4": "Period start from 1/12/2018 to 31/12/2018, Promotion Price: RM128.",
+                        "ln5": "Period start from 1/2/2019 to 28/2/2019, Promotion Price RM128"
+                    }
+                },
+                "sub_title": {
+                    "tier_pricing": "Tier Pricing",
+                    "promotion": "Promotion"
+                },
+                "labels": {
+                    "material_name": "Material name",
+                    "default_price": "Default price",
+                    "tax_scheme": "Tax scheme",
+                    "from_quantity": "From quantity",
+                    "to_quantity": " To quantity",
+                    "price": "Price",
+                    "from_date": "From date",
+                    "to_date": "To date",
+                    "always_use_lowest_price": "Always use lowest price"
+                },
+                "tax_scheme": {
+                    "title": "Tax Scheme",
+                    "listed_price_is_tax_inclusive": "Listed price is tax inclusive",
+                    "subject_to_tax": "Subject to tax",
+                    "non_taxable_item": "Non-taxable item"
+                }
+            },
+            "view-product-pricing": {
+                "title": " View Product Details"
+            },
+            "delete": {
+                "title": "Delete",
+                "message": "Continue to remove product pricing"
+            },
+            "look-up": {
+                "title": "Material Look Up",
+                "content": {
+                    "search": {
+                        "title": "Search",
+                        "search-lb": "Material Name",
+                        "search-pl": "Search Material",
+                        "no-result": "No result found",
+                        "searching": "Searching"
+                    }
+                }
+            },
+            "history": {
+                "title": "Product Pricing History",
+                "labels": {
+                    "updated-date": "Updated Date",
+                    "updated-by": "Updated By",
+                    "price": "Price",
+                    "view-all": "View All"
+                },
+                "tier": {
+                    "labels": {
+                        "title": "Tier Pricing",
+                        "from-quantity": "From Quantity",
+                        "to-quantity": "To Quantity",
+                        "price": "Price"
+                    }
+                },
+                "promotion": {
+                    "labels": {
+                        "title": "Promotion Price",
+                        "from-date": "From Date",
+                        "to-date": "To Date",
+                        "price": "Price"
+                    }
+                }
+            }
+        },
+        "currency": {
+            "title": "Currency",
+            "type": {
+                "dollar": "$",
+                "ringgit": "RM"
+            }
+        },
+        "purchase-request": {
+            "load-saved": "Load saved PO",
+            "title": "Purchase Request",
+            "cancel-pr": {
+                "title": "Cancel PR",
+                "message": "Continue to cancel purchase request"
+            },
+            "list-header": {
+                "id": "Reference",
+                "action": "",
+                "requester": "Requester",
+                "issue-date": "Issuance Date",
+                "status": "Status"
+            },
+            "status": {
+                "st0": "In Progress",
+                "st1": "Issued PO",
+                "st2": "Delivered",
+                "st3": "Completed",
+                "st4": "Cancelled"
+            },
+            "contax-box": {
+                "view-po": "View Purchase Order",
+                "view-pr": "View Purchase Request",
+                "cancel-pr": "Cancel Purchase Request",
+                "cancel-po": "Cancel Purchase Order",
+                "reissue-po": "Reissue Purchase Order",
+                "edit-po": "Edit Purchase Order",
+                "edit-pr": "Edit Purchase Request",
+                "issue-po": "Issue Purchase Order"
+            },
+            "issue-pr": {
+                "title": "Issue Purchase Request",
+                "lebals": {}
+            },
+            "view": {
+                "title": "View Purchase Request"
+            },
+            "pr-list-table": {
+                "col-names": {
+                    "id": "ID",
+                    "requested-by": "Requester",
+                    "issued-date": "Issuance Date",
+                    "status": "Status",
+                    "action": "Action"
+                }
+            }
+        },
+        "purchase-order": {
+            "title": "Purchase Order",
+            "cancel-po": {
+                "title": "Cancel PO",
+                "message": "Continue to cancel purchase Order"
+            },
+            "contax-box": {
+                "view-po": "View Purchase Order",
+                "do": "Delivery Order",
+                "invoice": "Invoice",
+                "download-pdf": "Download PDF"
+            },
+            "issues": {
+                "issue": {
+                    "title": "Issue Purchase Order",
+                    "vendor-not-exist": "No vendor found for the requested item(s)"
+                },
+                "reissue": {
+                    "title": "Reissue Purchase Order",
+                    "message": "Reissue will cancel the current Purchase Order. Do you want to continue?"
+                }
+            },
+            "po-listing": {
+                "po-th": {
+                    "id": "Reference",
+                    "vendor": "Vendor",
+                    "issue-date": "Issuance Date",
+                    "status": "Status",
+                    "action": ""
+                }
+            },
+            "look-up": {
+                "title": "Vendor Look-Up",
+                "labels": {
+                    "name": "Vendor Name",
+                    "is-seaching": "Searching ...",
+                    "no-result": "No result found"
+                },
+                "ph": "Vendor"
+            },
+            "view-po": {
+                "title": "View Purchase Order",
+                "labels": {
+                    "status": "Status",
+                    "po-reference": "PO Reference",
+                    "to": "To",
+                    "item-list": "Item List",
+                    "item-sub-labels": {
+                        "item": "Item",
+                        "quantity": "Quantity",
+                        "unit-price": "Unit Price (with Tax)",
+                        "amount": "Amount"
+                    },
+                    "total": "Total",
+                    "deliver-to": "Deliver To"
+                },
+                "buttons": {
+                    "accept": "Accept",
+                    "reject": "Reject",
+                    "invoice": "Invoice",
+                    "invoice-delivered": "Invoice Delivered",
+                    "delivery-order": "Delivery Order",
+                    "update-delivery-status": "Update Delivery Status"
+                }
+            },
+            "status": {
+                "st0": "Pending",
+                "st1": "New",
+                "st2": "In Progress",
+                "st3": "Delivering",
+                "st4": "Delivered",
+                "st5": "Completed",
+                "st6": "Cancelled",
+                "st7": "Rejected"
+            },
+            "po-view-status": {
+                "0": "Pending",
+                "1": "New",
+                "2": "In Progress",
+                "3": "Delivering",
+                "4": "Delivered",
+                "5": "Completed",
+                "6": "Cancelled",
+                "7": "Rejected"
+            },
+            "reject-reason": {
+                "REJ_001": "Unforeseen production shortfalls.",
+                "REJ_002": "If no confirmation or rejection is received from vendor during (5) business day period, it shall be deemed as rejected.",
+                "REJ_003": "If the vendor does not agree to comply with all terms of the PO, shall reject the PO.",
+                "REJ_004": "Duplicate Order",
+                "REJ_005": "Incorrect Price not vendor Produce line.",
+                "REJ_006": "Unable to supply Items."
+            },
+            "delete": {
+                "title": "Delete PO",
+                "message": "Confirm delete the PO?"
+            },
+            "delete-saved": {
+                "title": "Delete Saved PO",
+                "message": "Confirm delete Saved PO?"
+            },
+            "credit-limit": {
+                "title": "Credit Limit Exceeded",
+                "message": "The amount of purchase has exceeded the vendor's credit limit."
+            }
+        },
+        "notification": {
+            "content": "This is a blank notifications content page.",
+            "errors": {
+                "queryError": {
+                    "message": "Error querying notifications for {{purchase.notification.errors.queryError.msg.param1}}.",
+                    "title": "{{purchase.notification.errors.queryError.title.param1}} Error"
+                }
+            },
+            "title": "Notifications"
+        },
+        "delivery-order": {
+            "title": "Delivery Order",
+            "labels": {
+                "do-refrence": "PO Refrence",
+                "status": "Status",
+                "bill-to": "Bill To",
+                "deliver-to": "Deliver To",
+                "supplier": "Supplier",
+                "items": "Items",
+                "item": "Item",
+                "tel": "TEL",
+                "sst_no": "SST No",
+                "accepted": "Accepted",
+                "delivering": "Delivering",
+                "date": "Date",
+                "signature": "Signature",
+                "name": "Name"
+            },
+            "buttons": {
+                "deliver": "Deliver",
+                "pending-for-acceptance": "Pending for acceptance"
+            },
+            "delivery-status": {
+                "title": "Delivery Status",
+                "overall": "Overall",
+                "accepted-items": {
+                    "title": "Accepted Items"
+                },
+                "material-name": {
+                    "title": "Material Name"
+                },
+                "lbs": {
+                    "date": "Date",
+                    "accepted-qty": "Accepted Quantity"
+                }
+            },
+            "status": {
+                "0": "New",
+                "1": "Delivering",
+                "2": "Delivered",
+                "3": "Completed"
+            }
+        },
+        "invoice": {
+            "title": "Invoice",
+            "labels": {
+                "invoice-ref": "Invoice Ref",
+                "invoice-date": "Invoice Date",
+                "due-date": "Payment Due Date",
+                "bill-to": {
+                    "title": "Bill To",
+                    "lbs": {
+                        "item": "Item",
+                        "subtotal": "Subtotal (Before Tax)",
+                        "quantity": "Quantity",
+                        "price": "Price",
+                        "tax": "Tax",
+                        "amount": "Amount"
+                    }
+                }
+            },
+            "btns": {
+                "issue-invoice": "Issue Invoice"
+            }
+        }
+    },
+    "inventory": {
+        "material": {
+            "title": "Material"
+        },
+        "product": {
+            "title": "Product",
+            "labels": {
+                "product-type": "Product Type",
+                "product-name": "Product Name",
+                "description": "description",
+                "category": "category",
+                "brand": "brand",
+                "model": "Model",
+                "optimum-qty": "Optimum Quantity",
+                "par-level": "Par Level",
+                "qty-measure": "Quantity Measure",
+                "discount": "Discount",
+                "commission": "Commission",
+                "not-for-sale": "Not for sale",
+                "auto-add-stock": "Auto add stock for this product"
+            }
+        },
+        "kitchen": {
+            "title": "Kitchen"
+        }
+    }
+}

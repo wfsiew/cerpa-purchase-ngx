@@ -1,0 +1,167 @@
+.example-container {
+    height: 400px;
+    width: 550px;
+    overflow: auto;
+  }
+  .mat-elevation-z8{
+    box-shadow:none!important;
+  }
+  table {
+    width: 800px;
+  }
+  
+  td.mat-column-star {
+    width: 20px;
+    padding-right: 8px;
+  }
+  
+  th.mat-column-position, td.mat-column-position {
+    padding-left: 8px;
+  }
+  
+  .mat-table-sticky:first-child {
+    border-right: 1px solid #e0e0e0;
+  }
+  
+  .mat-table-sticky:last-child {
+    border-left: 1px solid #e0e0e0;
+  }
+
+.mat-header {
+  margin-left: -20px;
+}
+
+.side-title {
+  font-weight: bold;
+  text-align: center
+}
+
+.add-tool-btn {
+  min-width: 42px;
+  max-width: 42px;
+  min-height: 40px;
+  max-height: 40px;
+  line-height: 1;
+  padding: 0;
+}
+
+
+/*William, UI/UX styles enhancement*/
+#request-id.mat-header-cell {
+  width: 20%;
+  flex: none;
+}
+
+.cell-row.mat-row {
+  border-bottom-color: rgba(119, 119, 119, 0.5);
+}
+
+.header-row.mat-header-row {
+  border-bottom-color: rgba(119, 119, 119, 0.5);
+}
+
+.mat-header-cell {
+  font-weight: 600;
+  font-size: 16px;
+  color: #4E4972;
+  /* border: 1px solid; */
+}
+
+.mat-cell {
+  font-size: 16px;
+  color: #777777;
+  /* border: 1px solid red; */
+}
+
+.mat-header-cell.request-id-header {
+  flex: none;
+  text-align: left;
+  width: 30%;
+}
+
+.mat-header-cell.requested-by-header {
+  flex-grow: 1;
+  flex-shrink: 0;
+  text-align: left;
+}
+
+.mat-header-cell.issued-date-header {
+  flex: none;
+  width: 13%;
+}
+
+.issued-date-header ::ng-deep .mat-sort-header-container {
+  justify-content: center;
+}
+
+.mat-header-cell.status-header {
+  flex: none;
+  text-align: center;
+  width: 13%;
+}
+
+.status-header ::ng-deep .mat-sort-header-container {
+  justify-content: center;
+}
+
+.mat-header-cell.action-header {
+  flex: initial;
+  text-align: center;
+  min-width: 66px;
+}
+
+.action-header > mat-sort-header-container {
+  justify-content: center;
+}
+
+
+.mat-cell.request-id-cell {
+  width: 30%;
+  text-align: left;
+  flex: none;
+}
+
+.mat-cell.requested-by-cell {
+  flex-grow: 1;
+  flex-shrink: 0;
+  text-align: left;
+}
+
+.mat-cell.issued-date-cell {
+  flex: none;
+  width: 13%;
+  text-align: center;
+  padding-right: 18px;
+}
+
+.mat-cell.status-cell {
+  flex: none;
+  width: 13%;
+  text-align: center;
+  padding-right: 18px;
+}
+
+.mat-cell.action-cell {
+  flex: initial;
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 66px;
+}
+
+.action-btn.mat-button {
+  min-width: 30px;
+  padding: 0;
+}
+
+.action-btn .action-icon {
+  color: #483D8B;
+  vertical-align: middle;
+  min-width: 30px;
+}
+
+.action-btn {
+  cursor: pointer;
+}

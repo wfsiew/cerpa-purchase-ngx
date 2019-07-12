@@ -1,0 +1,38 @@
+<mat-card>
+    <div (click)="editProfile()" title="Edit Profile" class="edit-pp">
+        <mat-icon>edit</mat-icon>
+    </div>
+    <mat-card-header>
+        <div *ngIf="userDetails" matRipple class="user-picture shadow" mat-card-avatar>
+            <img class="rounded-circle" [src]="current_img" alt="user profile ">
+        </div>
+        <div class="user-name-title" *ngIf="userDetails">
+
+            <mat-card-title style="margin:0;padding:0;">
+                <span *ngFor="let role of userRole" class="text-secondary font-weight-bold text-uppercase">
+                    <p *ngIf="role.name=='ROLE_PURCHASING_STAFF'">PURCHASING STAFF</p>
+                    <p *ngIf="role.name =='ROLE_VENDOR'">VENDOR</p>
+                </span>
+                <span *ngIf="userDetails">
+                    <span>{{userDetails.first_name}}&nbsp;{{userDetails.last_name}}</span>
+                </span>
+            </mat-card-title>
+            <i mat-card-subtitle style="size:-4px;margin:0;padding:0;">
+                <span>{{userDetails.email}}</span>
+            </i>
+        </div>
+    </mat-card-header>
+    <mat-card-actions>
+        <hr>
+        <span *ngIf="msg != ''" class="pl-3 text-success"> {{msg | translate}} </span>
+        <div class="user-action">
+            <button class="btn btn-link" (click)="changePassword()">Change Password</button>
+            <app-logout></app-logout>
+
+        </div>
+    </mat-card-actions>
+</mat-card>
+
+<!-- <app-change-password></app-change-password> -->
+<!-- <app-update-user-profile *ngIf = "isEditable"></app-update-user-profile> -->
+<!-- <app-user-activities></app-user-activities> -->

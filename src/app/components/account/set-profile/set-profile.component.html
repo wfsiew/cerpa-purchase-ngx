@@ -1,0 +1,279 @@
+<div class="container-fluid">
+    <mat-toolbar>
+        <span class="example-spacer"></span>{{'purchase.vendor.title' | translate}}<span class="example-spacer"></span>
+    </mat-toolbar>
+
+    <div *ngIf="success_message" class="success-message">Successfuly registred</div>
+    <mat-toolbar *ngIf="hasError" class="error-message">
+        <!-- {{errorMessage}} -->
+        <app-error></app-error>
+    </mat-toolbar>
+
+    <div class="p-3">
+        <form [formGroup]="formgroup" #frm="ngForm" (ngSubmit)="AddVendorProfile()">
+            <div class="row">
+                <div class="col-12 col-md-2 text-center text-md-left">
+                    <img class="upload-image" (click)="openDialog()" [src]="company_logo">
+                </div>
+                <div class="col-12 col-md-10">
+                    <div class="row">
+                        <div class="col-12">
+                            <mat-form-field class="form-input">
+                                <input matInput formControlName="company_name" maxlength="100" id="company_name"
+                                    placeholder="{{'purchase.vendor.profile.form.company_name.ph' | translate}}"
+                                    readonly>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field class="form-input">
+                                <input matInput onkeyup="this.value = this.value.toUpperCase();" formControlName="biz_reg_num" maxlength="10" id="biz_reg_num"
+                                    placeholder="{{'purchase.vendor.profile.form.business_reg_no.ph' | translate}}">
+                                <button type="button" mat-button *ngIf="formgroup.controls.biz_reg_num.value" matSuffix
+                                    mat-icon-button aria-label="Clear"
+                                    (click)="formgroup.patchValue({ biz_reg_num: '' })">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-12">
+                            <mat-form-field class="form-input">
+                                <input matInput onkeyup="this.value = this.value.toUpperCase();" formControlName="gst_number" id="gst_number" maxlength="15"
+                                    placeholder="{{'purchase.vendor.profile.form.gst_no.ph' | translate}}">
+                                <button type="button" mat-button *ngIf="formgroup.controls.gst_number.value" matSuffix
+                                    mat-icon-button aria-label="Clear"
+                                    (click)="formgroup.patchValue({ gst_number: '' })">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="submit-company">
+                <div class="item-2">
+                    <!-- <div>
+                    <mat-form-field>
+                        <input matInput formControlName="biz_reg_num" maxlength="10" id="biz_reg_num"
+                            placeholder="{{'purchase.vendor.profile.form.business_reg_no.ph' | translate}}">
+                        <button type="button" mat-button *ngIf="formgroup.controls.biz_reg_num.value" matSuffix
+                            mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ biz_reg_num: '' })">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input matInput formControlName="gst_number" id="gst_number" maxlength="15"
+                            placeholder="{{'purchase.vendor.profile.form.gst_no.ph' | translate}}">
+                        <button type="button" mat-button *ngIf="formgroup.controls.gst_number.value" matSuffix
+                            mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ gst_number: '' })">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div> -->
+
+                    <div>
+                        <!-- <label for="credit_limit">{{'purchase.vendor.profile.form.credit_limit.label' | translate}}</label> -->
+                        <mat-form-field>
+                            <input matInput formControlName="credit_limit" type="number" id="credit_limit" min="0"
+                                placeholder="{{'purchase.vendor.profile.form.credit_limit.ph' | translate}}">
+                            <button type="button" mat-button *ngIf="formgroup.controls.credit_limit.value" matSuffix
+                                mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ credit_limit: '' })">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <!-- <label for="payment_term">{{'purchase.vendor.profile.form.payment_term.label' | translate}}</label> -->
+                        <mat-chip-list>
+                            <mat-chip [selected]="i == selectedOption" *ngFor="let x of selectionList; let i = index"
+                                (click)="selectedOption = x.key"
+                                [ngClass]="{'mat-chip-selected': x.key == selectedOption}">
+                                {{x.value}}</mat-chip>
+                        </mat-chip-list>
+                    </div>
+
+                    <div>
+                        <mat-form-field *ngIf="banks">
+                            <mat-select [placeholder]="'purchase.vendor.profile.form.bank.ph' | translate"
+                                (change)="getBankList($event.value)" [value]="bank_id">
+                                <mat-option *ngFor="let o of banks" [value]="o.id">{{o.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <mat-form-field>
+                            <input matInput [required]="formgroup.value.bank != null" formControlName="bank_acct_num"
+                                type="number" id="bank_acct_num"
+                                placeholder="{{'purchase.vendor.profile.form.bank_acct_num.ph' | translate}}">
+                            <button type="button" mat-button *ngIf="formgroup.controls.bank_acct_num.value" matSuffix
+                                mat-icon-button aria-label="Clear"
+                                (click)="formgroup.patchValue({ bank_acct_num: '' })">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div *ngIf="phone_codes">
+                        <mat-form-field>
+                            <input matInput formControlName="office_phone" id="office_phone"
+                                placeholder="{{'purchase.vendor.profile.form.office_phone.ph' | translate}}">
+                            <button type="button" mat-button *ngIf="formgroup.controls.bank_acct_num.value" matSuffix
+                                mat-icon-button aria-label="Clear"
+                                (click)="formgroup.patchValue({ bank_acct_num: '' })">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div>
+                        <mat-form-field>
+                            <input matInput formControlName="office_fax" id="office_fax"
+                                placeholder="{{'purchase.vendor.profile.form.office_fax.ph' | translate}}">
+                            <button type="button" mat-button *ngIf="formgroup.controls.office_fax.value" matSuffix
+                                mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ office_fax: '' })">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="submit-address">
+                    <div class="item-1">
+                        <strong>
+                            <p>{{'purchase.vendor.profile.form.address.label' | translate}}</p>
+                        </strong>
+                    </div>
+                    <div class="item-1">
+                        <!-- <label for="addr_line_1">{{'purchase.vendor.profile.form.address.ph.line_1' | translate}}</label> -->
+                        <mat-form-field>
+                            <input matInput formControlName="addr_line_1" maxlength="255" id="addr_line_1"
+                                placeholder="Address Line 1">
+                            <button type="button" mat-button *ngIf="formgroup.controls.addr_line_1.value" matSuffix
+                                mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ addr_line_1: '' })">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="item-1">
+                        <!-- <label for="addr_line_2">{{'purchase.vendor.profile.form.address.ph.line_2' | translate}}</label> -->
+                        <mat-form-field>
+                            <input matInput formControlName="addr_line_2" placeholder="Address Line 2">
+                            <button type="button" mat-button *ngIf="formgroup.controls.addr_line_2.value" matSuffix
+                                mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ addr_line_2: '' })">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="item-1">
+                        <!-- <label for="addr_line_3">{{'purchase.vendor.profile.form.address.ph.line_3' | translate}} </label> -->
+                        <mat-form-field>
+                            <input matInput formControlName="addr_line_3" maxlength="50" id="addr_line_3"
+                                placeholder="Address Line 3">
+                            <button type="button" mat-button *ngIf="formgroup.controls.addr_line_3.value" matSuffix
+                                mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ addr_line_3: '' })">
+                                <mat-icon>close</mat-icon>
+                            </button>
+                        </mat-form-field>
+                    </div>
+                    <div class="sub-address item-2">
+                        <div>
+                            <!-- <label for="postcode">{{'purchase.vendor.profile.form.postcode.label' | translate}} </label> -->
+                            <mat-form-field>
+                                <input matInput formControlName="postcode" maxlength="12" type="number" id="postcode"
+                                    placeholder="Postcode">
+                                <button type="button" mat-button *ngIf="formgroup.controls.postcode.value" matSuffix
+                                    mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ postcode: '' })">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <!-- <label for="city">{{'purchase.vendor.profile.form.city.label' | translate}}</label> -->
+                            <mat-form-field>
+                                <input matInput formControlName="city" maxlength="100" id="city" placeholder="City">
+                                <button type="button" mat-button *ngIf="formgroup.controls.city.value" matSuffix
+                                    mat-icon-button aria-label="Clear" (click)="formgroup.patchValue({ city: '' })">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                            </mat-form-field>
+                        </div>
+                        <div>
+                            <!-- <label for="country">{{'purchase.vendor.profile.form.country.label' | translate}}</label> -->
+                            <mat-form-field>
+                                <mat-select *ngIf="countries" placeholder="Country" (change)="getStates($event.value)"
+                                    [(value)]="selectedCountry">
+                                    <mat-option *ngFor="let cn of countries" [value]="cn.id"> {{cn.name}} </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+
+                        <div>
+                            <!-- <label for="state">{{'purchase.vendor.profile.form.state.label' | translate}}</label> -->
+                            <mat-form-field>
+                                <mat-select *ngIf="states" placeholder="State" (change)="setStates($event.value)"
+                                    [(value)]="selectedState">
+                                    <mat-option *ngFor="let st of states" [value]="st.id"> {{st.name}} </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+                <!-- *ngFor="let contactPerson of contactPersons.controls; let i = index;" -->
+                <!-- *ngFor="let contactPerson of formgroup.get('contactPersons').controls; let i = index;" -->
+                <div *ngIf="formgroup" class="submit-contact-person">
+                    <mat-accordion formArrayName="contactPersons"
+                        *ngFor="let contactPerson of formgroup.get('contactPersons').controls; let i = index;">
+                        <mat-expansion-panel [formGroupName]="i">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <!-- Contact Person-->
+                                    <input readonly matInput formControlName="email" maxlength="255" id="email"
+                                        placeholder="Email">
+                                </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <div>
+                                <h3>
+                                    <Strong>
+                                        {{'purchase.vendor.profile.form.contact_person_email.label' | translate}}
+                                    </Strong>
+                                </h3>
+                            </div>
+                            <span></span>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput formControlName="name" maxlength="255" id="name" placeholder="Name">
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput formControlName="phone" maxlength="15" id="phone"
+                                        placeholder="Phone">
+                                </mat-form-field>
+                            </div>
+                            <div>
+                                <mat-form-field>
+                                    <input matInput formControlName="alt_email" maxlength="255" id="alt_email"
+                                        placeholder="Alternative Email">
+                                </mat-form-field>
+                            </div>
+
+                        </mat-expansion-panel>
+                    </mat-accordion>
+                </div>
+            </div>
+            <mat-toolbar>
+                <span class="example-spacer"></span>
+                <button mat-raised-button [disabled]="!frm.valid"
+                    type="submit">{{'app.button.save' | translate}}</button>
+                <span class="example-spacer"></span>
+            </mat-toolbar>
+            <br>
+        </form>
+    </div>
+
+</div>

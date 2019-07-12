@@ -1,0 +1,35 @@
+<mat-toolbar color="primary" class="toolbar">
+  <span *ngIf = "isUserLogin" class="toolbar-modules-clickable">
+    <div mat-button class="toolbar-button" (click)="handleToggleLeftSidenav()">
+      <mat-icon>apps</mat-icon>
+    </div>
+  </span>
+
+  <span  class="toolbar-spacer">
+    <span (click)="refreshApp()" class="logo-icon">{{softwareName}}</span>
+  </span>
+
+  <span #toolbarmodulename class="toolbar-spacer">{{moduleName}}</span>
+  <div *ngIf = "isUserLogin">
+    <div mat-button class="toolbar-button toolbar-right-icons" (click)="handleToggleRightSidenav('Search')">
+      <!-- <mat-icon class="right-icons">search</mat-icon> -->
+    </div>
+
+    <!-- <div mat-button class="toolbar-button toolbar-right-icons" (click)="handleToggleRightSidenav('Settings')">
+      <mat-icon class="right-icons">settings</mat-icon>
+    </div> -->
+
+    <div mat-button class="toolbar-button toolbar-right-icons" (click)="handleToggleRightSidenav('Notifications')">
+      <!-- <span *ngIf="notifyNo" class="notify-badge">{{notifyNo}}</span> -->
+      <!-- <button  class="notify-badge"></button> -->
+      <span *ngIf="notifyNo" class="badge badge-pill notify-badge badge-danger">{{notifyNo}}</span>
+      <mat-icon class="right-icons">notifications</mat-icon>
+    </div>
+
+    <div mat-button class="toolbar-button toolbar-right-icons" (click)="handleToggleRightSidenav('UserProfile')">
+      <mat-icon class="right-icons">person</mat-icon>
+    </div>
+  </div>
+</mat-toolbar>
+
+<!-- <div *ngFor="let e of events">{{e}}</div> --> 

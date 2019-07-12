@@ -1,0 +1,51 @@
+<mat-toolbar *ngIf="isListAll">
+  <button class="custom-btn icon" (click)="back()">
+    <mat-icon class="icon-align">arrow_back</mat-icon>
+  </button>
+  <span class="example-spacer"></span>
+  <div class="example-icon">Notifications</div>
+  <span class="example-spacer"></span>
+</mat-toolbar>
+
+<div *ngIf = "haseToken" class="example-container">
+  <div *ngIf="notifyLists">
+    <span *ngFor="let list of notifyLists" (click)="readNotification(list.id)">
+      <!-- new inbox -->
+      <mat-card *ngIf="list.read_date != null" class="isNotRead">  
+        {{list.notification_message.title}} &nbsp; &nbsp;  
+        <span class="notifications-box read">
+          <span class="record">
+            <mat-icon>fiber_manual_record</mat-icon>
+          </span>
+          <mat-icon>email</mat-icon>
+        </span>
+        <small class="m-body">{{list.notification_message.short_msg}}</small>
+        <br>
+        <span class="received_date">{{list.sent_date | date: 'medium'}}</span>
+      </mat-card>
+      <!-- read -->
+      <mat-card *ngIf="list.read_date == null" class="isRead">{{list.notification_message.title}}:&nbsp;
+          <span class="notifications-box unread">
+              <span class="record">
+                <mat-icon>fiber_manual_record</mat-icon>
+              </span>
+              <mat-icon>email</mat-icon>
+            </span>
+        <small class="m-body">{{list.notification_message.short_msg}}</small>
+        <br>
+        <span class="received_date">{{list.sent_date | ago: time_diff}}</span>
+      </mat-card>
+    </span>
+    <!-- <div  class="more-notify"><mat-icon>arrow_drop_down</mat-icon></div> -->
+    <hr>
+    <a *ngIf="!isListAll" (click)="viewAll()" style="color: blue; cursor: pointer">View All</a>
+    <mat-paginator (page)="goto($event)" *ngIf="isListAll" [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true"></mat-paginator>
+  </div>
+
+  <!-- <div class="upload-logo">
+    <input id="logo" type="file" (change)="handleFileInput($event.target.files)" accept="image/*" multiple="false"
+      placeholder="Upload Image">
+  </div> -->
+
+</div>

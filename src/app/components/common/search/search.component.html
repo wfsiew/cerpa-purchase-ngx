@@ -1,0 +1,27 @@
+<!-- {{ data }} -->
+<div class="container">
+  <mat-form-field class="container-form">
+    <input matInput type="text" placeholder="Search in {{ showApp }}" 
+           [(ngModel)]="searchKeyword" 
+           (keypress)="search($event)">
+    <button mat-button *ngIf="searchKeyword" matSuffix mat-icon-button aria-label="Clear" (click)="searchKeyword = ''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+  <div class="container-search">
+    <button mat-icon-button (click)="initSearch()">
+      <mat-icon class="right-icons">search</mat-icon>
+    </button>
+  </div> 
+</div>
+<div class="container">
+  <mat-checkbox [(ngModel)]="useOption">Search in {{ showApp }}</mat-checkbox>
+</div>
+<div *ngIf="selectionList.length > 0 && useOption" class="container-chip mat-typography">
+  <mat-chip-list>
+    <mat-chip [selected]="i == selectedOption" 
+              *ngFor="let x of selectionList; let i = index" 
+              (click)="selectedOption = i"
+              [ngClass]="{'mat-chip-selected': i == selectedOption}">{{ x | translate }}</mat-chip>
+  </mat-chip-list>
+</div>

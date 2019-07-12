@@ -1,0 +1,42 @@
+<div class="login-container">
+  <div class="wrapper fadeInDown">
+    <mat-card id="formContent">
+      <!-- Tabs Titles -->
+      <h2 class="active"> Sign In </h2>
+      <!-- <h2 class="inactive underlineHover">Sign Up </h2> -->
+      <!-- Icon -->
+      <div class="fadeIn first logo">
+        <img id="login-logo" src="assets/images/company-logo/cerpa-logo.png" id="icon" alt="User Icon" />
+        <!-- <img src="assets/module-icon/account-tie.png"> -->
+      </div>
+      <!-- Login Form -->
+      <form [formGroup]="mform" (ngSubmit)="login()" autocomplete="off">
+        <div id="login-error-msg" *ngIf="hasError && !isLocked" class="error-message fadeInDown"> {{errorMessage}}
+        </div>
+        <div id="lock-account-msg" *ngIf="hasError && isLocked" class="error-message fadeInDown">
+          {{'login.error.lock-account' |translate}} </div>
+        <input type="text" id="login" class="fadeIn second" required formControlName="username"
+          placeholder="{{ 'login.form.username.ph' | translate }}">
+        <input #x type="password" id="password" class="fadeIn third" required formControlName="password"
+          placeholder="{{ 'login.form.password.ph' | translate }}">
+        <span class="show-password" (click)="x.type=x.type=='password'?'text':'password'">
+          <mat-icon id="hide-password-icon" *ngIf="x.type=='password'">visibility_off</mat-icon>
+          <mat-icon id="show-password-icon" *ngIf="x.type=='text'">remove_red_eye</mat-icon>
+        </span>
+        <button id="submit-login-btn" mat-raised-button color="primary" [disabled]="!mform.valid" type="submit"
+          class="fadeIn fourth login-btn">
+          <!-- <mat-icon>arrow_forward</mat-icon> -->
+          Login
+        </button>
+      </form>
+      <!-- Forgot Passowrd -->
+      <div id="formFooter">
+        <a id="forgot-password-link" class="underlineHover" (click)="forgotPassword()" style="cursor: pointer">Forgot
+          Password?</a>
+      </div>
+    </mat-card>
+    <div class="copyright-div">
+      <p>&copy; {{ 'login.copyright' | translate }}<p>
+    </div>
+  </div>
+</div>

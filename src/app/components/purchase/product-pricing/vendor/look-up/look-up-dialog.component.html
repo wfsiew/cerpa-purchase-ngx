@@ -1,0 +1,52 @@
+<div style="float: right; cursor: pointer;">
+  <a (click)="onNoClick({'confirm': false})">
+    <mat-icon>close</mat-icon>
+  </a>
+</div>
+
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span class="example-spacer"></span>
+    <span> {{'purchase.product-pricing.look-up.title' | translate}} </span>
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<br>
+<mat-card-subtitle>{{'purchase.product-pricing.look-up.content.search.search-lb' | translate}}</mat-card-subtitle>
+
+<!-- autocomplate  -->
+<form class="example-form" (ngSubmit)="setTermValue()" #frm="ngForm">
+  <mat-form-field class="example-full-width search">
+    <input type="text" (change)="setTermValue()" placeholder="{{'purchase.product-pricing.look-up.content.search.search-pl' | translate}}"
+      aria-label="Number" matInput [formControl]="searchTerm" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngIf="isSearching" value=''>
+        {{'purchase.product-pricing.look-up.content.search.searching' | translate}}</mat-option>
+      <mat-option *ngIf="isEmpty" value=''> {{'purchase.product-pricing.look-up.content.search.no-result' | translate}}
+      </mat-option>
+      <mat-option *ngFor="let item of searchResult" [value]="item">{{ item }}</mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <button hidden></button>
+</form>
+
+<span style="color: red" *ngIf="haseErr">Please insert text to search</span>
+<mat-list role="list">
+  <mat-radio-group id="lookup_id">
+    <mat-list-item *ngFor="let list of lookUpData" role="listitem">
+      <mat-radio-button matListIcon color="primary" (change)="selectedItem(list)" [value]="list"></mat-radio-button>
+      <img matListIcon [src]="list.material_picture" alt="">
+      <h3 matLine> {{list.name}}</h3>
+    </mat-list-item>
+  </mat-radio-group>
+</mat-list>
+
+
+
+<div style="text-align: center; padding: 2%;">
+  <button [disabled]="isSelected" mat-raised-button color="primary"
+    (click)="onNoClick({'confirm': true})">{{'app.button.ok' | translate}}</button>
+  <br>
+  <mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+    [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+</div>

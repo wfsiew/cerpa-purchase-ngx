@@ -1,0 +1,246 @@
+<mat-toolbar>
+  <button class="custom-btn icon" (click)="back()">
+    <mat-icon class="icon-align">arrow_back</mat-icon>
+  </button>
+  &nbsp;
+  <button *ngIf="isEdit" class="custom-btn icon" (click)="openHistory()">
+    <mat-icon class="icon-align">history</mat-icon>
+  </button>
+  <span class="example-spacer"></span>
+  <div *ngIf="!isEdit" class="example-icon">
+    {{'purchase.product-pricing.add_product_pricing.title.add'| translate}}
+  </div>
+  <div *ngIf="isEdit" class="example-icon">
+    {{'purchase.product-pricing.add_product_pricing.title.edit'| translate}}
+  </div>
+  <span class="example-spacer"></span>
+</mat-toolbar>
+<div class="container-fluid">
+  <mat-toolbar *ngIf="hasError" class="error-message">
+    <app-error></app-error>
+  </mat-toolbar>
+  <br>
+  <form [formGroup]="formgroup" #frm="ngForm" (ngSubmit)="addNewProduct(frm.value)">
+    <div class="cer-row">
+
+      <div>
+        <mat-card class="example-card">
+          <img *ngIf="material_picture" [src]="material_picture" alt="CERPA-APP">
+        </mat-card>
+      </div>
+
+      <div>
+        <mat-form-field aria-readonly="true">
+          <input matInput placeholder="Material Name" readonly [value]="material_name">
+          <input matInput hidden formControlName="material_id" required>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="number" min="0" formControlName="default_price"
+            placeholder="{{'purchase.product-pricing.add_product_pricing.labels.default_price' | translate}}" required>
+          <button type="button" mat-button *ngIf="formgroup.controls.default_price.value" matSuffix mat-icon-button
+            aria-label="Clear" (click)="formgroup.patchValue({ default_price: '' })">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-select placeholder="{{'purchase.product-pricing.add_product_pricing.labels.tax_scheme' | translate}}"
+            formControlName="tax_scheme" required>
+            <mat-option *ngFor="let _tax_ of tax_scheme" [value]="_tax_.value">
+              <span *ngIf="_tax_.value === AppConstant.TAX_SCHEME.TAX_INCLUSIVE">
+                {{'purchase.product-pricing.add_product_pricing.tax_scheme.listed_price_is_tax_inclusive' | translate}}
+              </span>
+              <span *ngIf="_tax_.value === AppConstant.TAX_SCHEME.TAXABLE">
+                {{'purchase.product-pricing.add_product_pricing.tax_scheme.subject_to_tax' | translate}}
+              </span>
+              <span *ngIf="_tax_.value === AppConstant.TAX_SCHEME.NON_TAXABLE">
+                {{'purchase.product-pricing.add_product_pricing.tax_scheme.non_taxable_item' | translate}}
+              </span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- <mat-form-field>
+          <input matInput [matDatepicker]="picker" placeholder="Validity Date" formControlName="validity_date">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field> -->
+
+        <!-- <div class="c-date">
+            <input matInput formControlName="validity_date" [matDatepicker]="validity_date" placeholder="Validity Date">
+            <mat-datepicker-toggle matSuffix [for]="validity_date"></mat-datepicker-toggle>
+            <mat-datepicker #validity_date></mat-datepicker>
+        </div> -->
+
+        <input type="date" formControlName="validity_date">
+
+
+      </div>
+
+      <div>
+        <a mat-button (click)="openDialog()">
+          <mat-icon>search</mat-icon>
+        </a>
+      </div>
+    </div>
+
+    <br>
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <span>
+          <strong> {{'purchase.product-pricing.add_product_pricing.sub_title.tier_pricing' | translate}}</strong>
+          <!-- <mat-icon mat-raised-button matTooltip="" style="color: #5959f1" custom-tooltip>help_outline</mat-icon> -->
+
+          <div class="tooltips">
+            <mat-icon mat-raised-button style="color: #5959f1">help_outline</mat-icon>
+            <div class="right">
+              <strong>{{'purchase.product-pricing.add_product_pricing.sub_title.tier_pricing' | translate}}</strong><br>
+              {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln1' | translate}} <br>
+              <strong>{{'purchase.product-pricing.add_product_pricing.tooltips.example' | translate}}</strong> <br>
+              {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln1' | translate}} <br>
+              {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln3' | translate}} <br>
+              {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln4' | translate}} <br>
+              <i></i>
+            </div>
+          </div>
+
+        </span>
+        <span class="example-spacer"></span>
+        <a mat-button (click)="addPricing()">
+          <mat-icon>add</mat-icon>
+        </a>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div *ngIf="pricings" formArrayName="pricings">
+      <div class="pricing-containt" *ngFor="let _price of formgroup.controls.pricings.controls; let i=index"
+        [formGroupName]='i'>
+        <div [ngClass]="{'mat-form-field-invalid':!frm.valid && frm.touched}">
+          <mat-form-field>
+            <input matInput formControlName="from_qty" min="1" type="number"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_quantity' | translate}}">
+            <a mat-button *ngIf="from_qty" matSuffix mat-icon-button aria-label="Clear" (click)="from_qty=''">
+              <mat-icon>close</mat-icon>
+            </a>
+          </mat-form-field>
+        </div>
+        <div [ngClass]="{'mat-form-field-invalid':!frm.valid && frm.touched}">
+          <mat-form-field>
+            <input matInput formControlName="to_qty" min="1" type="number"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_quantity' | translate}}">
+            <a mat-button *ngIf="to_qty" matSuffix mat-icon-button aria-label="Clear" (click)="to_qty=''">
+              <mat-icon>close</mat-icon>
+            </a>
+          </mat-form-field>
+          <!-- <p *ngIf = "fQty > tQty">Required</p> -->
+        </div>
+        <div>
+          <mat-form-field>
+            <input matInput type="number" min="0.5" formControlName="price"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.price' | translate}}">
+            <a mat-button *ngIf="pricing_price" matSuffix mat-icon-button aria-label="Clear" (click)="pricing_price=''">
+              <mat-icon>close</mat-icon>
+            </a>
+          </mat-form-field>
+        </div>
+        <div *ngIf="i>=0">
+          <a mat-button color="warn" (click)="removePricing(i,formgroup.value.pricings[i].id)">
+            <mat-icon>clear</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <mat-toolbar>
+      <span>
+        <strong> {{'purchase.product-pricing.add_product_pricing.sub_title.promotion' | translate}}</strong>
+
+        <div class="tooltips">
+          <mat-icon mat-raised-button style="color: #5959f1">help_outline</mat-icon>
+          <div class="right">
+            <strong> {{'purchase.product-pricing.add_product_pricing.sub_title.promotion' | translate}}</strong><br>
+            {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln1' | translate}} <br>
+            {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln2' | translate}} <br>
+            {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln3' | translate}} <br>
+            <strong>{{'purchase.product-pricing.add_product_pricing.tooltips.example' | translate}}</strong> <br>
+            {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln4' | translate}} <br>
+            {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln5' | translate}} <br>
+            <i></i>
+          </div>
+        </div>
+      </span>
+      <span class="example-spacer"></span>
+      <a mat-button (click)="addPromotion()">
+        <mat-icon>add</mat-icon>
+      </a>
+    </mat-toolbar>
+
+    <div formArrayName="promotions">
+      <div class="Promotions-containt" *ngFor="let address of promotions.controls; let i=index" [formGroupName]="i">
+        <div [ngClass]="{'mat-form-field-invalid':!frm.valid && frm.touched}">
+
+          <!-- <div class="c-date">
+            <input matInput formControlName="from_date" [matDatepicker]="from_date" placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}">
+            <mat-datepicker-toggle matSuffix [for]="from_date"></mat-datepicker-toggle>
+            <mat-datepicker #from_date></mat-datepicker>
+          </div> -->
+
+          <mat-form-field>
+            <input matInput type="date" formControlName="from_date"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}">
+            <a mat-button *ngIf="from_date" matSuffix mat-icon-button aria-label="Clear" (click)="from_date=''">
+              <mat-icon>close</mat-icon>
+            </a>
+          </mat-form-field>
+        </div>
+
+        <div [ngClass]="{'mat-form-field-invalid':!frm.valid && frm.touched}">
+
+          <mat-form-field>
+            <input matInput type="date" formControlName="to_date"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}">
+            <a mat-button *ngIf="to_date" matSuffix mat-icon-button aria-label="Clear" (click)="to_date=''">
+              <mat-icon>close</mat-icon>
+            </a>
+          </mat-form-field>
+
+          <!-- <div class="c-date">
+            <input formControlName="to_date" matInput [matDatepicker]="to_date" placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}">
+            <mat-datepicker-toggle matSuffix [for]="to_date"></mat-datepicker-toggle>
+            <mat-datepicker #to_date></mat-datepicker>
+          </div> -->
+
+        </div>
+        <div>
+          <mat-form-field>
+            <input matInput min="0" type="number" formControlName="price"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.price' | translate}}">
+            <a mat-button *ngIf="promotion_price" matSuffix mat-icon-button aria-label="Clear"
+              (click)="promotion_price=''">
+              <mat-icon>close</mat-icon>
+            </a>
+          </mat-form-field>
+        </div>
+        <div *ngIf="i>=0">
+          <a mat-button color="warn" (click)="removePromotion(i, formgroup.value.promotions[i].id)">
+            <mat-icon>clear</mat-icon>
+          </a>
+        </div>
+      </div>
+    </div>
+    <br>
+    <mat-checkbox formControlName="use_lowest_price">
+      {{'purchase.product-pricing.add_product_pricing.labels.always_use_lowest_price' | translate}}
+    </mat-checkbox>
+    <br>
+    <mat-toolbar-row>
+      <span class="example-spacer"></span>
+      <button mat-raised-button type="submit" color="primary" [disabled]="!frm.valid || !frm.dirty">
+        {{'app.button.save' | translate}} </button>
+      <span class="example-spacer"></span>
+    </mat-toolbar-row>
+  </form>
+</div>

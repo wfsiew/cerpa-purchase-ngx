@@ -1,0 +1,355 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+// color maps
+
+$cerpa-color-primary: (
+  50: #8a80c7,
+  100: #7a6ec0,
+  200: #6a5db8,
+  300: #5a4dae,
+  400: #51459d,
+  500: #483D8B,
+  600: #3f3579,
+  700: #362d68,
+  800: #2c2656,
+  900: #231e44,
+  A100: #9b92cf,
+  A200: #aba4d7,
+  A400: #bbb5df,
+  A700: #1a1632,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-secondary: (
+  50: #0e0d15,
+  100: #191724,
+  200: #232134,
+  300: #2e2b43,
+  400: #393553,
+  500: #433f62,
+  600: #595382,
+  700: #635d91,
+  800: #6f699f,
+  900: #7e78a9,
+  A100: #595382,
+  A200: #4E4972,
+  A400: #433f62,
+  A700: #8d88b3,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-contrast: (
+  50: #ffd587,
+  100: #ffcc6e,
+  200: #ffc354,
+  300: #ffba3b,
+  400: #ffb121,
+  500: #FFA808,
+  600: #ed9a00,
+  700: #d48900,
+  800: #ba7900,
+  900: #a16800,
+  A100: #ffdea1,
+  A200: #ffe7ba,
+  A400: #fff0d4,
+  A700: #875800,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-light: (
+  50: #ffffff,
+  100: #fbfbfb,
+  200: #efeeef,
+  300: #e2e1e2,
+  400: #d6d4d6,
+  500: #C9C7C9,
+  600: #bcbabc,
+  700: #b0adb0,
+  800: #a3a0a3,
+  900: #979397,
+  A100: #ffffff,
+  A200: #ffffff,
+  A400: #ffffff,
+  A700: #8a868a,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-dark: (
+  50: #848484,
+  100: #777777,
+  200: #6a6a6a,
+  300: #5d5d5d,
+  400: #515151,
+  500: #444444,
+  600: #373737,
+  700: #2a2a2a,
+  800: #1e1e1e,
+  900: #111111,
+  A100: #909090,
+  A200: #9d9d9d,
+  A400: #aaaaaa,
+  A700: #040404,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-red: (
+  50: #ff4d79,
+  100: #ff3366,
+  200: #ff1a53,
+  300: #ff0040,
+  400: #e60039,
+  500: #CC0033,
+  600: #b3002d,
+  700: #990026,
+  800: #800020,
+  900: #660019,
+  A100: #ff668c,
+  A200: #ff809f,
+  A400: #ff99b3,
+  A700: #4d0013,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-green: (
+  50: #b0dfb0,
+  100: #9ed89e,
+  200: #8cd18c,
+  300: #79ca79,
+  400: #67c267,
+  500: #55bb55,
+  600: #46b046,
+  700: #3f9e3f,
+  800: #388c38,
+  900: #317931,
+  A100: #c2e7c2,
+  A200: #d4eed4,
+  A400: #e7f5e7,
+  A700: #296729,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-blue: (
+  50: #4d79ff,
+  100: #3366ff,
+  200: #1a53ff,
+  300: #0040ff,
+  400: #0039e6,
+  500: #0033CC,
+  600: #002db3,
+  700: #002699,
+  800: #002080,
+  900: #001966,
+  A100: #668cff,
+  A200: #809fff,
+  A400: #99b3ff,
+  A700: #00134d,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+$cerpa-color-orange: (
+  50: #e2ae9e,
+  100: #dc9d8a,
+  200: #d68d77,
+  300: #d07d63,
+  400: #ca6c50,
+  500: #C45C3C,
+  600: #b15336,
+  700: #9d4930,
+  800: #8a402a,
+  900: #763724,
+  A100: #e8beb1,
+  A200: #edcfc5,
+  A400: #f3dfd9,
+  A700: #632e1e,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: white,
+    600: white,
+    700: white,
+    800: $white-87-opacity,
+    900: $white-87-opacity,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+// palettes
+$cerpa-theme-primary: mat-palette($cerpa-color-primary, 500, 100, 900);
+$cerpa-theme-secondary: mat-palette($cerpa-color-secondary, 500, 100, 900);
+$cerpa-theme-contrast: mat-palette($cerpa-color-contrast, 500, 100, 800);
+$cerpa-theme-background: mat-palette($cerpa-color-light, 300, 50, 600);
+$cerpa-theme-foreground: mat-palette($cerpa-color-dark, 100, 50, 600);
+$cerpa-theme-dark: mat-palette($cerpa-color-dark, 500, 100, 900);
+$cerpa-theme-light: mat-palette($cerpa-color-light, 500, 100, 900); 
+
+// applied into cerpa-theme
+$cerpa-theme: mat-light-theme($cerpa-theme-primary, $cerpa-theme-secondary, $cerpa-theme-contrast);
+
+$cerpa-background: map-get($cerpa-theme, background);
+$cerpa-background: map-merge($cerpa-background, ($cerpa-theme-background));
+$cerpa-theme: map-merge($cerpa-theme, (background: $cerpa-background));
+
+$cerpa-foreground: map-get($cerpa-theme, foreground);
+$cerpa-foreground: map-merge($cerpa-foreground, ($cerpa-theme-foreground));
+$cerpa-theme: map-merge($cerpa-theme, (foreground: $cerpa-foreground));
+
+$cerpa-theme: map-merge($cerpa-theme, (secondary: $cerpa-theme-secondary));
+$cerpa-theme: map-merge($cerpa-theme, (contrast: mat-palette($cerpa-color-contrast, 500, 100, 900)));
+$cerpa-theme: map-merge($cerpa-theme, (promotion: mat-palette($cerpa-color-orange, 500)));
+$cerpa-theme: map-merge($cerpa-theme, (quantity: $cerpa-theme-contrast));
+$cerpa-theme: map-merge($cerpa-theme, (currency: $cerpa-theme-contrast));
+$cerpa-theme: map-merge($cerpa-theme, (selector: $cerpa-theme-primary));
+$cerpa-theme: map-merge($cerpa-theme, (dull: mat-palette($cerpa-color-dark, 600)));
+$cerpa-theme: map-merge($cerpa-theme, (disabled:  mat-palette($cerpa-color-light, 400)));
+$cerpa-theme: map-merge($cerpa-theme, (border: mat-palette($cerpa-color-dark, 400)));
+$cerpa-theme: map-merge($cerpa-theme, (alert: mat-palette($cerpa-color-red, 500)));
+$cerpa-theme: map-merge($cerpa-theme, (error: mat-palette($cerpa-color-red, 600)));
+$cerpa-theme: map-merge($cerpa-theme, (notice: mat-palette($cerpa-color-blue, 500)));
+$cerpa-theme: map-merge($cerpa-theme, (info: mat-palette($cerpa-color-green, 500)));
+
+
+@mixin cerpa-theme($theme) {
+  $primary: map-get($theme, primary);
+  $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: $cerpa-theme-foreground;
+  $info: map-get($theme, info);
+  $contrast: map-get($theme, contrast);
+  $border: map-get($theme, border);
+  .statusIcon {
+    color: map-get($border, default);
+    &:active {
+      color: red;
+    }
+  }
+}
+
+@include angular-material-theme($cerpa-theme);
+@include cerpa-theme($cerpa-theme);

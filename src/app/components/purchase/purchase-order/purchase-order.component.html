@@ -1,0 +1,228 @@
+<app-tab id="po-tabs" [tabs]="tabs" [selected]="'description'"></app-tab>
+<mat-toolbar>
+  <span class="example-spacer"></span>
+  <div class="custom-search-input">
+    <input id="search-po-input" class="search-box" (keyup)="searchPO($event)" placeholder="Search" [value]="keyword">
+    <mat-icon class="search-icon">search</mat-icon>
+  </div>
+</mat-toolbar>
+<mat-toolbar id="po-error-toolbar" *ngIf="hasError" class="error-message">
+  <app-error id="po-error-msg"></app-error>
+</mat-toolbar>
+<div class="custom-section">
+  <mat-card class="custom-card">
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <p>{{'purchase.purchase-request.list-header.issue-date' | translate}}</p>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-radio-group id="po-date-group" class="row" name="dtList" fxLayout="column" [(ngModel)]="chosenDate"
+          (change)="setDateType($event)">
+          <mat-radio-button id="po-date-type-{{i}}" class="col" *ngFor="let dt of dateType; let i=index" [value]="dt.name" name="dtList">
+            {{ dt.name}}
+          </mat-radio-button>
+        </mat-radio-group>
+        <div id="single-date-container" class="custom-date-container" *ngIf="chosenDate === 'Single'">
+          <input id="single-date-input" type="date" class="custom-date"
+            placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
+            (change)="setFromDate($event)" [value]="fromDate">
+        </div>
+        <div id="range-date-container" *ngIf="chosenDate === 'Range'">
+          <div class="custom-date-container">
+            <label for="">From</label>
+            <input id="range-date-from-input" type="date" class="custom-date"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
+              (change)="setFromDate($event)" [value]="fromDate" max="{{toDate}}">
+          </div>
+          <div id="date-to-container" class="custom-date-container" *ngIf="fromDate">
+            <label for="">To</label>
+            <input id="date-to-input" type="date" class="custom-date"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}"
+              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}">
+          </div>
+          <div class="custom-date-container disabled" *ngIf="!fromDate">
+            <label for="">To</label>
+            <input id="disabled-date-to-input" type="date" class="custom-date" disabled
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}"
+              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="custom-card-border">
+      <div class="custom-card-title">
+        <p>{{'purchase.purchase-request.list-header.status' | translate}}</p>
+      </div>
+      <div class="custom-chip-wrapper">
+        <mat-chip-list multiple="true">
+          <span class="custom-chip-list" *ngFor="let x of filterSelectionList; let i = index;">
+            <mat-chip id="po-status-{{i}}" *ngIf = "x.key !=1 && x.key !=4" color="accent" (click)="setSearchFilter(i)" [selected]="getSelected(i)">
+              <span class="custom-chip-text">{{x.value}}</span>
+            </mat-chip>
+          </span>
+        </mat-chip-list>
+      </div>
+    </div>
+    <div id="po-reset-container" *ngIf="isSearch">
+      <button id="po-reset-btn" class="custom-btn outline" (click)="resetFilter()">
+        {{ 'app.action.reset_filter' | translate}}
+      </button>
+    </div>
+  </mat-card>
+  <div id="check-po" class="mat-elevation-z8">
+    <mat-paginator id="po-paginator" [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
+      [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+    <mat-table *ngIf="dataSource.data.length > 0 && !isVendor" id="po-table" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)"
+      matSortDisableClear>
+      <ng-container matColumnDef="id">
+        <mat-header-cell id="order-id-header" class="order-id-header" mat-header-cell *matHeaderCellDef>
+          {{'purchase.purchase-order.po-listing.po-th.id' |translate}}
+        </mat-header-cell>
+        <mat-cell id="order-id-{{i}}" class="order-id-cell" *matCellDef="let element; let i = index"><span
+            class="order-id-text">{{element.order_id}}</span>
+          <span id="po-thumbnail-{{i}}" class="po-thumbnail" *ngFor="let im of element.materials; let i = index">
+            <img id="all-product-shown-{{i}}" *ngIf="element.materials.length < 4" [src]="im.picture"
+              matTooltip="{{ im.name }}">
+            <img id="max-product-shown-{{i}}" *ngIf="element.materials.length > 3 && i < 3" [src]="im.picture"
+              matTooltip="{{ im.name }}">
+            <div id="show-more-items" class="more-items-span" *ngIf="element.materials.length > 3 && i==2">
+              <mat-icon id="viewPR-btn" class="more-items-icon" matTooltip="More items..." (click)="viewPR(element.id)"
+                style="cursor: pointer">more_horiz
+              </mat-icon>
+            </div>
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="vendor">
+        <mat-header-cell class="vendor-header" mat-header-cell *matHeaderCellDef mat-sort-header="vendor">
+          {{'purchase.purchase-order.po-listing.po-th.vendor' |translate}}
+        </mat-header-cell>
+        <mat-cell id="vendor-{{i}}" class="vendor-cell" *matCellDef="let element; let i = index">
+          <span *ngIf="!isVendor">{{element.vendor.company_name}}</span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="issued_date">
+        <mat-header-cell class="issued-date-header" mat-header-cell *matHeaderCellDef mat-sort-header="issued_date">
+          {{'purchase.purchase-order.po-listing.po-th.issue-date' |translate}}</mat-header-cell>
+        <mat-cell id="issued-date-{{i}}" class="issued-date-cell" *matCellDef="let element; let i = index">
+          {{element.issued_date  | ago :time_diff}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <mat-header-cell class="status-header" *matHeaderCellDef mat-sort-header="status">
+          {{'purchase.purchase-order.po-listing.po-th.status' |translate}} </mat-header-cell>
+        <!-- 
+          enum: 
+          0 - pending, 
+          1 - new, 
+          2- in progress, 
+          3 - Delivering, 
+          4 - Delivered, 
+          5 - Completed, 
+          6 - Cancelled, 
+          7 - rejected 
+        -->
+
+        <mat-cell id="status-{{i}}" class="status-cell" *matCellDef="let element; let i = index">
+          <span>{{getStatus(element.status) | translate}}</span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell class="action-header" *matHeaderCellDef>&nbsp;
+        </mat-header-cell>
+        <mat-cell id="action-{{i}}" class="action-cell" *matCellDef="let element; let i = index">
+          <a id="more-action-btn-{{i}}" class="action-btn" mat-button [matMenuTriggerFor]="menu">
+            <mat-icon class="action-icon">more_horiz</mat-icon>
+          </a>
+          <!-- ** -->
+          <mat-menu #menu="matMenu">
+            <button id="view-new-po-btn-{{i}}" mat-menu-item (click)="viewNewPO(element)">
+              {{'purchase.purchase-order.contax-box.view-po' |translate}}</button>
+            <button id="view-pr-btn-{{i}}" mat-menu-item (click)="viewPR(element.id)">
+              {{'purchase.purchase-request.contax-box.view-pr' | translate}}</button>
+            <button id="update-delivery-status-btn-{{i}}" mat-menu-item (click)="updateDeliveryStatus(element)"
+              *ngIf="element.action_status.delivery_status === 1">
+              {{'purchase.purchase-order.view-po.buttons.update-delivery-status' | translate}}</button>
+            <button id="invoice-do-btn-{{i}}" mat-menu-item (click)="invoiceDO(element.id)"
+              *ngIf="element.action_status.invoice_status === 1">
+              {{'purchase.purchase-order.view-po.buttons.invoice' |translate}}</button>
+            <button id="download-po-btn-{{i}}" mat-menu-item (click)="downloadPO(element)">
+              {{'purchase.purchase-order.contax-box.download-pdf' |translate}}</button>
+          </mat-menu>
+          <!-- ** -->
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row class="header-row" *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row id="po-row-{{i}}" class="cell-row" *matRowDef="let row; columns: displayedColumns; let i = index"></mat-row>
+    </mat-table>
+
+    <mat-table *ngIf="dataSource.data.length > 0 && isVendor" id="vendor-po-table" [dataSource]="dataSource" matSort (matSortChange)="sortData($event)">
+      <ng-container matColumnDef="order_id">
+        <mat-header-cell class="order-id-header-full" mat-header-cell *matHeaderCellDef mat-sort-header="order_id">
+          {{'purchase.purchase-order.po-listing.po-th.id' |translate}} </mat-header-cell>
+        <mat-cell class="order-id-cell-full" *matCellDef="let element; let i = index"> {{element.order_id}}
+          <span class="po-thumbnail" *ngFor="let im of element.materials; let i = index">
+            <img id="v-all-product-shown-{{i}}" *ngIf="element.materials.length < 4" [src]="im.picture" matTooltip="{{ im.name }}">
+            <img id="v-max-product-shown-{{i}}" *ngIf="element.materials.length > 3 && i < 3" [src]="im.picture" matTooltip="{{ im.name }}">
+            <div id="v-show-more-items" class="more-items-span" *ngIf="element.materials.length > 3 && i==2">
+              <mat-icon class="more-items-icon" matTooltip="More items...">more_horiz</mat-icon>
+            </div>
+          </span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="issued_date">
+        <mat-header-cell class="issued-date-header" mat-header-cell *matHeaderCellDef mat-sort-header="issued_date">
+          {{'purchase.purchase-order.po-listing.po-th.issue-date' |translate}} </mat-header-cell>
+        <mat-cell id="v-issued-date-{{i}}" class="issued-date-cell" *matCellDef="let element; let i = index">
+          {{element.issued_date | ago : time_diff}}
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <mat-header-cell class="status-header" mat-header-cell *matHeaderCellDef mat-sort-header="status">
+          {{'purchase.purchase-order.po-listing.po-th.status' |translate}} </mat-header-cell>
+        <mat-cell id="v-status-{{i}}" class="status-cell" *matCellDef="let element; let i = index">
+          <span>{{getStatus(element.status) | translate}}</span>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <mat-header-cell class="action-header" mat-header-cell *matHeaderCellDef>
+          {{'purchase.purchase-order.po-listing.po-th.action' |translate}} </mat-header-cell>
+        <mat-cell id="v-action-{{i}}" class="action-cell" *matCellDef="let element; let i = index">
+          <a id="v-more-action-btn-{{i}}" class="action-btn" mat-button [matMenuTriggerFor]="menu">
+            <mat-icon class="action-icon">more_horiz</mat-icon>
+          </a>
+          <!-- ** -->
+          <mat-menu #menu="matMenu">
+            <button id="v-view-new-po-btn-{{i}}" mat-menu-item (click)="viewNewPO(element)">
+              {{'purchase.purchase-order.contax-box.view-po' |translate}} </button>
+            <button id="v-view-pr-btn-{{i}}" *ngIf="element.action_status.delivery_status === 1" mat-menu-item
+              (click)="viewDeliveryOrder(element)"> {{'purchase.purchase-order.contax-box.do' |translate}} </button>
+            <button id="v-update-delivery-status-btn-{{i}}" mat-menu-item *ngIf="element.action_status.invoice_status === 1" (click)="invoiceDO(element.id)">
+              {{'purchase.purchase-order.contax-box.invoice' |translate}} </button>
+            <button id="v-invoice-do-btn-{{i}}" mat-menu-item *ngIf="element.action_status.invoice_delivered_status === 1"
+              (click)="invoiceDelivered(element.id)">
+              {{'purchase.purchase-order.view-po.buttons.invoice-delivered' |translate}} </button>
+            <button id="v-download-po-btn-{{i}}" mat-menu-item (click)="downloadPO(element)">
+              {{'purchase.purchase-order.contax-box.download-pdf' |translate}} </button>
+            <!-- <button mat-menu-item (click)="viewNewPO(element)"> View Purchase Order </button>
+            <button mat-menu-item (click)="viewNewPO(element)"> View Purchase Order </button> -->
+
+          </mat-menu>
+          <!-- ** -->
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row class="header-row" *matHeaderRowDef="displayedVendorColumns"></mat-header-row>
+      <mat-row id="v-po-row-{{i}}" class="cell-row" *matRowDef="let row; columns: displayedVendorColumns; let i = index"></mat-row>
+    </mat-table>
+    <div *ngIf="dataSource.data.length == 0">&nbsp;&nbsp;{{ noRecordMsg }}</div>
+  </div>
+</div>

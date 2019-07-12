@@ -1,0 +1,67 @@
+.toolbar-icon {
+  margin: 0;
+  padding: 0;
+}
+  
+.toolbar-spacer {
+  flex: 1 1 auto;
+  padding-left: 25px;
+  padding-right: 25px;
+  font-size: 16px;
+  font-style: normal;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.logo-icon{
+  cursor: pointer;
+}
+
+.toolbar {
+  margin: 0;
+  padding: 0;
+  border: none;
+  height: 40px;
+}
+
+.toolbar-button {
+  background-color: inherit;
+  border: none;
+  color: none;
+  padding: 0;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.toolbar-modules-clickable {
+  font-size: 16px;
+  background-color: black;
+  width: auto;
+  height: inherit;
+  padding: 9px;
+}
+
+.toolbar-settings-button {
+  font-size: 18px;
+}
+
+.toolbar-modules-icon-area {
+  background-color: black;
+  width: auto;
+  height: inherit;
+  margin: 0 5px;
+}
+
+.toolbar-right-icons {
+  background-color: inherit;
+  padding: 10px 3px 0 3px;
+  height: inherit;
+}
+
+.right-icons {
+  padding: 5px 2px;
+}
+.notify-badge{
+  font-size: 12px;
+  position: absolute;
+  margin-left: 10px;
+}

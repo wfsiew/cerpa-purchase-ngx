@@ -1,0 +1,37 @@
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  clear: both;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.container-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.container-form > * {
+  width: 100%;
+}
+
+.container-search {
+  background: inherit;
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+.container-chip {
+  margin-left: 14px;
+}
+
+mat-chip {
+  border: 1px solid rgb(46, 117, 182);
+  margin-top: 5px;
+}
+
+.mat-chip-selected {
+  border: 1px solid black !important;
+}

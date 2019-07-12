@@ -1,0 +1,33 @@
+.look_up_header{
+    display: grid;
+    padding: 12px;
+    background-color: lightgray;text-align: center;
+    color: white;
+}
+.example-card{
+    padding: 0px;
+    margin: 0px;
+}
+.look_up_header{
+    margin: 0px;
+    background-color: gray;
+}
+.search{
+    width: 96%;
+    margin-right: 10px;
+    border: 1px solid #cecece5d;
+    font-size: 16px;
+    padding: 12px;
+    background-origin: unset;
+}
+.mat-dialog-container{
+    padding-top: 0px;
+    margin: 0px;
+}
+
+img{
+    max-width: 50px;
+}
+.mat-dialog-container{
+    padding: 0px;
+}

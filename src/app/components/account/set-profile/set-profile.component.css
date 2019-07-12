@@ -1,0 +1,64 @@
+
+.upload-image {
+    max-width: 100%;
+    object-fit: contain;
+    width: 200px;
+}
+.example-spacer {
+    flex: 1 1 auto;
+  }
+.submit-company{
+    margin: 1%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto;
+}
+.submit-company div>*{
+    width: 98%;
+}
+.form-input{
+    width: 100%;
+}
+.submit-address{
+    margin: 1%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto;
+}
+.submit-address div>*{
+    width: 98%;
+}
+
+.submit-contact-person{
+    margin: 1%;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: auto auto;
+    border: 1px solid lightgray;
+    padding: 2%;
+}
+.submit-contact-person div>*{
+    width: 98%;
+}
+.item-1{
+    display: grid;
+    grid-template-columns: 100%;
+}
+.item-2{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+.item-2 >*{
+    margin-left: 2%;
+    margin-right: 2%;
+}
+.container-plus-minus{
+    min-width: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+  }
+.container-plus-minus >*{
+    cursor: pointer;
+    border-radius: 12px;
+    margin: 2px;
+  }

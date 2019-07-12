@@ -1,0 +1,23 @@
+<button mat-button *ngIf="materialAction!='view'"
+  class="back-button"
+  (click)="materialAction='view'">
+  <mat-icon>keyboard_backspace</mat-icon>
+  <i>Back</i>
+</button>
+
+<app-list-material *ngIf="materialAction == 'listMaterial'"
+  (materialAction) = "setAction($event)"></app-list-material>
+
+<app-view-material *ngIf="materialAction == 'viewMaterial'"
+  (materialAction) = "setAction($event)"></app-view-material>
+
+<app-new-material *ngIf="materialAction == 'newMaterial'"
+  (materialAction) = "setAction($event)"></app-new-material>
+
+<app-modify-material *ngIf="materialAction == 'modifyMaterial'"
+  (materialAction) = "setAction($event)"></app-modify-material>
+
+<app-material-stock *ngIf="materialAction == 'listStock'"></app-material-stock>
+
+
+  

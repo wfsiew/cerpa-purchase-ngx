@@ -1,0 +1,95 @@
+.container-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-form > * {
+  width: 100%;
+}
+
+.details {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+header {
+  background: rgb(242, 242, 242);
+  text-align: center;
+  height: 40px;
+}
+
+header > h4 {
+  padding-top: 8px;
+}
+
+.img {
+  float: left;
+  border: 1px solid black;
+  max-width: 200px;
+  width: 200px;
+  height: 200px;
+  margin-top: 10px;
+}
+.img>img{
+  cursor: pointer;
+  max-width: 100%;
+  min-width: 100%;
+}
+
+.imgitem {
+  width: inherit;
+  height: inherit;
+}
+
+.data {
+  clear: right;
+  padding-left: 250px;
+  margin-top: 10px;
+}
+
+.data-inner {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 10px;
+}
+
+.company {
+  clear: both;
+}
+
+.address {
+  clear: both;
+  margin-top: 20px;
+}
+
+.contact {
+  clear: both;
+  margin-top: 20px;
+}
+
+.contacts {
+  border: 1px solid black; 
+}
+.contacts >*{
+  min-width: 100%;
+}
+.contact-inner {
+  display: grid;
+}
+.contact-inner>*{
+  margin-right: 15px;
+}
+.container-plus-minus{
+  min-width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+}
+.container-plus-minus >*{
+  cursor: pointer;
+  align-items: center;
+  text-justify: auto;
+  border-radius: 12px;
+  margin: 2px;
+}

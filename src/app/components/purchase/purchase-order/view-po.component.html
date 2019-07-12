@@ -1,0 +1,241 @@
+<mat-toolbar *ngIf="viewPO">
+  <button class="custom-btn icon" (click)="back()">
+    <mat-icon class="icon-align">arrow_back</mat-icon>
+  </button>
+  &nbsp;
+  <button class="custom-btn icon" (click)="downloadPO()">
+    <mat-icon class="icon-align">save_alt</mat-icon>
+  </button>
+  <span class="example-spacer"></span>
+  {{'purchase.purchase-order.view-po.title' | translate}}
+  <span class="example-spacer"></span>
+</mat-toolbar>
+<div class="container-fluid" id="DO">
+  <span *ngIf="viewPO">
+    <mat-toolbar class="view-po-toolbar" *ngIf="viewPO.status === 0 && isvendor === true">
+      <mat-form-field class="example-full-width">
+        <form #frm="ngForm">
+          <input type="text" maxlength="150" placeholder="Reject Reason" matInput [matAutocomplete]="auto"
+            [formControl]="rejectReasonInput">
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option class="select-reason" *ngFor="let reason of rejectRList" [value]="reason.name">
+              {{reason.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </form>
+      </mat-form-field>
+      &nbsp;
+      <span class="example-spacer"></span>
+      <div class="reason-resp-btn">
+        <button mat-raised-button color="primary" (click)="acceptPurchaseOrder(viewPO)">{{'purchase.purchase-order.view-po.buttons.accept'|
+          translate}}</button> <br> <button [disabled] = "rejectReasonInput.value ==''" mat-raised-button color="warn" (click)="rejectPurchaseOrder(viewPO)">
+          {{'purchase.purchase-order.view-po.buttons.reject' | translate}}</button>
+      </div>
+    </mat-toolbar>
+  </span>
+
+  <br>
+  <div class="" *ngIf="viewPO">
+
+    <div *ngIf="viewPO.reject_reason != null">
+      <label style="color:red"> <strong>Rejected :</strong> &nbsp;&nbsp;
+        {{viewPO.reject_reason}} </label>
+      <hr>
+    </div>
+
+    <table class="table table-bodered" *ngIf="viewPO.vendor">
+      <tr>
+        <td> <span class="text-muted">{{'purchase.purchase-order.view-po.labels.po-reference' | translate}}</span>: {{viewPO.order_id |uppercase}} </td>
+        <td> <span class="text-muted">{{'purchase.purchase-order.view-po.labels.status' | translate |
+          titlecase}}:</span> 
+          <span *ngIf="viewPO.status ==0">{{'purchase.purchase-order.po-view-status.0' | translate |
+            titlecase}}</span>
+          <span *ngIf="viewPO.status ==1">{{'purchase.purchase-order.po-view-status.1' | translate |
+            titlecase}}</span>
+          <span *ngIf="viewPO.status ==2">{{'purchase.purchase-order.po-view-status.2' | translate |
+            titlecase}}</span>
+          <span *ngIf="viewPO.status ==3">{{'purchase.purchase-order.po-view-status.3' | translate |
+            titlecase}}</span>
+          <span *ngIf="viewPO.status ==4">{{'purchase.purchase-order.po-view-status.4' | translate |
+            titlecase}}</span>
+          <span *ngIf="viewPO.status ==5">{{'purchase.purchase-order.po-view-status.5' | translate |
+            titlecase}}</span>
+          <span *ngIf="viewPO.status ==6">{{'purchase.purchase-order.po-view-status.6' | translate |
+            titlecase}}</span>
+          <span *ngIf="viewPO.status ==7">{{'purchase.purchase-order.po-view-status.7' | translate |
+            titlecase}}</span>
+        </td>
+        <td> <span class="text-muted text-small">Updated by:</span> {{viewPO.issued_by.name}} ({{viewPO.modified_date | date:'mediumDate'}})</td>
+      </tr>
+
+      <!-- <tr *ngIf = "viewPO.status == 6">
+        <td>{{viewPO.issued_by.name}} </td>
+        <td>{{viewPO.created_date |ago : viewPO.time_diff}} </td>
+        <td>{{viewPO.modified_by.name}}</td>
+        <td>{{viewPO.modified_date |ago : viewPO.time_diff}}</td>
+      </tr>
+
+      <tr>
+        <td rowspan="6"> <strong> {{'purchase.purchase-order.view-po.labels.to' | translate |
+            titlecase}} </strong> </td>
+        <td>{{viewPO.vendor.company_name | titlecase}} &nbsp; </td>
+      </tr>
+      <tr *ngIf = "viewPO.vendor.vendor_address.addr_line_1 != ''">
+        <td>{{viewPO.vendor.vendor_address.addr_line_1}} &nbsp; </td>
+      </tr>
+      <tr *ngIf = "viewPO.vendor.vendor_address.addr_line_2 != ''">
+        <td>{{viewPO.vendor.vendor_address.addr_line_2}} &nbsp; </td>
+      </tr>
+      <tr *ngIf = "viewPO.vendor.vendor_address.addr_line_3 != ''">
+        <td>{{viewPO.vendor.vendor_address.addr_line_3}} &nbsp; </td>
+      </tr>
+      <tr>
+        <td>{{viewPO.vendor.vendor_address.postcode}} &nbsp; </td>
+        <td>{{viewPO.vendor.vendor_address.city}} &nbsp; </td>
+      </tr>
+      <tr>
+        <td>{{viewPO.vendor.vendor_address.state.name}} &nbsp; </td>
+        <td>{{viewPO.vendor.vendor_address.country.name}} &nbsp; </td>
+      </tr> -->
+
+    </table>
+
+    <strong>
+        <p class="text-muted font-italic">
+            {{'purchase.delivery-order.labels.supplier' | translate | titlecase}}
+        </p>
+    </strong>
+
+    <div class="p-3 table-bordered">
+        <span>{{viewPO.vendor.company_name | titlecase}}</span> <br>
+        <span>{{viewPO.vendor.biz_reg_num}}</span> <br>
+        <span
+            *ngIf="viewPO.vendor.vendor_address.addr_line_1 != ''">{{viewPO.vendor.vendor_address.addr_line_1}}</span><br>
+        <span
+            *ngIf="viewPO.vendor.vendor_address.addr_line_2 != ''">{{viewPO.vendor.vendor_address.addr_line_2}}<br></span>
+        <span
+            *ngIf="viewPO.vendor.vendor_address.addr_line_3 != ''">{{viewPO.vendor.vendor_address.addr_line_3}}<br></span>
+        <span>{{viewPO.vendor.vendor_address.postcode}},</span>
+        <span>{{viewPO.vendor.vendor_address.city}},</span>
+        <span>{{viewPO.vendor.vendor_address.state.name}},</span> <br>
+        <!-- <span>{{viewPO.vendor.vendor_address.country.name}}</span> <br> -->
+        <!-- <span>{{'purchase.delivery-order.labels.tel' | translate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{viewPO.vendor.office_phone}}</span> <br>
+        <span>{{'purchase.delivery-order.labels.sst_no' | translate}}: {{viewPO.vendor.tax_num}}</span> -->
+    </div>
+
+    <br>
+
+    <table class="table table-bodered text-truncate">
+      <tr>
+        <th [attr.rowspan]="viewPO.po_products.length + 3" colspan="2"> <strong>{{'purchase.purchase-order.view-po.labels.item-list'
+            | translate |
+            titlecase}} </strong> </th>
+        <th colspan="2">{{'purchase.purchase-order.view-po.labels.item-sub-labels.item' | translate |
+          titlecase}} </th>
+        <th colspan="2">{{'purchase.purchase-order.view-po.labels.item-sub-labels.quantity' | translate |
+          titlecase}} </th>
+        <th colspan="2">{{'purchase.purchase-order.view-po.labels.item-sub-labels.unit-price' | translate |
+          titlecase}} </th>
+        <th colspan="2"> {{'purchase.purchase-order.view-po.labels.item-sub-labels.amount' | translate |
+          titlecase}} </th>
+      </tr>
+
+      <tr *ngFor="let item of viewPO.po_products">
+        <td colspan="2">{{item.material.name | titlecase}} </td>
+        <td colspan="2">{{item.quantity}} </td>
+        <td colspan="2" style="text-align: right;"> {{item.price | currency:'RM'}} </td>
+        <td colspan="2" style="text-align: right;">{{item.subtotal | currency:'RM'}} </td>
+      </tr>
+      <tr>
+        <td colspan="6">
+          <Strong>{{'purchase.purchase-order.view-po.labels.total' | translate |
+            titlecase}}</Strong>
+        </td>
+        <td colspan="3" style="text-align: right;">
+          {{viewPO.grand_total | currency:'RM'}}
+        </td>
+      </tr>
+    </table>
+
+    <p class="text-muted font-italic">
+      <strong>{{'purchase.purchase-order.view-po.labels.deliver-to' | translate | titlecase}}</strong> 
+    </p> 
+
+    <div class="p-3 table-bordered text-truncate">
+        <span *ngIf="viewPO.issued_by.company.name">{{viewPO.issued_by.company.name}}</span> <br>
+        <span *ngIf="viewPO.issued_by.company.biz_reg_num">{{viewPO.issued_by.company.biz_reg_num}}</span> <br>
+        <span *ngIf="viewPO.issued_by.company.address.addr_line_1">{{viewPO.issued_by.company.address.addr_line_1}}</span> <br>
+        <span *ngIf="viewPO.issued_by.company.address.addr_line_2">{{viewPO.issued_by.company.address.addr_line_2}}<br></span>
+        <span *ngIf="viewPO.issued_by.company.address.addr_line_3">{{viewPO.issued_by.company.address.addr_line_3}}<br></span>
+        <span *ngIf="viewPO.issued_by.company.address.postcode">{{viewPO.issued_by.company.address.postcode}},</span>
+        <span *ngIf="viewPO.issued_by.company.address.city">{{viewPO.issued_by.company.address.city}},</span>
+        <span *ngIf="viewPO.issued_by.company.address.state.name">{{viewPO.issued_by.company.address.state.name}}</span>
+        <!-- <span *ngIf="viewPO.issued_by.company.address.country.name">{{viewPO.issued_by.company.address.country.name}},</span> -->
+    </div>
+    <table hidden class="table table-bodered">
+      <tr>
+        <td *ngIf="viewPO.issued_by.company.name" colspan="4">{{viewPO.issued_by.company.name }} Just for</td>
+      </tr>
+
+      <tr *ngIf = "viewPO.issued_by.company.address.addr_line_1 != ''">
+        <td colspan="4">{{viewPO.issued_by.company.address.addr_line_1}} &nbsp; </td>
+      </tr>
+      <tr *ngIf = "viewPO.issued_by.company.address.addr_line_2 != ''">
+        <td colspan="4">{{viewPO.issued_by.company.address.addr_line_2}} &nbsp;</td>
+      </tr>
+      <tr *ngIf = "viewPO.issued_by.company.address.addr_line_3 != ''">
+        <td colspan="4">{{viewPO.issued_by.company.address.addr_line_3}} &nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2"> {{viewPO.issued_by.company.address.postcode}} &nbsp;</td>
+        <td colspan="2">{{viewPO.issued_by.company.address.city}} &nbsp;</td>
+      </tr>
+      <tr>
+        <td colspan="2"> {{viewPO.issued_by.company.address.state.name}} &nbsp;</td>
+        <td colspan="2"> {{viewPO.issued_by.company.address.country.name}} &nbsp;</td>
+      </tr>
+    </table>
+
+  </div>
+
+  <div *ngIf="viewPO">
+    <!-- *ngIf="viewPO.status === 2" -->
+    <mat-toolbar>
+      <span class="example-spacer"></span>
+
+      <button mat-raised-button [disabled]="viewPO.invoice_status===0" (click)="invoiceDO()" color="primary">{{'purchase.purchase-order.view-po.buttons.invoice'|
+        translate}}</button>
+
+      &nbsp;&nbsp;
+
+      <button *ngIf="isvendor" [disabled]="viewPO.delivery_status==0" mat-raised-button color="primary" (click)="deliveryOrder()">
+        {{'purchase.purchase-order.view-po.buttons.delivery-order' | translate}}</button>
+
+
+      <button *ngIf="!isvendor" (click)="viewDeliveryStatus()" mat-raised-button color="primary" [disabled]="viewPO.delivery_status==0">
+        {{'purchase.purchase-order.view-po.buttons.update-delivery-status' | translate}}</button>
+
+      &nbsp;&nbsp;
+
+      <button *ngIf="isvendor" mat-raised-button color="primary" (click)="invoiceDelivered()" [disabled]="viewPO.invoice_delivered_status==0">{{'purchase.purchase-order.view-po.buttons.invoice-delivered'|
+        translate}}</button>
+
+      &nbsp;&nbsp;
+
+      <button mat-raised-button *ngIf="viewPO.completion_ready" (click)="autoComplete()" color="primary">Complete
+      </button>
+
+      <span class="example-spacer"></span>
+    </mat-toolbar>
+
+    <!-- {
+                do status
+                0:New
+                1:In progress
+                2:Completed
+            } -->
+  </div>
+</div>
+
+<!-- as vendor disbale the (deliver button) when status is 1 - "In progress" or 2 - "Completed". -->
+<!-- label change to "Pending for acceptance"  when the status is 1 - In progress. -->

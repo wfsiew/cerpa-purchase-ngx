@@ -1,0 +1,126 @@
+<!-- <app-tab [tabs]="tabs" [selected]="'monetization_on'"></app-tab> -->
+<mat-toolbar>
+    <mat-toolbar-row>
+        <button class="custom-btn icon" (click)="back()">
+            <mat-icon class="icon-align">arrow_back</mat-icon>
+        </button>
+        &nbsp;
+        <span>
+            <button class="custom-btn icon" (click)="viewProductHistory()">
+                <mat-icon class="icon-align">history</mat-icon>
+            </button>
+        </span>
+
+        <span class="example-spacer"></span>
+        <span>{{'purchase.product-pricing.view-product-pricing.title' | translate}} </span>
+        <span class="example-spacer"></span>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<br>
+<div class="container-fluid pb-5" *ngIf="product">
+
+    <div class="d-flex flex-row">
+        <div class="example-card" *ngIf="product.material.material_picture">
+            <mat-card class="example-card-img">
+                <img mat-card-image [src]="product.material.material_picture" alt="cerpa material picture">
+            </mat-card>
+        </div>
+
+        <div>
+            <p>
+                <strong>Material Name : </strong> <small>{{product.material.name |titlecase}}</small>
+            </p>
+            <hr>
+            <p>
+                <strong>Default Price: </strong> <small> {{'purchase.currency.type.ringgit' | translate}}
+                    {{product.price}}</small>
+            </p>
+            <hr>
+            <p>
+                <strong>Tax Scheme: </strong>
+                <small *ngIf="product.tax_scheme === 0">
+                    {{'purchase.product-pricing.add_product_pricing.tax_scheme.listed_price_is_tax_inclusive' |
+                                translate}}
+                </small>
+                <small *ngIf="product.tax_scheme === 1">{{'purchase.product-pricing.add_product_pricing.tax_scheme.subject_to_tax'
+                                | translate}}</small>
+                <small *ngIf="product.tax_scheme === 2">{{'purchase.product-pricing.add_product_pricing.tax_scheme.non_taxable_item'
+                                | translate}}</small>
+            </p>
+            <hr>
+        </div>
+
+    </div>
+    <br> 
+    <mat-toolbar>
+        {{'purchase.product-pricing.add_product_pricing.sub_title.tier_pricing' | translate}}
+        <div class="tooltips">
+            <mat-icon mat-raised-button style="color: #5959f1">help_outline</mat-icon>
+            <div class="right">
+                <strong>{{'purchase.product-pricing.add_product_pricing.sub_title.tier_pricing' | translate}}</strong><br>
+                {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln1' | translate}} <br>
+                <strong>{{'purchase.product-pricing.add_product_pricing.tooltips.example' | translate}}</strong> <br>
+                {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln1' | translate}} <br>
+                {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln3' | translate}} <br>
+                {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln4' | translate}} <br>
+                <i></i>
+            </div>
+        </div>
+    </mat-toolbar>
+
+    <div *ngFor="let pricing of product.pricings" class="pricing-containt">
+        <div>
+            From Quantity: &nbsp; {{pricing.from_qty}}
+            <hr>
+        </div>
+        <div>
+            To Quantity: &nbsp; {{pricing.to_qty}}
+
+            <hr>
+        </div>
+        <div>
+            Price: &nbsp; {{'purchase.currency.type.ringgit' | translate}} {{pricing.price}}
+            <hr>
+        </div>
+    </div>
+
+    <mat-toolbar>
+        <span>
+            {{'purchase.product-pricing.add_product_pricing.sub_title.promotion' | translate}}
+            <div class="tooltips">
+                <mat-icon mat-raised-button style="color: #5959f1">help_outline</mat-icon>
+                <div class="right">
+                    <strong>
+                        {{'purchase.product-pricing.add_product_pricing.sub_title.promotion' | translate}}</strong><br>
+                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln1' | translate}} <br>
+                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln2' | translate}} <br>
+                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln3' | translate}} <br>
+                    <strong>{{'purchase.product-pricing.add_product_pricing.tooltips.example' | translate}}</strong>
+                    <br>
+                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln4' | translate}} <br>
+                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln5' | translate}} <br>
+                    <i></i>
+                </div>
+            </div>
+        </span>
+    </mat-toolbar>
+
+
+    <div *ngFor="let promo of product.promotions" class="Promotions-containt">
+        <div>
+            To Date: &nbsp; {{promo.from_date | date}}
+            <hr>
+        </div>
+        <div>
+            From Date: &nbsp; {{promo.to_date | date}}
+            <hr>
+        </div>
+        <div>
+            Price: &nbsp; {{'purchase.currency.type.ringgit' | translate}} {{promo.price}}
+            <hr>
+        </div>
+    </div>
+    <mat-checkbox disabled [checked]="product.use_lowest_price">Always use lowest price</mat-checkbox>
+    <br><br>
+</div>

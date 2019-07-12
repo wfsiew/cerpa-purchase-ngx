@@ -1,0 +1,116 @@
+<div class="container-fluid">
+    <mat-toolbar>
+        <button class="custom-btn icon" (click)="back()">
+          <mat-icon class="icon-align">arrow_back</mat-icon>
+        </button>
+        <span class="example-spacer"></span>
+        <div class="compo-title">Issue Purchase Request</div>
+        <span class="example-spacer"></span>
+      </mat-toolbar>
+      <div class="wrap-area">&nbsp;</div>
+      <form [formGroup]="formgroup" #frm="ngForm">
+        <div class="search-container">
+          <div class="custom-search-input-lookup" (click)="openDialog()">
+            <input formControlName="material_name" class="cus_input" readonly type="text" placeholder="Search">
+            <span class="cus_icon">
+              <mat-icon>search</mat-icon>
+            </span>
+          </div>
+      
+          <div *ngIf="formgroup.value.material_name" class="d-flex flex-row bd-highlight">
+            <div class="bd-highlight">
+              <div class="material-img-box">
+                <img class="material-picture" *ngIf="material_picture" [src]="material_picture" alt="CERPA-APP">
+              </div>
+            </div>
+            <div class="bd-highlight materail-desc">
+              <div>
+                <div *ngIf="formgroup">
+                  <div class="product-title">{{formgroup.value.material_name}}</div>
+                  <input matInput hidden formControlName="material_id">
+                  <mat-form-field hidden>
+                    <textarea matInput formControlName="desc" readonly></textarea>
+                  </mat-form-field>
+                  <div class="product-desc">{{formgroup.value.desc}}</div>
+                </div>
+              </div>
+      
+            </div>
+            <div class="p-2 bd-highlight manage-item">
+      
+              <div class="manage-material float-right">
+                <!-- <div class="pr-4"> -->
+                <div class="ctr btn-block text-center">
+                  <span class="ff btn-block rounded">
+                    <button [disabled]="qty <=1" (click)="lessQyt()" class="btn btn-sm ctr-btn float-left">
+                      <mat-icon class="qty-seletor-icon">remove</mat-icon>
+                    </button>
+      
+                    <input min="0" maxlength="5" hidden type="number" formControlName="qty" [(ngModel)]="qty">
+                    <span class="btn qty-no">
+                      {{qty}}
+                    </span>
+      
+                    <button (click)="addQyt()" class="btn btn-sm ctr-btn float-right">
+                      <mat-icon class="qty-seletor-icon">add</mat-icon>
+                    </button>
+                  </span>
+                  <span *ngIf="qty>0" (click)="clearQyt()" class="btn-clear">
+                    <mat-icon class="qty-seletor-icon">clear</mat-icon>
+                  </span>
+                </div>
+                <!-- </div> -->
+                <div class="row mt-2">
+                  <button (click)="addNewProduct()" class="btn btn-block issue-btn mx-3" mat-raised-button type="submit"
+                    [disabled]="!frm.valid">
+                    Request </button>
+                </div>
+              </div>
+      
+            </div>
+          </div>
+        </div>
+      
+      
+      </form>
+      
+      <div *ngIf="purchaseRequest.length == 0" class="d-flex items-card card-list flex-row bd-highlight empty-message">
+        Click on search at above to start adding item here.
+      </div>
+      <div *ngIf="purchaseRequest.length != 0" class="d-flex items-card card-list flex-row bd-highlight">
+      
+        <div *ngFor="let preq of purchaseRequest let i=index" class="p-2 bd-highlight">
+          <div class="card products-card">
+            <div class="item-img text-center">
+              <img class="product-img" [src]="preq.material_picture">
+            </div>
+            <div class="item-name">{{preq.material_name}}</div>
+            <div class="item-qty">
+              <div class="qty-chip-box-sm btn-block">
+                <span class="qty-chip-sm btn-block rounded text-center">
+                  <button [disabled]="preq.qty <= 1" (click)="lessP(preq)" class="btn btn-sm ctr-btn float-left">
+                    <mat-icon class="qty-seletor-icon">remove</mat-icon>
+                  </button>
+                  <span class="btn qty-no">{{preq.qty}}</span>
+                  <button (click)="addP(preq)" class="btn btn-sm ctr-btn float-right">
+                    <mat-icon class="qty-seletor-icon">add</mat-icon>
+                  </button>
+                </span>
+                <span *ngIf="preq.qty>0" (click)="deleteItem(preq)" class="btn-clear">
+                  <mat-icon class="qty-seletor-icon">clear</mat-icon>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      
+        <mat-toolbar-row>
+          <span class="example-spacer"></span>
+          <button mat-raised-button type="submit" class="issue-btn pro-btn" [disabled]="purchaseRequest.length == 0"
+            (click)="submitRequestes()">
+            <!-- {{'app.button.save' |  translate}}  -->
+            Proceed
+          </button>
+        </mat-toolbar-row>
+      </div>
+</div>

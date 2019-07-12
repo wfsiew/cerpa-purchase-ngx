@@ -1,0 +1,31 @@
+.custom-input{
+  height: 36px;
+  width: 100%;
+  font-size: 16px;
+  background: #F4F4F4;
+  border: 2px solid #483D8B;
+  padding: 5px;
+  border-radius: 5px;
+}
+.custom-input:focus{
+  outline: none;
+}
+.in-valid-input{
+  border: 2px solid red!important;
+}
+.in-drop-valid{
+  border-end-end-radius: .25rem;
+  border-top: 2px solid red!important;
+  border-bottom: 2px solid red!important;
+  border-left: 2px solid red!important;
+}
+.in-drop-valid-icon{
+  color: red;
+  border-start-start-radius: .25rem;
+  border-top: 2px solid red!important;
+  border-bottom: 2px solid red!important;
+  border-right: 2px solid red!important;
+}
+.valid-input{
+  border: 1px solid rgb(119, 226, 18);
+}

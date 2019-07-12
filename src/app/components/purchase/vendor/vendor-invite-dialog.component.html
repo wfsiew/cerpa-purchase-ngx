@@ -1,0 +1,76 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <span class="example-spacer"></span>
+    {{ 'purchase.vendor.invite.title' | translate}}
+    <span class="example-spacer"></span>
+  </mat-toolbar-row>
+</mat-toolbar>
+<div mat-dialog-content>
+  <mat-toolbar *ngIf="hasError" class="error-message">
+    <!-- {{errorMessage}} -->
+    <app-error></app-error>
+  </mat-toolbar>
+</div>
+ 
+<br>
+<div mat-dialog-content>
+  <form [formGroup]="mform">
+    <div class="container-form">
+      <mat-form-field>
+        <input matInput required formControlName="company_name" maxlength="100" [placeholder]="'purchase.vendor.invite.form.company_name.ph' | translate">
+        <button type="button" mat-button *ngIf="mform.controls.company_name.value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="mform.patchValue({ company_name: '' })">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="invalid('company_name')">
+          {{ 'purchase.vendor.invite.error.company_name.required' | translate }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field>
+        <input matInput required formControlName="contact_person" maxlength="255" [placeholder]="'purchase.vendor.invite.form.contact_person.ph' | translate">
+        <button type="button" mat-button *ngIf="mform.controls.contact_person.value" matSuffix mat-icon-button
+          aria-label="Clear" (click)="mform.patchValue({ contact_person: '' })">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="invalid('contact_person')">
+          {{ 'purchase.vendor.invite.error.contact_person.required' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput required formControlName="email" maxlength="254" [placeholder]="'purchase.vendor.invite.form.email.ph' | translate">
+        <button type="button" mat-button *ngIf="mform.controls.email.value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="mform.patchValue({ email: '' })">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="invalid('email') && mform.controls.email.hasError('required')">
+          {{ 'purchase.vendor.invite.error.email.required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="invalid('email') && mform.controls.email.hasError('email') && !mform.controls.email.hasError('required')">
+          {{ 'purchase.vendor.invite.error.email.invalid' | translate }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput required formControlName="conf_email" maxlength="254" [placeholder]="'purchase.vendor.invite.form.conf_email.ph' | translate">
+        <button type="button" mat-button *ngIf="mform.controls.conf_email.value" matSuffix mat-icon-button aria-label="Clear"
+          (click)="mform.patchValue({ conf_email: '' })">
+          <mat-icon>close</mat-icon>
+        </button>
+        <mat-error *ngIf="invalid('email') && mform.controls.email.hasError('required')">
+          {{ 'purchase.vendor.invite.error.email.required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="invalid('email') && mform.controls.email.hasError('email') && !mform.controls.email.hasError('required')">
+          {{ 'purchase.vendor.invite.error.email.invalid' | translate }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <span class="example-spacer"></span>
+    <button mat-raised-button (click)="submitInvite()" [disabled]="mform.pristine || mform.invalid" color="primary">{{'purchase.vendor.invite.button.submit'
+      | translate }}</button>
+    <button mat-raised-button (click)="closeDailog({success: 0})" color="warn">{{'app.button.cancel' | translate }}</button>
+  <span class="example-spacer"></span>
+</div>

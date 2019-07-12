@@ -1,0 +1,263 @@
+<mat-toolbar>
+  <span>
+    <button class="custom-btn icon" [routerLink]="['/product-list']">
+      <mat-icon class="icon-align">arrow_back</mat-icon>
+    </button>
+  </span>
+</mat-toolbar>
+
+<div class="container-fluid mt-3">
+
+  <div class="container">
+    <form [formGroup]="fGroup" #frm="ngForm">
+      <div class="row text-left my-4">
+        <div class="col-12 col-md-2 text-center text-md-left">
+          <div class="image">
+            <input class="image-upload" (change)="uploadImage($event.target.files)" type="file" accept="images/*">
+            <img [src]="blankImage(pictureUrl)">
+          </div>
+        </div> 
+        <div class="col-12 offset-md-2 mt-2 mt-md-0 col-md-8">
+          <div class="row text-left">
+            <div class="col-3">{{'inventory.product.labels.product-type'| translate}}</div>
+            <div class="col-9">
+
+              <div class="custom-card-border">
+                <div class="custom-card-title">
+                  <mat-select class="selected-box" formControlName="product_type"
+                    (change)="onChangeProductType($event.value)">
+                    <mat-option *ngFor="let o of productTypeList" [value]="o.id">
+                      <span>{{o.name}}</span>
+                    </mat-option>
+                  </mat-select>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-2">{{'inventory.product.labels.product-name'| translate}}</div>
+        <div class="col-12 col-md-10"> <input class="custom-input" [ngClass]="{'in-valid-input':myForm.name.invalid && myForm.name.touched}"
+            maxlength="100" formControlName="name" type="text" placeholder="{{'inventory.product.labels.product-name'| translate}}"> </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-2"> {{'inventory.product.labels.description'| translate}}</div>
+        <div class="col-12 col-md-10"> <input maxlength="250" formControlName="description" type="text"
+            class="custom-input" placeholder="{{'inventory.product.labels.description'| translate}}"> </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-2"> {{'inventory.product.labels.category'| translate}}</div>
+        <div class="col-12 col-md-10">
+
+          <div class="custom-card-title">
+            <div class="custom-search-input">
+              <input class="search-box-outline"
+              [value] = "productCategoryName"
+              formControlName="ctr"
+                [ngClass]="{'in-drop-valid': myForm.product_category.invalid && myForm.ctr.touched}"
+                (keyup)="searchCategory($event)" [matAutocomplete]="ctrAuto"
+                placeholder="{{'inventory.product.labels.category'| translate}}">
+              <mat-icon class="search-icon-outline"
+                [ngClass]="{'in-drop-valid-icon': myForm.product_category.invalid && myForm.ctr.touched}">
+                search</mat-icon>
+            </div>
+            <mat-autocomplete #ctrAuto="matAutocomplete">
+              <mat-option *ngFor="let x of categoryList" [value]="x.name" matInput (click)="selectCategory(x)">
+                {{x.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.brand'| translate}}</div>
+            <div class="col-12 col-md-8">
+
+              <div class="custom-card-title">
+                <div class="custom-search-input">
+                  <input class="search-box-outline" #brand
+                  [value]="brandName"
+                    [ngClass]="{'in-drop-valid': myForm.brand.value == '' && brand.value.length>0}"
+                    (keyup)="searchBrand($event)" [matAutocomplete]="brandAuto" placeholder="{{'inventory.product.labels.brand'| translate}}">
+                    <mat-icon class="search-icon-outline"
+                    [ngClass]="{'in-drop-valid-icon': myForm.brand.value == '' && brand.value.length>0}">search</mat-icon>
+                  </div>
+                  <mat-autocomplete #brandAuto="matAutocomplete">
+                  <mat-option *ngFor="let x of brandList" [value]="x.name" matInput (click)="selectBrand(x)">
+                    {{x.name}}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.model'| translate}}</div>
+            <div class="col-12 col-md-8">
+
+              <div class="custom-card-title">
+                <div class="custom-search-input">
+                  <input [readonly] = "myForm.brand.value == '' || myForm.brand.value == 'null'" class="search-box-outline"
+                  [value]="modelName"
+                    [ngClass]="{'in-drop-valid': myForm.model.value == ''}"
+                    (keyup)="searchModel($event)" [matAutocomplete]="modelAuto" placeholder="{{'inventory.product.labels.model'| translate}}">
+                  <mat-icon class="search-icon-outline"
+                    [ngClass]="{'in-drop-valid-icon': myForm.model.value == ''}">search</mat-icon>
+                </div>
+                <mat-autocomplete [readonly] = "!hasBrandId" #modelAuto="matAutocomplete">
+                  <mat-option *ngFor="let x of modelList" [value]="x.name" matInput (click)="selectModel(x)">
+                    {{x.name}}
+                  </mat-option>
+                </mat-autocomplete>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.optimum-qty'| translate}} </div>
+            <div class="col-12 col-md-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button class="custom-btn icon" (click) = "rmOptimumLevel()" id="minus-btn">
+                    <mat-icon class="icon-align">remove</mat-icon>
+                  </button>
+                </div>
+                <input formControlName="optimum_level" type="number" id="qty_input"
+                  class="form-control form-control-sm text-center" [value]="fGroup.value.optimum_level" min="1">
+                <div class="input-group-prepend">
+                  <button (click) = "addOptimumLevel()" class="custom-btn icon" id="plus-btn">
+                    <mat-icon class="icon-align">add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.par-level'| translate}} </div>
+            <div class="col-12 col-md-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button (click)="rmParLevel()" class="custom-btn icon" id="minus-btn">
+                    <mat-icon class="icon-align">remove</mat-icon>
+                  </button>
+                </div>
+                <input formControlName="par_level" type="number" id="qty_input"
+                  class="form-control form-control-sm text-center" [value]="fGroup.value.par_level" min="1" [max]="maxParLevel()">
+                <div class="input-group-prepend">
+                  <button (click)="addParLevel()" class="custom-btn icon" id="plus-btn">
+                    <mat-icon class="icon-align">add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row text-left mt-md-1">
+        <div class="col-12 col-md-2"> {{'inventory.product.labels.qty-measure'| translate}} </div>
+        <div class="col-12 col-md-10">
+          <!-- <input [ngClass]="isValidStrInput(ob.qty_measure)" formControlName = "qty_measure" type="text" class="form-control" placeholder="product"> -->
+          <div class="custom-card-border">
+            <div class="custom-card-title">
+              <mat-select class="selected-box"
+                [ngClass]="{'in-valid-input': myForm.qty_measure.invalid && myForm.qty_measure.touched}"
+                formControlName="qty_measure" (change)="onChangeQtyMeasure($event.value)"
+                placeholder="{{'inventory.product.labels.qty-measure'| translate}}">
+                <mat-option *ngFor="let o of quantityMeasureList" [value]="o.id">
+                  <span>{{o.name}}</span>
+                </mat-option>
+              </mat-select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.discount'| translate}} (%) </div>
+            <div class="col-12 col-md-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button (click) = "rmDiscount()" class="custom-btn icon" id="minus-btn">
+                    <mat-icon class="icon-align">remove</mat-icon>
+                  </button>
+                </div>
+                <input formControlName="price" type="number" id="qty_input"
+                  class="form-control form-control-sm text-center" [value]="fGroup.value.price" min="1">
+                <div class="input-group-prepend">
+                  <button (click) = "addDiscount()" class="custom-btn icon" id="plus-btn">
+                    <mat-icon class="icon-align">add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.commission'| translate}}</div>
+            <div class="col-12 col-md-8">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <button (click) = "rmCommission()" class="custom-btn icon" id="minus-btn">
+                    <mat-icon class="icon-align">remove</mat-icon>
+                  </button>
+                </div>
+                <input formControlName="commission" type="number" id="qty_input"
+                  class="form-control form-control-sm text-center" [value]="fGroup.value.commission" min="1">
+                <div class="input-group-prepend">
+                  <button (click) = "addCommission()" class="custom-btn icon" id="plus-btn">
+                    <mat-icon class="icon-align">add</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-check">
+        <input formControlName="not_for_sale" class="form-check-input" type="checkbox" value="" id="notSale">
+        <label class="form-check-label" for="notSale">
+          {{'inventory.product.labels.not-for-sale'| translate}}
+        </label>
+      </div>
+
+      <div class="form-check">
+        <input formControlName="auto_stock_up" class="form-check-input" type="checkbox" value="" id="autoStock">
+        <label class="form-check-label" for="autoStock">
+          {{'inventory.product.labels.auto-add-stock'| translate}}
+        </label>
+      </div>
+      <div class="text-center">
+        <button (click)="submitForm(frm.value)" [disabled]="frm.invalid || picture === 'null'" class="btn btn-danger">Save</button>
+      </div>
+
+    </form>
+  </div>
+  <br>
+</div>

@@ -1,0 +1,158 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+//custom font
+$font-xl:32px;
+$font-l:26px;
+$font-m:22px;
+$font-s:16px;
+$font-xs:14px;
+
+//custom padding
+$padding-xxl:20px;
+$padding-xl:15px;
+$padding-l:11px;
+$padding-m:8px;
+$padding-s:5px;
+$padding-xs:3px;
+$padding-xxs:1px;
+$padding-xxl:20px;
+
+//custom margin
+$margin-xxl:25px;
+$margin-xl:18px;
+$margin-l:12px;
+$margin-m:8px;
+$margin-s:5px;
+$margin-xs:3px;
+$margin-xxs:1px;
+
+//custom border
+$border-m:4px solid;
+$border-s:2px solid;
+$border-xs:1px solid;
+$border-xxs:0.5px solid;
+
+//custom radius
+$radius-m:25px;
+$radius-s:10px;
+$radius-xs:6px;
+$radius-xxs:3px;
+
+//custom opacity
+$opacity-xxl:0.95;
+$opacity-xl:0.8;
+$opacity-l:0.7;
+$opacity-m:0.55;
+$opacity-s:0.4;
+$opacity-xs:0.25;
+$opacity-xss:0.1;
+
+//custom color
+$color-primary:#483D8B;
+$color-secondary:#4E4972;
+// $color-tertiary:#;
+$color-background:#E9E7E9;
+$color-border:#DBDBDB;
+$color-dull:#4E5F4C;
+$color-contrast:#FFA808;
+$color-selector:$color-primary;
+$color-quantity:$color-contrast;
+$color-currency:$color-contrast;
+$color-disabled:#D4D6D8;
+$color-alert:#C40034;
+$color-warning:#C45C3C;
+// $color-info:#;
+$color-light:#F4F4F4;
+$color-dark:#777777;
+
+// custom palette
+$cerpa-color: (
+    50: #ffffff,
+    100: #fff7f4,
+    200: #fecdbd,
+    300: #fc9978,
+    400: #777777,
+    500: $color-primary, //primary //default
+    600: $color-secondary, //accent
+    700: $color-alert, //warn
+    800: #DBDBDB, 
+    900: #4E5F4C, 
+    A100: #FFA707, 
+    A200: #796777, 
+    A400: #C40034,
+    A700: #F4F4F4,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: white,
+        900: white,
+        A100: $black-87-opacity,
+        A200: $black-87-opacity,
+        A400: $black-87-opacity,
+        A700: white,
+    )
+);
+
+$custom-primary: mat-palette($cerpa-color);
+$custom-accent: mat-palette($cerpa-color,600);
+$custom-warn: mat-palette($cerpa-color,700);
+
+// custom background and foreground palettes
+$cerpa-background: (
+  status-bar: white,
+  app-bar:    rgba($color-dark,$opacity-xss), //mat-toolbar
+  background: $color-background,
+  hover:      rgba(black, 0.04), 
+  card:       white,
+  dialog:     white,
+  disabled-button: $color-background,
+  raised-button: white,
+  focused-button: $black-6-opacity,
+  selected-button: map_get($mat-grey, 300),
+  selected-disabled-button: map_get($mat-grey, 400),
+  disabled-button-toggle: black,
+  unselected-chip: #E0E0E0,
+  disabled-list-option: black,
+);
+
+$cerpa-foreground: (
+  base:              yellow,
+  divider:           black,
+  dividers:          $white-12-opacity,
+  disabled:          #F4F4F4,
+  disabled-button:   #F4F4F4,
+  disabled-text:     #796777,
+  hint-text:         black,
+  secondary-text:    black,
+  icon:              blue,
+  icons:             blue,
+  text:              #483D8B,
+  slider-min:        rgb(170, 70, 70),
+  slider-off:        rgba(white, 0.3),
+  slider-off-active: rgba(#ffffff, 0.3),
+);
+
+@function cerpa-theme($primary, $accent, $warn) {
+  @return (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+    is-dark: false,
+    foreground: $cerpa-foreground,
+    background: $cerpa-background,
+  );
+}
+
+// $custom-theme: mat-light-theme($custom-primary, $custom-accent, $custom-warn);
+$custom-theme: cerpa-theme($custom-primary, $custom-accent, $custom-warn);
+
+@include angular-material-theme($custom-theme);
+

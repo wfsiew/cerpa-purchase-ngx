@@ -1,0 +1,20 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+<ng4-loading-spinner [timeout]="12000"> </ng4-loading-spinner>
+
+<app-toolbar-panel (toggleLeftSidenav)="toggleLeftSidenav($event)" (refreshModule)="refreshModule($event)" (closeLeftSidenav)="closeLeftSidenav($event)" (toggleRightSidenav)="toggleRightSidenav($event)"></app-toolbar-panel>
+<app-module-panel *ngIf="!is404" (updateToolbarModuleName)="handleToolbarModuleNameChange($event)">Loading...</app-module-panel>
+
+
+
+<div *ngIf="is404" style="padding: 15%; text-align: center">
+  <h1><span style="color:red"> 404 </span> No internet connection</h1>
+  <hr>
+  <p>
+    <a [href]="reTry_url">Retry: {{reTry_url}}</a>
+  </p>
+</div>
+<!-- <app-footer-panel></app-footer-panel> -->

@@ -1,0 +1,133 @@
+<mat-toolbar>
+    <button class="custom-btn icon" (click)="back()">
+        <mat-icon class="icon-align">arrow_back</mat-icon>
+    </button>
+    &nbsp;
+    <button class="custom-btn icon" (click)="downloadDO()">
+        <mat-icon class="icon-align">save_alt</mat-icon>
+    </button>
+
+    &nbsp;
+    <button class="custom-btn icon" (click)="printDO()">
+        <mat-icon class="icon-align">print</mat-icon>
+    </button>
+
+    <span class="example-spacer"></span>
+    {{'purchase.delivery-order.title' | translate | titlecase}}
+    <span class="example-spacer"></span>
+</mat-toolbar>
+
+<mat-toolbar class="error-message" *ngIf="hasError">
+    <app-error></app-error>
+</mat-toolbar>
+<div class="container-fluid" *ngIf="DODetails">
+ 
+    <table class="table table-bordered mt-3">
+        <tr> 
+            <td colspan="4">{{'purchase.delivery-order.labels.do-refrence' | translate}}:&nbsp;{{DODetails.order_id}} &nbsp; </td>
+            <td>{{'purchase.purchase-order.view-po.labels.status' | translate}}: {{ doStatus(DODetails.status) | translate | titlecase}}</td>
+        </tr>
+    </table>
+
+    <strong>
+        <p class="text-muted font-italic">
+            {{'purchase.delivery-order.labels.supplier' | translate | titlecase}}
+        </p>
+    </strong>
+
+    <div class="p-3 table-bordered">
+
+        <span>{{DODetails.vendor.company_name}}</span> <br>
+        <span>{{DODetails.vendor.biz_reg_num}}</span> <br>
+        <span
+            *ngIf="DODetails.vendor.vendor_address.addr_line_1 != ''">{{DODetails.vendor.vendor_address.addr_line_1}}</span><br>
+        <span
+            *ngIf="DODetails.vendor.vendor_address.addr_line_2 != ''">{{DODetails.vendor.vendor_address.addr_line_2}}<br></span>
+        <span
+            *ngIf="DODetails.vendor.vendor_address.addr_line_3 != ''">{{DODetails.vendor.vendor_address.addr_line_3}}<br></span>
+        <span>{{DODetails.vendor.vendor_address.postcode}},</span>
+        <span>{{DODetails.vendor.vendor_address.city}},</span>
+        <span>{{DODetails.vendor.vendor_address.state.name}},</span> <br>
+        <!-- <span>{{DODetails.vendor.vendor_address.country.name}}</span> <br> -->
+        <span>{{'purchase.delivery-order.labels.tel' | translate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{DODetails.vendor.office_phone}}</span> <br>
+        <span>{{'purchase.delivery-order.labels.sst_no' | translate}}: {{DODetails.vendor.tax_num}}</span>
+    </div>
+
+    <br>
+    <strong>
+        <p class="text-muted font-italic">
+            {{'purchase.delivery-order.labels.deliver-to' | translate | titlecase}}
+        </p> 
+    </strong>
+    
+    <div class="p-3 table-bordered">
+        <span>{{DODetails.issued_by.name}}</span> <br>
+        <span>{{DODetails.issued_by.company.name}} ({{DODetails.issued_by.company.biz_reg_num}})</span> <br>
+        <span
+            *ngIf="DODetails.issued_by.company.address.addr_line_1 != ''">{{DODetails.issued_by.company.address.addr_line_1}},</span> <br>
+        <span
+            *ngIf="DODetails.issued_by.company.address.addr_line_2 != ''">{{DODetails.issued_by.company.address.addr_line_2}},<br></span>
+        <span
+            *ngIf="DODetails.issued_by.company.address.addr_line_3 != ''">{{DODetails.issued_by.company.address.addr_line_3}}<br></span>
+        <span>{{DODetails.issued_by.company.address.postcode}},</span>
+        <span>{{DODetails.issued_by.company.address.city}},</span>
+        <span>{{DODetails.issued_by.company.address.state.name}},</span> <br>
+        <!-- <span>{{DODetails.issued_by.company.address.country.name}}</span> -->
+        <span>{{'purchase.delivery-order.labels.tel' | translate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: {{DODetails.issued_by.company.office_phone}}</span> <br>
+        <!-- <span>{{'purchase.delivery-order.labels.sst_no' | translate}}: {{DODetails.issued_by.company.tax_num}}</span> -->
+    </div>
+
+    <br>
+    <strong>
+        <p>{{'purchase.delivery-order.labels.items' | translate | titlecase}}</p>
+    </strong>
+    <table class="table table-bordered">
+        <tr>
+            <th> {{'purchase.delivery-order.labels.item' | translate | titlecase}}</th>
+            <th> {{'purchase.delivery-order.labels.accepted' | translate | titlecase}}</th>
+            <th> {{'purchase.delivery-order.labels.delivering' | translate | titlecase}}</th>
+        </tr>
+
+        <tr *ngFor="let do of Items let i = index">
+            <td>{{do.material.name}}</td>
+            <td>{{do.total_accepted_quantity}}</td>
+            <!-- *ngIf = "isDelivering(Items)" -->
+            <td *ngIf="do.total_remaining_quantity !=0; else elseBlock">
+                <a mat-raised-button color="primary" (click)="minimizeQty(do,i)">
+                    <mat-icon>remove</mat-icon>
+                </a>
+
+                <mat-form-field class="example-full-width">
+                    <form [formGroup]="formG" #frm="ngForm">
+                        <input readonly formControlName="qtyFiled" style="text-align: center" matInput
+                            [value]="do.quantity">
+                    </form>
+                </mat-form-field>
+
+                <a mat-raised-button color="primary" (click)="addQty(do, i)">
+                    <mat-icon>add</mat-icon>
+                </a>
+                <!-- {{po.quantity}} -->
+            </td>
+            <ng-template #elseBlock>
+                <td>All items has accepted</td>
+            </ng-template>
+        </tr>
+    </table>
+
+    <mat-toolbar>
+        <span class="example-spacer"></span>
+        <button *ngIf="DODetails.status !=DOSTATUS.complete"
+            [disabled]="formG.invalid || DODetails.status ==1 || totalQTY < 1 || isSubmited" (click)="doDeliver()"
+            mat-raised-button color="primary">
+            <span *ngIf="DODetails.status !=DOSTATUS.delivering ">{{'purchase.delivery-order.buttons.deliver'|
+                translate | titlecase}}</span>
+            <span *ngIf="DODetails.status ===DOSTATUS.delivering">{{'purchase.delivery-order.buttons.pending-for-acceptance'
+                | translate | titlecase}}</span>
+        </button>
+        <span class="example-spacer"></span>
+    </mat-toolbar>
+</div>
+
+
+<!-- Delivery Order -->

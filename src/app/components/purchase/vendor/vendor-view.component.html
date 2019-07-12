@@ -1,0 +1,130 @@
+<mat-toolbar *ngIf="hasError" class="error-message">
+  <!-- {{errorMessage}} -->
+  <app-error></app-error>
+</mat-toolbar>
+
+<div class="details">
+  <section class="company">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <button class="custom-btn icon" (click)="back()">
+          <mat-icon class="icon-align">arrow_back</mat-icon>
+        </button>
+        <span class="example-spacer"></span>
+        <span class="header-title">
+          {{ 'purchase.vendor.profile.header.company_details' | translate }}
+        </span>
+        <span class="example-spacer"></span>
+      </mat-toolbar-row>
+    </mat-toolbar>
+
+    <div class="img">
+      <img src="{{ vendor.company_logo }}" *ngIf="vendor.company_logo" class="imgitem">
+    </div>
+
+    <div class="data">
+      <label>{{ 'purchase.vendor.profile.form.company_name.label' | translate }}</label>
+      <div>{{ vendor.company_name }} </div>
+      <div class="data-inner">
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.business_reg_no.label' | translate }}</label>
+          <div>{{ vendor.biz_reg_num }}</div>
+        </div>
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.gst_no.label' | translate }}</label>
+          <div>{{ vendor.gst_number }}</div>
+        </div>
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.credit_limit.label' | translate }}</label>
+          <div>{{ vendor.credit_limit }}</div>
+        </div>
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.payment_term.label' | translate }}</label>
+          <div *ngIf="vendor.payment_term != 0">{{ vendor.payment_term }} Day(s)</div>
+          <div *ngIf="vendor.payment_term == 0">Cash on delivery </div>
+        </div>
+
+        <div>
+          <label>{{'purchase.vendor.profile.form.bank.label' | translate }}</label>
+          <div *ngIf="vendor.bank != null">{{vendor.bank.name}}</div>
+        </div>
+        <div>
+          <label>{{'purchase.vendor.profile.form.bank_acct_num.label' | translate }}</label>
+          <div>{{vendor.account_num}}</div>
+        </div>
+
+
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.office_phone.label' | translate }}</label>
+          <div>{{ vendor.office_phone }}</div>
+        </div>
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.office_fax.label' | translate }}</label>
+          <div>{{ vendor.office_fax }}</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="address">
+    <header>
+      <h4>{{ 'purchase.vendor.profile.header.address' | translate }}</h4>
+    </header>
+
+    <div>
+      <label>{{ 'purchase.vendor.profile.form.address.label' | translate }}</label>
+      <div>{{ vendor.address.addr_line_1 }}</div>
+      <div>{{ vendor.address.addr_line_2 }}</div>
+      <div>{{ vendor.address.addr_line_3 }}</div>
+
+      <div class="data-inner">
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.postcode.label' | translate }}</label>
+          <div>{{ vendor.address.postcode }}</div>
+        </div>
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.city.label' | translate }}</label>
+          <div>{{ vendor.address.city}}</div>
+        </div>
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.country.label' | translate }}</label>
+          <div>{{country}}</div>
+        </div>
+        <div>
+          <label>{{ 'purchase.vendor.profile.form.state.label' | translate }}</label>
+          <span>
+            <div>{{state}}</div>
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact">
+    <header>
+      <h4>{{ 'purchase.vendor.profile.header.contact' | translate }}</h4>
+    </header>
+
+    <div class="contacts">
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let o of vendor.contact_persons">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ o.email }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div class="contact-inner">
+            <label>{{ 'purchase.vendor.profile.form.contact_person_name.label' | translate }}</label>
+            <div>{{ o.name }}</div>
+            <label></label>
+            <div></div>
+            <label>{{'purchase.vendor.profile.form.contact_person_phone.label' | translate }}</label>
+            <div>{{o.phone }}</div>
+            <label>{{'purchase.vendor.profile.form.contact_person_alt_email.label' | translate }}</label>
+            <div>{{ o.alt_email }}</div>
+          </div>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
+  </section>
+</div>

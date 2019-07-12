@@ -1,0 +1,36 @@
+  
+  .example-container > * {
+    width: 100%;
+  }
+  
+  .select-reason{
+    color: red;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 238px;
+    padding-right:30px;
+  }
+
+  /* .view-po-container>table{
+    border-collapse: collapse;
+    width: 75%;
+  } */
+
+  /* .view-po-container{
+    padding: 3%;
+  } */
+  /* .view-po-container> table, td, th {  
+    padding: 1%;
+    border: 1px solid #ddd;
+    text-align: left;
+  } */
+  .delivry-od-footer-tb> .tb{
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  .invoice-status{
+    float: right;
+    width: 20%;
+  }
