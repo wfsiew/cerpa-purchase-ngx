@@ -18,14 +18,13 @@ export class InventoryService {
       { params: httpParams, observe: 'response', headers: this.headers });
   }
 
-// par_reached=${prm.reached_par_level}&
-// expired_stocks=${prm.expiredStock}&
-// not_for_sale=${prm.notForSale}&
-// current_promotion=${prm.currentPromotion}
-
   get_searchProductList(term, pager: Pager, prm, sort) {
     const httpParams: HttpParams = createRequestParams(pager);
     return this.http.get(`${this.baseUrl}/api/inventory/products?term=${term}&
+par_reached=${prm.reached_par_level ? true : ''}&
+expired_stocks=${prm.expiredStock ? true : ''}&
+not_for_sale=${prm.notForSale ? true : ''}&
+current_promotion=${prm.currentPromotion ? true : ''}&
 product_category=${prm.product_category}&
 product_type=${prm.product_type}`,
       { params: httpParams, observe: 'response', headers: this.headers });
@@ -57,6 +56,9 @@ product_type=${prm.product_type}`,
   get_product(id) {
     return this.http.get(`${this.baseUrl}/api/inventory/product/${id}`);
   }
+  delete_product(id) {
+    return this.http.delete(`${this.baseUrl}/api/inventory/product/${id}`);
+  }
   put_product(id, data) {
     return this.http.put(`${this.baseUrl}/api/inventory/product/${id}`, data);
   }
@@ -79,16 +81,16 @@ product_type=${prm.product_type}`,
     return this.http.get(`${this.baseUrl}/api/inventory/product/${productId}/product-batch/${batchId}`);
   }
 
-  get_productBatches(productId, pager: Pager, sort) {
+  get_productBatches(productId, pager: Pager) {
     const httpParams: HttpParams = createRequestParams(pager);
-    if (sort != null || sort !== undefined) {
-      const sorts: SortBatch = Object.assign(sort, {});
-      return this.http.get(`${this.baseUrl}/api/inventory/product/${productId}/product-batches?${sorts.active}=${sorts.direction}`,
-        { params: httpParams, observe: 'response', headers: this.headers });
-    } else {
+    // if (sort != null || sort !== undefined) {
+    //   const sorts: SortBatch = Object.assign(sort, {});
+    //   return this.http.get(`${this.baseUrl}/api/inventory/product/${productId}/product-batches?${sorts.active}=${sorts.direction}`,
+    //     { params: httpParams, observe: 'response', headers: this.headers });
+    // } else {
       return this.http.get(`${this.baseUrl}/api/inventory/product/${productId}/product-batches`,
         { params: httpParams, observe: 'response', headers: this.headers });
-    }
+    // }
   }
 
   get_disposeReason() {
@@ -96,7 +98,7 @@ product_type=${prm.product_type}`,
   }
 
   delete_dispose(id, message) {
-   return this.http.put(`${this.baseUrl}/product/product-batch/dispose-reasons`, message);
+   return this.http.put(`${this.baseUrl}/api/inventory/product/${id}/product-batch/${id}/dispose`, message);
   }
 }
 

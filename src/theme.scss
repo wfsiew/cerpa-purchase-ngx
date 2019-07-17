@@ -11,7 +11,7 @@ $font-xs:14px;
 
 //custom padding
 $padding-xxl:20px;
-$padding-xl:15px;
+$padding-xl:16px;
 $padding-l:11px;
 $padding-m:8px;
 $padding-s:5px;
@@ -53,18 +53,18 @@ $opacity-xss:0.1;
 $color-primary:#483D8B;
 $color-secondary:#4E4972;
 // $color-tertiary:#;
-$color-background:#E9E7E9;
-$color-border:#DBDBDB;
-$color-dull:#4E5F4C;
+$color-background:#E2E1E2;
+$color-border:#D6D4D6;
+$color-dull:#373737;
 $color-contrast:#FFA808;
 $color-selector:$color-primary;
 $color-quantity:$color-contrast;
 $color-currency:$color-contrast;
-$color-disabled:#D4D6D8;
-$color-alert:#C40034;
-$color-warning:#C45C3C;
+$color-disabled:#D6D4D6;
+$color-alert:#CC0033;
+$color-warning:$color-contrast;
 // $color-info:#;
-$color-light:#F4F4F4;
+$color-light:#EFEEEF;
 $color-dark:#777777;
 
 // custom palette
@@ -113,7 +113,7 @@ $cerpa-background: (
   hover:      rgba(black, 0.04), 
   card:       white,
   dialog:     white,
-  disabled-button: $color-background,
+  disabled-button: $color-disabled,
   raised-button: white,
   focused-button: $black-6-opacity,
   selected-button: map_get($mat-grey, 300),

@@ -6,7 +6,7 @@ import { AuthService } from '../../../../../account/services/auth.service';
 import { MatDialog } from '@angular/material';
 import { LookUpComponent } from '../look-up/look-up-dialog.component';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Location } from '@angular/common';
+import { Location, DatePipe } from '@angular/common';
 import { CurrentUser, Promotion, Pricing, ProductPricingData } from '../../product-pricing.model';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -15,6 +15,7 @@ import { ProductPricingConstant } from '../../product-pricing.constant';
 import { SubmitModel } from './add.model';
 import { ProductPricingHistoryComponent } from '../../product-pricing.history.component';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { count } from 'rxjs/operators';
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -22,33 +23,41 @@ import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 })
 export class AddProductComponent implements OnInit {
   minDate = new Date();
-  isTouched: boolean = false;
+  isTouched = false;
   productPricingData = new ProductPricingData();
-  user_role: boolean = false;
-  spinner: boolean = false;
+  user_role = false;
+  spinner = false;
   isvendor: boolean;
   product: any;
-  isEdit: boolean = true;
+  isEdit = true;
   errorMessage: string;
   material_picture = AppLocaleConstant.MATERIAL_DEFAULT_ICON;
   material_name = null;
+  lsPromo = [];
+  lsTire = [];
   tax_scheme = [];
   pDeletes = [];
   tDeletes = [];
-  isvalidPricing: boolean = false
-  isvalidPromotion: boolean = false
-  hasError:boolean = false;
-  isvalidForm:boolean = true
+  isvalidPricing = false;
+  isvalidPromotion = false;
+  hasError = false;
+  isvalidForm = true;
   readonly AppConstant = AppConstant;
+  promoMessage = true;
+  tierMessage = true;
 
   /**
    * @see Vendor can add, edit delete product
    * @see Staff can view blacklist and delete product
    */
 
-  formgroup: FormGroup
+  formgroup: FormGroup;
+  checkPromo: any;
+  checkPrice: any;
+  todayDate = new Date();
+  today = this.datePipe.transform(this.todayDate, 'yyyy-MM-dd');
 
-  constructor(
+  constructor (
     public dialog: MatDialog,
     private location: Location,
     private route: ActivatedRoute,
@@ -56,19 +65,20 @@ export class AddProductComponent implements OnInit {
     private spinnerService: Ng4LoadingSpinnerService,
     private authService: AuthService,
     private translateService: TranslateService,
-    private ProductService: ProductPricingService
+    private ProductService: ProductPricingService,
+    private datePipe: DatePipe
   ) { }
   /**
    * the functions within @see ngOnInit() is going to be loaded when the plage is loaded
    */
   ngOnInit() {
-    this.translateService.setDefaultLang('en')
+    this.translateService.setDefaultLang('en');
     this.initRole();
     this.createForm();
   }
 
   /**
-   * checking the users rule if the rule is not matched 
+   * checking the users rule if the rule is not matched
    * @see initRole() will automatically send back to previous page
    */
   initRole() {
@@ -86,9 +96,8 @@ export class AddProductComponent implements OnInit {
             }
           }
         }
-      )
-    }
-    else {
+      );
+    } else {
       this.isvendor = this.authService.hasGroup(AppConstant.ROLE.VENDOR);
       // this.hidemenu = this.isvendor;
       if (this.isvendor) {
@@ -105,9 +114,29 @@ export class AddProductComponent implements OnInit {
       return this.editData(value);
     } else if (path === 'add-product') {
       this.isEdit = false;
-      return
-    }
-    else {
+
+      this.tax_scheme = ProductPricingConstant.TAX_SCHEME;
+      this.formgroup = this.fb.group(
+        {
+          material_id: ['', [Validators.required]],
+          use_lowest_price: [false],
+          validity_date: [null],
+          rrp_price: [null],
+          default_price: ['', [Validators.required]],
+          tax_scheme: ['', [Validators.required, Validators.min(0)]],
+          pricings: this.fb.array([this.initPricing()]),
+          promotions: this.fb.array([this.initPromotion()])
+        }
+        , { validator: this.validateForm }
+      );
+
+      if (!this.isEdit) {
+        if (this.pricings.length === 1) { this.pricings.removeAt(0); }
+        if (this.promotions.length === 1) { this.promotions.removeAt(0); }
+      }
+
+      return;
+    } else {
       this.location.back();
     }
   }
@@ -123,17 +152,16 @@ export class AddProductComponent implements OnInit {
       (res) => {
         if (res) {
           this.setLookUpData(res);
-        }else{
-          return
+        } else {
+          return;
         }
       }
     );
   }
   setLookUpData(data) {
     if (data === undefined || data.length === 0) {
-      return
-    }
-    else {
+      return;
+    } else {
       if (data.material_picture === undefined || data.material_picture === null) {
         this.material_picture = this.material_picture;
       } else {
@@ -145,7 +173,7 @@ export class AddProductComponent implements OnInit {
         {
           material_id: data.id,
         }
-      )
+      );
     }
   }
 
@@ -156,17 +184,18 @@ export class AddProductComponent implements OnInit {
         material_id: ['', [Validators.required]],
         use_lowest_price: [false],
         validity_date: null,
+        rrp_price: [0, [Validators.min(0)]],
         default_price: ['', [Validators.required]],
         tax_scheme: ['', [Validators.required, Validators.min(0)]],
         pricings: this.fb.array([this.initPricing()]),
         promotions: this.fb.array([this.initPromotion()])
       }
       , { validator: this.validateForm }
-    )
+    );
 
     if (!this.isEdit) {
-      // if (this.pricings.length === 1) { this.pricings.removeAt(0) }
-      // if (this.promotions.length === 1) { this.promotions.removeAt(0) }
+      if (this.pricings.length === 1) { this.pricings.removeAt(0); }
+      if (this.promotions.length === 1) { this.promotions.removeAt(0); }
     }
   }
 
@@ -178,31 +207,29 @@ export class AddProductComponent implements OnInit {
     var tier = tierPrice.value;
     var promo = promotion.value;
 
-    if (promo.length>0) {
+    if (promo.length > 0) {
       for (let i = 0; i < promo.length; i++) {
         var fd = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/.test(promo[i].from_date);
         var td = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/.test(promo[i].to_date);
         if (promo[i].from_date <= promo[i].to_date && fd && td) {
           pr = true;
-        }
-        else {
+        } else {
           // this.isvalidPricing = false;
           pr = false;
-          break
+          break;
         }
       }
-    }else{
+    } else {
       pr = true;
     }
 
-    if (tier.length>0) {
+    if (tier.length > 0) {
       for (let i = 0; i < tier.length; i++) {
-        if (tier[i].from_qty <= tier[i].to_qty) {
+        if (tier[i].from_qty <= tier[i].from_qty) {
           tr = true;
-        }
-        else {
+        } else {
           tr = false;
-          break
+          break;
         }
       }
     } else {
@@ -210,13 +237,13 @@ export class AddProductComponent implements OnInit {
     }
 
     if (tr && pr) {
-      return null
+      return null;
     }
 
-    return { mismatch: true }
+    return { mismatch: true };
   }
 
-  nn(){
+  nn() {
     console.log('test .....?');
   }
   initPricing() {
@@ -224,66 +251,147 @@ export class AddProductComponent implements OnInit {
       id: [0],
       from_qty: ['', [Validators.required]],
       to_qty: ['', [Validators.required]],
-      price: ['', [Validators.min(0)]],
-    })
+      price: ['', [Validators.required]],
+    });
   }
 
   get pricings(): FormArray {
     return this.formgroup.get('pricings') as FormArray;
   }
 
-  addPricing(): void {
-    this.pricings.push(this.fb.group(new Pricing()));
+  plusQty(idx) {
+    this.markAsTouched();
+    const ln = this.formgroup.value.pricings.length;
+    // if (ln > idx) {
+    //   if ( this.formgroup.value.pricings[idx].from_qty >  this.formgroup.value.pricings[idx].from_qty) {
+    //     this.formgroup.value.pricings[idx].from_qty += 1;
+    //   } else {
+    //     return;
+    //   }
+    // } else {
+      this.formgroup.value.pricings[idx].from_qty += 1;
+    // }
+  }
+
+  minusQty(idx) {
+    this.markAsTouched();
+    if (idx === 0 ) {
+      if (this.formgroup.value.pricings[idx].from_qty > 2) {
+        this.formgroup.value.pricings[idx].from_qty -= 1;
+      } else {
+        return;
+      }
+    } else if (this.formgroup.value.pricings[idx].from_qty > this.formgroup.value.pricings[idx - 1].from_qty + 1) {
+      this.formgroup.value.pricings[idx].from_qty -= 1;
+    } else {
+      return;
+    }
+  }
+
+  addPricing() {
+    const tierPrice = this.formgroup.get('pricings');
+    var tier = tierPrice.value;
+    if (tier.length == 0) {
+      var qtyValue = this.fb.group({
+        id: [0],
+        from_qty: [{ value: 2, disabled: false }],
+        price: [{ value: '', disabled: false }]
+      });
+    } else {
+      for (let i = 0; i < tier.length; i++) {
+        var qtyValue = this.fb.group({
+          id: [0],
+          from_qty: [{ value: this.pricings.value[i].from_qty + 1, disabled: false }],
+          price: [{ value: '', disabled: false }]
+        });
+      }
+    }
+    this.pricings.push(qtyValue);
+    this.tierMessage = false;
   }
   removePricing(i, rm) {
     this.formgroup.value.pricings.touched
     if (/^\d+$/.test(rm) && rm !== 0) {
-      this.tDeletes.push({ id: rm })
+      this.tDeletes.push({ id: rm });
     } else {
-      this.tDeletes.push()
+      this.tDeletes.push();
     }
-    this.pricings.removeAt(i)
-  }
+    this.pricings.removeAt(i);
 
+    if (this.pricings.length > 0) {
+      this.tierMessage = false;
+    } else {
+      this.tierMessage = true;
+
+    }
+  }
+  checkTierPrice (tierPrice, idx): boolean {
+    let p = null;
+    if (Number(tierPrice[idx].price) >= Number(tierPrice[idx - 1].price)) {
+      p = true;
+    } else {
+      p = false;
+    }
+    return p;
+  }
+  setMinDate(minDate, idx) {
+    let j = null;
+    if (idx === 0) {
+      j = new Date();
+    } else {
+      const dt = new Date(minDate.value[idx - 1].to_date);
+      j = dt.setDate( dt.getDate() + 1 );
+    }
+    // console.log(minDate.value[idx].from_date);
+    return j;
+  }
   initPromotion() {
     return this.formgroup = this.fb.group({
       id: [0],
       from_date: [null, [Validators.min(0)]],
       to_date: [null, [Validators.min(0)]],
       price: [0, [Validators.min(0)]]
-    })
+    });
   }
 
-    get promotions(): FormArray {
-      return this.formgroup.get('promotions') as FormArray;
-    };
+  get promotions(): FormArray {
+    return this.formgroup.get('promotions') as FormArray;
+  }
 
-    addPromotion(): void {
-      this.promotions.push(this.fb.group(new Promotion()));
+  addPromotion(): void {
+    this.promotions.push(this.fb.group(new Promotion()));
+    this.promoMessage = false;
+  }
+  removePromotion(i, rm) {
+    this.formgroup.enable
+    if (/^\d+$/.test(rm) && rm !== 0) {
+      this.pDeletes.push({ id: rm });
+    } else {
+      this.pDeletes.push();
     }
-    removePromotion(i, rm) {
-      this.formgroup.enable 
-      if (/^\d+$/.test(rm) && rm !== 0) {
-        this.pDeletes.push({ id: rm })
-      } else {
-        this.pDeletes.push()
-      }
-      this.promotions.removeAt(i);
+    this.promotions.removeAt(i);
+
+    if (this.promotions.length > 0) {
+      this.promoMessage = false;
+    } else {
+      this.promoMessage = true;
+
     }
+  }
 
-    addNewProduct(data): void {
+  addNewProduct(data): void {
 
-      if(data.promotions.length > 0) {
+    if (data.promotions.length > 0) {
       if (data.promotions.from_date === 0 || data.promotions.to_date === 0) {
         console.log('invalid form ');
-        return
+        return;
       }
     }
-    var body = {
+    const body = {
       price: data.default_price,
       validity_date: data.validity_date||null,
       tax_scheme: data.tax_scheme,
-      rrp_price: 22,
+      rrp_price: data.rrp_price,
       use_lowest_price: data.use_lowest_price,
       material: {
         id: data.material_id
@@ -292,13 +400,13 @@ export class AddProductComponent implements OnInit {
       promotions: data.promotions,
       tier_deletes: this.tDeletes,
       promo_deletes: this.pDeletes,
-    }
+    };
     if (this.route.snapshot.url[0].path === 'add-product') {
       this.submitAdd(body);
     } else if (this.route.snapshot.url[0].path === 'edit' && Number(this.route.snapshot.url[1].path) > 0) {
       this.submitEdit(Number(this.route.snapshot.url[1].path), body);
     } else {
-      this.location.back()
+      this.location.back();
     }
   }
 
@@ -312,8 +420,8 @@ export class AddProductComponent implements OnInit {
         this.onError('something is wrong ...');
       }
     }, (err) => {
-      this.onError(err)
-    })
+      this.onError(err);
+    });
   }
   submitEdit(id, data) {
     this.spinnerService.show();
@@ -321,31 +429,42 @@ export class AddProductComponent implements OnInit {
       this.resetForm();
       console.log(res);
     }, (err) => {
-      this.onError(err)
-    })
+      this.onError(err);
+    });
   }
 
   editData(value?: number) {
-    this.ProductService.queryEiditData(value).subscribe((res) => {
+    this.ProductService.queryEiditData(value).subscribe((res: any) => {
+      this.lsPromo = res.promotions;
+      this.lsTire = res.pricings;
       this.setProductData(res.data);
     }, (err => {
-      this.onError(err)
-    }))
+      this.onError(err);
+    }));
   }
 
   setProductData(values) {
-    var entity: SubmitModel = Object.assign({}, values);
+    const entity: SubmitModel = Object.assign({}, values);
     this.material_picture = entity.material.material_picture;
     this.material_name = entity.material.name;
+    this.checkPromo = entity.promotions;
+    this.checkPrice = entity.pricings;
+    if (this.checkPromo != 0) {
+      this.promoMessage = false;
+    }
+    if (this.checkPrice != 0) {
+      this.tierMessage = false;
+    }
     this.formgroup.patchValue({
+      rrp_price: values.rrp_price,
       material_id: entity.material.id,
       use_lowest_price: entity.use_lowest_price,
       default_price: entity.price,
       validity_date: values.validity_date,
       tax_scheme: entity.tax_scheme,
-    })
+    });
 
-    let addPriceArray: FormArray = <FormArray>this.formgroup.get('pricings');
+    const addPriceArray: FormArray = <FormArray> this.formgroup.get('pricings');
     let counter = 0;
     entity.pricings.forEach(_add_price => {
       if (counter == 0) {
@@ -355,7 +474,9 @@ export class AddProductComponent implements OnInit {
       }
       counter++;
     });
-    let addPromotionsArray: FormArray = <FormArray>this.formgroup.get('promotions');
+    console.log('counterpricings', counter);
+
+    const addPromotionsArray: FormArray = <FormArray> this.formgroup.get('promotions');
     counter = 0;
     entity.promotions.forEach(_add_promotion => {
       if (counter == 0) {
@@ -365,12 +486,12 @@ export class AddProductComponent implements OnInit {
       }
       counter++;
     });
-    if (entity.pricings.length === 0) { this.pricings.removeAt(0) }
-    if (entity.promotions.length === 0) { this.promotions.removeAt(0) }
+    if (entity.pricings.length === 0) { this.pricings.removeAt(0); }
+    if (entity.promotions.length === 0) { this.promotions.removeAt(0); }
   }
 
   openHistory() {
-    var id = this.route.snapshot.params.id;
+    const id = this.route.snapshot.params.id;
     const dialogRef = this.dialog.open(ProductPricingHistoryComponent, {
       width: '80%',
       height: '80%',
@@ -384,22 +505,25 @@ export class AddProductComponent implements OnInit {
   }
 
   back() {
-    this.location.back()
+    this.location.back();
   }
-
+  checkDate(date) {
+    return new Date(date);
+  }
   onError(error) {
     this.spinnerService.hide();
-    this.errorMessage = "Failed to save product pricing";
+    this.errorMessage = 'Failed to save product pricing';
     this.hasError = true;
   }
 
-  ngOnDestroy() {
-    // unsubscribe();
-  }
 
   resetForm() {
     this.spinnerService.hide();
     this.formgroup.reset();
-    this.location.back()
-  } 
+    this.location.back();
+  }
+
+  markAsTouched() {
+    this.formgroup.markAsTouched();
+  }
 }

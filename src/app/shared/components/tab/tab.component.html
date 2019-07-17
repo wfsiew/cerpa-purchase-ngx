@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- <span class="mdi mdi-account-tie"></span> -->
-    <img style="width: 50px;position: absolute;z-index: 1; padding: 3px; margin: 5px 10px" src="assets/images/account-tie.png">
+    <!-- <img style="width: 50px;position: absolute;z-index: 1; padding: 3px; margin: 5px 10px" src="assets/images/account-tie.png"> -->
     <a [routerLink]="tab.link" class="col-md-2 sub-module-tab" [ngClass]="{'active': tab.icon == selected}"
       *ngFor="let tab of tabs" (click)="selectTab(tab.link, tab.icon)">
       <div class="sub-module-icon-div">

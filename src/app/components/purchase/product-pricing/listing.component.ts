@@ -37,7 +37,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   tabs = PurchaseTabs.tabs;
   // checkedCategory = [0,1,2,3]
   page = 1;
-  totalPage  = 20;
+  totalPage = 20;
   pageLenght = 0;
   sortOrder = SortOrder.ASC;
   pagesize = AppConstant.PAGE_SIZE;
@@ -257,7 +257,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   setTermSort(value, index) {
     this.filterSelected[index] = !this.filterSelected[index];
     value.selected = this.filterSelected;
- 
+
     if (value.selected[0]) {
       this.isPromoItems = 'true';
     }
@@ -278,7 +278,7 @@ export class ListingComponent implements OnInit, OnDestroy {
   }
 
 
-  
+
   setTermFilter(index) {
     this.paymentTermSelected[index] = !this.paymentTermSelected[index];
     if (this.paymentTermSelected[index]) {
@@ -395,7 +395,6 @@ export class ListingComponent implements OnInit, OnDestroy {
    */
   setSortOption(v) {
     this.sortByParams = v;
-    // console.log('sortoptions');
 
     this.executeSearch(this.page);
     // this.productService.queryListing(-1,
@@ -437,29 +436,16 @@ export class ListingComponent implements OnInit, OnDestroy {
   // }
 
   setCategories(index) {
+    const toggledCategoryId = this.categoryList[index].id;
     this.categoriesSelected[index] = !this.categoriesSelected[index];
-    this.spinnerService.show();
-    if (this.categoryParams.length > 0) {
-      var o = this.categoryParams.indexOf(this.categoryList[index]);
-      if (o !== -1) { this.categoryParams.splice(o, 1) }
-      else { this.categoryParams.push(this.categoryList[index]) }
+
+    if (this.categoriesSelected[index]) {
+      this.categoryParams.push(toggledCategoryId);
     } else {
-      this.categoryParams.push(this.categoryList[index])
+      this.categoryParams.splice(toggledCategoryId, 1);
     }
 
-    // if (this.keyword != '') {
     this.executeSearch();
-    // } else {
-    //   console.log('setCategories');
-
-    //   this.productService.queryListing(-1,
-    //     new OptionalSortingTerms(this.termParams, this.categoryParams),
-    //     new Pager(this.pager, AppConstant.PAGE_SIZE,
-    //       [this.sortByParams])).subscribe(
-    //         (res: ResponseWrapper) => this.onSuccess(res),
-    //         (res: ResponseWrapper) => this.onError(res)
-    //       )
-    // }
   }
 
   /**

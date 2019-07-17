@@ -10,6 +10,7 @@ import { SortBatch } from './inventory.model';
 import { MatDialog } from '@angular/material';
 import { MessageDialogComponent } from '../../shared/components/message-dialog';
 import * as _ from 'lodash';
+import { AuthService } from '../../account/services/auth.service';
 @Component({
   selector: 'app-batch-listing',
   templateUrl: './batch-listing.component.html',
@@ -19,8 +20,12 @@ export class BatchListingComponent implements OnInit {
   readonly appConstant = AppConstant;
   tabs = Inventory.tabs;
   productName  = '';
+  isStockObserver = false;
   batchList = [];
-  sort: SortBatch;
+  sort: SortBatch =  {
+    active: 'expiry_date',
+    direction: 'asc'
+  };
   page = 1;
   pagination: Pagination;
   pagesize = AppConstant.PAGE_SIZE;
@@ -32,7 +37,8 @@ export class BatchListingComponent implements OnInit {
     private pageState: BatchesPageService,
     private spinnerService: Ng4LoadingSpinnerService,
     private translateService: TranslateService,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private authService: AuthService
   ) {
     this.pagination = new Pagination();
   }
@@ -41,7 +47,8 @@ export class BatchListingComponent implements OnInit {
     this.translateService.setDefaultLang('en');
     this.productName = this.route.snapshot.params.productName;
     this.loadState();
-    // this.spinnerService.show();
+    this.isStockObserver = this.authService.hasRole(
+      [this.appConstant.ROLE.ROLE_STOCK_OBSERVER]);
   }
 
   sortData(sort) {
@@ -60,11 +67,16 @@ export class BatchListingComponent implements OnInit {
     this.router.navigate(['edit-batch', productId , batchId, this.productName]);
   }
 
+  view(batchId) {
+    const productId = this.route.snapshot.params.id;
+    this.router.navigate(['view-batch', productId , batchId, this.productName]);
+  }
+
   loadPatchesState() {
     const id = this.route.snapshot.params.id;
     console.log(this.page);
     this.inventoryService.get_productBatches(id, new Pager(this.page, AppConstant.PAGE_SIZE,
-      []), this.sort).subscribe((res: any) => {
+      [this.sort.active, this.sort.direction].join(':'))).subscribe((res: any) => {
       this.onSuccess(res);
     }, (err) => {
       this.onError(err);
@@ -73,8 +85,9 @@ export class BatchListingComponent implements OnInit {
 
   load() {
     const id = this.route.snapshot.params.id;
-    this.inventoryService.get_productBatches(id, new Pager(this.page, AppConstant.PAGE_SIZE,
-      []), this.sort).subscribe((res: any) => {
+    this.inventoryService.get_productBatches(id, new Pager(
+      this.page, AppConstant.PAGE_SIZE,
+      [this.sort.active, this.sort.direction].join(':'))).subscribe((res: any) => {
       this.onSuccess(res);
     }, (err) => {
       this.onError(err);
@@ -88,9 +101,8 @@ export class BatchListingComponent implements OnInit {
   }
 
   loadState() {
+    this.spinnerService.show();
     this.page = this.pageState.page;
-    // this.sort = this.pageState.sortBatch;
-    console.log(this.sort);
     if (this.pageState.isSave) {
       this.loadPatchesState();
     } else {
@@ -106,34 +118,38 @@ export class BatchListingComponent implements OnInit {
   onSuccess(res) {
     this.batchList = res.body;
     this.pagination = parsePagination(res.headers);
+    this.spinnerService.hide();
   }
 
   onError(err) {
+    this.spinnerService.hide();
     console.log(err);
   }
 
-  dispose() {
+  dispose(o) {
     const dialogRef = this.dialog.open(MessageDialogComponent, {
       width: '450px',
       data: {
-        title: 'Dispose',
+        id: o.id,
+        title: 'Dispose Product Batch',
         button_yes: 'Submit',
-        button_no: 'Discard'
+        button_no: 'Cancel'
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (!_.isUndefined(result)) {
-        console.log('disposed');
+        this.submitDispose(result);
       } else {
         console.log('error');
       }
     });
   }
 
-  submitDispose() {
-    this.inventoryService.delete_dispose(1, '').subscribe((res) => {
-      console.log(res);
+  submitDispose(data) {
+    const reason = {disposed_reason: data.message};
+    this.inventoryService.delete_dispose(data.id, reason).subscribe((res) => {
+      this.loadState();
     });
   }
   initState() {

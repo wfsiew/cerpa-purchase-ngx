@@ -97,7 +97,7 @@ export class InventoryComponent implements OnInit {
   saveState() {
     this.pageState.page = this.page;
     this.pageState.term = this.term;
-    this.pageState.capacity = this.capacity;
+    this.pageState.productType = this.capacity;
     this.pageState.category = this.category;
     this.pageState.notForSale = this.notForSale;
     this.pageState.expiredStock = this.expiredStock;

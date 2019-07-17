@@ -5,13 +5,19 @@ import {
   Pager,
   Pagination,
   parsePagination,
+  AppLocaleConstant
 } from '../../shared';
 import { TranslateService } from '@ngx-translate/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Inventory } from './inventory.tabs';
 import * as _ from 'lodash';
-import { debounceTime, throttleTime } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 import { InventoryPageService } from '../../shared/services/inventory/inventory-state.service';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
+import { Observable } from 'rxjs/observable';
+import { AuthService } from '../../account/services/auth.service';
+import { ConfirmDialogComponent } from '../../shared/components';
+import { MatDialog } from '@angular/material';
 @Component({
   selector: 'app-product-listing',
   templateUrl: './product-listing.component.html',
@@ -22,11 +28,16 @@ export class ProductListingComponent implements OnInit {
   tabs = Inventory.tabs;
   list = [];
   term = '';
+  s = [];
   page = 1;
   pagination: Pagination;
   pagesize = AppConstant.PAGE_SIZE;
   hasError = false;
   isNotAbleToAddProduct = false;
+  isStockObserver = false;
+  isProductCoordinator = false;
+  isCoordinator = false;
+  ispManager = false;
   /** Check Boxes */
   belowParLevel = false;
   expiredStock = false;
@@ -39,41 +50,49 @@ export class ProductListingComponent implements OnInit {
   category: any = '';
   categoryList = [];
   capacityList = [
-    { id: 1, name: 'Item 1' },
-    { id: 2, name: 'Item 2' },
-    { id: 3, name: 'Item 3' }
+    { id: 0, name: 'Rebranded' },
+    // { id: 1, name: 'Divided' },
+    // { id: 2, name: 'Repackaged' },
+    // { id: 3, name: 'Service' }
   ];
 
   sortList = [];
   constructor (
     private inventoryService: InventoryService,
     private translateService: TranslateService,
+    private spinnerService: Ng4LoadingSpinnerService,
+    private authService: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private pageState: InventoryPageService
+    private pageState: InventoryPageService,
+    public dialog: MatDialog
   ) {
     this.translateService.setDefaultLang('en');
     this.pagination = new Pagination();
   }
 
   ngOnInit() {
-    this.route.data.subscribe((res: any) => {
-      const ROLES = res.roles;
-      const r = ROLES.map(function (e) { return e.ROLE_PRODUCT_MANAGER; }).indexOf(this.appConstant.ROLE.ROLE_PRODUCT_MANAGER);
-      if (r !== - 1) {
-        this.isNotAbleToAddProduct = true;
-      } else {
-        this.isNotAbleToAddProduct = false;
-      }
-    });
     this.loadState();
     this.loadProductCategory();
+    const userRoles: any = JSON.parse(localStorage.getItem('userGroup'));
+    this.isStockObserver = _.some(userRoles, (value, i, ls) => {
+        return this.appConstant.ROLE.ROLE_STOCK_OBSERVER === value.name;
+    });
+    this.isNotAbleToAddProduct = this.authService.hasRole(
+      [this.appConstant.ROLE.ROLE_PRODUCT_MANAGER]);
+    this.isCoordinator = this.authService.hasRole(
+      [this.appConstant.ROLE.ROLE_PRODUCT_COORDINATOR]);
+
+    this.ispManager = this.authService.hasRole(
+      [this.appConstant.ROLE.ROLE_PRODUCT_MANAGER]);
   }
   loadProductCategory() {
     this.inventoryService.get_autocompleteProductCategory('').subscribe((res: any) => {
       this.categoryList = res;
     });
   }
+
+
   searchProducts(event) {
     this.pageState.saveState = false;
     this.page = 1;
@@ -102,6 +121,7 @@ export class ProductListingComponent implements OnInit {
   }
   onProductType(eve) {
     this.productType = eve;
+    this.page = 1;
     this.searchMode = true;
     this.loadState();
   }
@@ -117,6 +137,14 @@ export class ProductListingComponent implements OnInit {
         return k === 'below_par_level';
       });
     }
+    this.searchMode = true;
+    this.page = 1;
+    // this.s.push({'below_par_level': e.checked});
+    // const t = _.findIndex(this.s, function(o) {
+    //   return o.below_par_level === 'below_par_level';
+    // });
+    // console.log(t);
+
     this.loadState();
   }
   itemNotForSale(e) {
@@ -130,6 +158,7 @@ export class ProductListingComponent implements OnInit {
       });
     }
     this.searchMode = true;
+    this.page = 1;
     this.loadState();
   }
   itemCurrentPromotion(e) {
@@ -143,6 +172,7 @@ export class ProductListingComponent implements OnInit {
       });
     }
     this.searchMode = true;
+    this.page = 1;
     this.loadState();
   }
   itemExpiredStock(e) {
@@ -155,27 +185,18 @@ export class ProductListingComponent implements OnInit {
         return k === 'expired_stock';
       });
     }
-    console.log(this.sortList);
     this.searchMode = true;
+    this.page = 1;
     this.loadState();
   }
 
-  onSortFilter(key, value) {
-    const i = _.indexOf(this.sortList, key);
-    if (i < 0) {
-      this.sortList.push(key);
-    } else {
-      const lx = _.remove(this.sortList, (k) => {
-        return k === key;
-      });
-    }
-  }
-
   saveState() {
+    console.log(this.belowParLevel);
     this.searchMode = false;
+    this.pageState.sortList = this.sortList;
     this.pageState.page = this.page;
     this.pageState.term = this.term;
-    this.pageState.capacity = this.productType;
+    this.pageState.productType = this.productType;
     this.pageState.category = this.category;
     this.pageState.notForSale = this.notForSale;
     this.pageState.expiredStock = this.expiredStock;
@@ -185,10 +206,20 @@ export class ProductListingComponent implements OnInit {
   }
 
   loadState() {
+    this.spinnerService.show();
     if (this.pageState.saveState) {
+      this.belowParLevel = this.pageState.belowParLevel;
+      this.notForSale = this.pageState.notForSale;
+      this.expiredStock = this.pageState.expiredStock;
+      this.currentPromotion = this.pageState.currentPromo;
       this.page = this.pageState.page;
       this.term = this.pageState.term;
+      this.sortList = this.pageState.sortList;
       this.category = this.pageState.category;
+      this.productType = this.pageState.productType;
+
+      this.pageState.saveState = false;
+
       this.search();
     } else if (this.searchMode) {
       this.search();
@@ -202,6 +233,7 @@ export class ProductListingComponent implements OnInit {
   }
 
   goto(ev) {
+    this.spinnerService.show();
     this.page = ev.pageIndex + 1;
     if (this.searchMode || this.pageState.saveState) {
       this.load();
@@ -262,17 +294,50 @@ export class ProductListingComponent implements OnInit {
     this.saveState();
     this.router.navigate(['batch-list', data.id, data.name]);
   }
-  deleteProduct(id) {
-    this.saveState();
-    console.log({ message: 'Successfully deleted' });
+  viewProduct(data) {
+    this.router.navigate(['view-product', data.id]);
+  }
+  deleteProduct(data) {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      minWidth: '10%',
+      minHeight: '10%',
+      data: {
+        id: data.id,
+        message: 'inventory.product.delete.message',
+        name: '*',
+        title: 'inventory.product.delete.title',
+        button_yes: AppLocaleConstant.APP_BUTTON_YES,
+        button_no: AppLocaleConstant.APP_BUTTON_NO
+      },
+      closeOnNavigation: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.saveState();
+      this.spinnerService.show();
+      if (result) {
+        this.saveState();
+
+        this.inventoryService.delete_product(data.id).subscribe((res) => {
+          this.spinnerService.hide();
+          console.log({ message: 'Successfully deleted' }, res);
+        }, (err) => {
+          this.onError(err);
+        });
+      } else {
+        this.spinnerService.hide();
+      }
+    });
   }
 
   onSuccess(res) {
+    this.spinnerService.hide();
     this.list = res.body;
     this.pagination = parsePagination(res.headers);
   }
 
   onError(err) {
+    this.spinnerService.hide();
     console.log(err);
   }
 }

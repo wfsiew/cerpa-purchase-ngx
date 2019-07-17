@@ -236,7 +236,11 @@ html,body{
     float: right;
     margin-right: 5%;
 }
+
 @import 'theme.scss';
+.container-fluid {
+    padding:0 $padding-xl;
+}
 
 .promo-badge{
     position: absolute;
@@ -304,6 +308,14 @@ html,body{
 
 .custom-btn {
     margin: 1px; //temporary size
+    &.white {
+        background: white;
+        font-size: $font-s;
+        color: $color-primary;
+        height: 38px;
+        margin: 10px 0px;
+        width: 100%;
+    }
     &.normal {
         background: $color-primary;
         font-size: $font-s;
@@ -316,7 +328,6 @@ html,body{
         height: 38px;
         margin: 10px 0px;
         width: 100%;
-
     }
     &.icon {
         background: $color-primary;
@@ -326,7 +337,15 @@ html,body{
             display: block;
             margin: auto;
         }
+    }    
+    &.icon-outline {
+        color: $color-primary;        
+        .icon-align {
+            font-size: 35px;
+            line-height: 28px;
+        }
     }
+
     cursor: pointer;
     height: 46px;
     border: $border-s $color-primary;
@@ -346,8 +365,185 @@ html,body{
     }
 }
 
-.custom-search-input {
+.custom-selected-box {
+    height: 36px;
+    font-size: 16px;
+    background: $color-background;
+    border: $border-s $color-primary;
+    padding: 5px;
+    border-radius: 5px;
+    margin: $margin-xs;  
+    &.alert {
+        color: $color-alert;        
+        border: $border-s $color-alert;
+        text-align: center;
+        margin: $margin-xl 0;
+        font-weight: 600;
+    }
+    &.quantity {        
+        padding: 5px 30px;
+        border-radius: 20px;
+    }
+    &.dark {
+        color: $color-dark;        
+        border: $border-s $color-dark;
+    }
+}
+
+.custom-label {
+    font-size: $font-m;    
+    text-align: left;
+    padding: 0px 15px;
+    &.secondary {
+        color: $color-secondary;
+    }
+    &.contrast {
+        color: $color-contrast;
+    }
+    .disabled {
+        color: $color-disabled;
+        padding: 0;
+    }
+    .alert-color {
+        color: $color-alert;
+        padding: 0;
+    }
+}
+
+
+.block-with-text {
+    overflow: hidden;
+    position: relative; 
+    line-height: 1.2em;
+    max-height: 2.6em; 
+    text-align: justify;
+    padding-right: 1em;
+}
+.block-with-text:before {
+    content: '...';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.block-with-text:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: 0.2em;
+    background: white;
+}
+
+.aligning {    
     display: flex;
+    flex-direction: row !important;
+    align-content: end !important;
+}
+.custom-input {
+    display: flex;
+    margin: 0;
+    .input-box {
+        width: 70%;
+        height: 36px;
+        font-size: $font-m;
+        font-weight: 600;
+        background: white;
+        color: $color-secondary;       
+        border: none;
+        padding-left: 10px;
+
+        &:focus { 
+            outline: none;
+        }
+        &::placeholder {
+            color:grey;
+        }
+    }
+
+    .selector-button {
+        padding: 0;
+        color: white;
+        background: $color-primary;
+        border: none;
+        min-width: 40px;
+        height: 36px;
+        &:focus { 
+            outline: none;
+        }
+        &.suffix-left {
+            border-radius: 5px 0px 0px 5px;
+        }
+        &.suffix-right {
+            border-radius: 0px 5px 5px 0px;            
+        }
+    }
+
+    .number-box {
+        min-width: 40%;
+        height: 36px;
+        font-size: $font-s;
+        background: white;
+        color: $color-secondary;       
+        border: $border-s;
+        text-align: center;
+
+        &:focus { 
+            outline: none;
+        }
+        &::placeholder {
+            color:grey;
+        }
+        &::-webkit-inner-spin-button, 
+        &::-webkit-outer-spin-button { 
+          -webkit-appearance: none; 
+          margin: 0; 
+        }
+    }
+
+    .currency-box{
+        &.ng-valid{
+            border-color: $color-contrast;
+        }
+        &:invalid{
+            border-color: $color-alert;
+        }
+        width: 80%;
+        height: 36px;
+        font-size: $font-s;
+        background: $color-light;
+        color: $color-dark;        
+        border: $border-s $color-contrast;
+        &.default-box {
+            border: $border-s $color-primary;
+        }
+        padding-left: 50px;
+        border-radius: 5px;
+
+        &:focus { 
+            outline: none;
+        }
+        &::placeholder {
+            color:grey;
+        }
+    }
+    .currency-icon {
+        &.alert {
+            color: $color-alert;
+        }
+        height: 32px;
+        color: $color-contrast;
+        &.default-icon {
+            color: $color-primary;
+        }
+        background: white;
+        padding: 15px 10px;
+        line-height: 5px !important;
+        border-radius: 5px;
+        position: absolute;
+        top: 2px;
+        left: 17px;
+    }
     .search-box {
         font-size: $font-s;
         background: $color-primary;
@@ -403,9 +599,12 @@ html,body{
         border: $border-s $color-disabled;
     }
     border: $border-s;
+    // &.valid{
+    //     border: $border-s;
+    // }
     border-radius: 10px;
     background: $color-light;
-    margin: 5px;
+    margin: 5px 0px;
     label {
         display: block;
         font-size: 12px;
@@ -414,6 +613,24 @@ html,body{
     }
 }
 
+.custom-promo-date-container {
+    &.disabled {
+        border: $border-s $color-disabled;
+    }
+    // border: $border-s;
+    &.valid{
+        border: $border-s;
+    }
+    border-radius: 10px;
+    background: $color-light;
+    margin: 5px 0px;
+    label {
+        display: block;
+        font-size: 12px;
+        padding: 5px 10px 0px;
+        margin: 0px;
+    }
+}
 .custom-date{
     display: block;
     padding-left: 10px;
@@ -426,11 +643,30 @@ html,body{
     outline: none;
     width: 99%;
     position: relative;
+    z-index: 1;
     &:after {
         font-weight: 900; 
-        content: url(assets/module-icon/baseline_calendar_today_black_18dp.png);
+        content: url(assets/module-icon/calendar-month-outline-primary.png);
         color: #555;
-        padding: 0 5px;
+        height: 30px;
+    }
+    &.hide-placeholder {
+        &:after {
+            font-weight: 900; 
+            content: url(assets/module-icon/calendar-month-outline-primary.png);
+            color: #555;
+            height: 30px;
+            width: 100%;
+            text-align: right;
+        }
+    }
+    &.disabled {
+        &:after{
+            font-weight: 900; 
+            content: url(assets/module-icon/calendar-month-outline-disabled.png);
+            color: #555;
+            height: 30px;
+        }        
     }    
     &::-webkit-inner-spin-button,
     &::-webkit-clear-button {
@@ -449,12 +685,66 @@ html,body{
         color: transparent;
         background: transparent;
     }
+    &::-webkit-datetime-edit-text { color: $color-primary; }
+    &::-webkit-datetime-edit-month-field { color: $color-primary; }
+    &::-webkit-datetime-edit-day-field { color: $color-primary; }
+    &::-webkit-datetime-edit-year-field { color: $color-primary; }
+
+    &.invalid{
+        border: 2px solid $color-alert !important;
+    }
+    // .custom-date-container{
+    //     border: $border-s;
+    // }
 }
 
-.custom-suplier {
-    margin: auto $margin-xxs auto $margin-xs;
-    padding: $padding-s $padding-m;
+.custom-row-card {
+    background: $color-light;
+    margin: 10px 0px;
+    padding: 15px;
+    p {
+        padding: 0px 5px;
+        margin: 5px;
+    }
+    
+    .custom-table {
+        th,td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+    }
 }
+
+.custom-row-address {
+    margin: 10px 0px;
+    color: $color-dark;
+    font-size: $font-s;
+    line-height: 24px;
+    .custom-suplier {
+        background: $color-light;
+        // margin: 0px $margin-xxs 0px $margin-xs;
+        // padding: $padding-s $padding-m;
+        padding: 15px;
+        margin-right: 5px;
+
+    }
+    .custom-deliver-to {
+        background: $color-light;
+        // margin: 0px $margin-xs 0px $margin-xxs;
+        // padding: $padding-s $padding-m;
+        padding: 15px;
+        margin-left: 5px;
+    }
+    .label-po-title {
+        font-size: $font-s;
+        font-weight: 400;
+        color: $color-secondary;
+        line-height: 24px;
+    }
+}
+
+
 
 .custom-card {
     padding: 10px !important;
@@ -478,4 +768,30 @@ html,body{
             }
         }
     }
+}
+
+.custom-promo-tier {
+    padding: 20px 0px;
+    p{
+        margin: 0px;
+    }
+}
+.custom-dash {    
+    position: relative;
+    right: 18px;
+    bottom: 7px;
+    padding: 0;
+    mat-icon {
+        font-size:60px;
+        width: 7px;
+    }
+}
+
+.payment-term {
+    color: $color-dark;
+}
+
+.upcoming-promo {
+    color: $color-alert;
+    margin-top: $margin-xl;
 }

@@ -6,7 +6,7 @@
     </button>
   </span>
   <span class="example-spacer"></span>
-  <div class="custom-search-input">
+  <div class="custom-input">
     <input class="search-box" placeholder="Search" (keyup)="searchProducts($event)" [value]="keyword">
     <mat-icon class="search-icon">search</mat-icon>
   </div>
@@ -18,7 +18,7 @@
   <mat-card class="custom-card">
     <div class="custom-card-border">
       <div class="custom-card-title">
-        <mat-select class="selected-box" (change)="setSortOption($event.value)"
+        <mat-select class="custom-selected-box" (selectionChange)="setSortOption($event.value)"
           placeholder="{{'purchase.product-pricing.sort.title' | translate}}">
           <mat-option *ngFor="let sort of sortList" [value]="sort.id">
             <span
@@ -33,12 +33,6 @@
     <div class="custom-card-border">
       <div class="custom-chip-wrapper">
         <mat-chip-list multiple="true">
-          <!-- <div *ngFor="let x of filterSelectionList; let i=index">
-            <mat-checkbox (input)="setSearchFilter($event.target.checked, i)" name="i" color="primary"
-              class="example-margin" [value]="x.key" [checked]="getFilterSelected(i)">
-              <div class="cc">{{x.value}}</div>
-            </mat-checkbox>
-          </div> -->
           <span class="custom-chip-list" *ngFor="let x of filterSelectionList; let i=index">
             <mat-chip color="accent" (click)="setTermSort($event, i)" [selected]="getFilterSelected(i)">
               <span class="custom-chip-text">{{x.value}}</span>
@@ -62,13 +56,13 @@
     </div>
     <div class="custom-card-border">
       <div class="custom-card-title">
-        <div class="custom-search-input">
+        <div class="custom-input">
           <input class="search-box-outline" (keyup)="searchCategory($event)" [(ngModel)]="filterName" name="filterName"
             [matAutocomplete]="auto" placeholder="Search Category">
           <mat-icon class="search-icon-outline">search</mat-icon>
         </div>
         <mat-autocomplete #auto="matAutocomplete">
-          <mat-option *ngFor="let x of categoryList" [value]="x" matInput (click)="selectCategory($event)">{{x}}
+          <mat-option *ngFor="let x of categoryList" [value]="x.name" matInput (click)="selectCategory($event)">{{x.name}}
           </mat-option>
         </mat-autocomplete>
       </div>
@@ -76,7 +70,7 @@
         <mat-chip-list multiple="true">
           <span class="custom-chip-list" *ngFor="let x of categoryList; let i = index">
             <mat-chip color="accent" (click)="setCategories(i)" [selected]="getCategoriesSelected(i)"><span
-                class="custom-chip-text">{{ x }}</span>
+                class="custom-chip-text">{{ x.name }}</span>
             </mat-chip>
           </span>
         </mat-chip-list>

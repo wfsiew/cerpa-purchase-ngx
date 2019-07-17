@@ -67,6 +67,7 @@ export class PurchaseOrderComponents implements OnInit {
   ];
   chosenDate = this.dateType[0].name;
   todayDate = new Date();
+  today = this.datePipe.transform(this.todayDate,"yyyy-MM-dd");
   checkedDateType: any = 'Single';
 
   constructor(
@@ -244,15 +245,13 @@ export class PurchaseOrderComponents implements OnInit {
     if(this.checkedDateType==="Single"){
       if (this.fromDate !== '') {
         this.isSearch = true;
-        if (this.toDate === '') {
-          this.issuedDate = this.fromDate + ":" + this.fromDate;
-        } else this.issuedDate = this.fromDate + ":" + this.toDate;
+        this.issuedDate = this.fromDate + ":" + this.fromDate;
       }
     } else {
       if (this.fromDate !== '') {
         this.isSearch = true;
         if (this.toDate === '') {
-          this.issuedDate = this.fromDate + ":" + this.datePipe.transform(this.todayDate,"yyyy-MM-dd");
+          this.issuedDate = this.fromDate + ":" + this.today;
         } else this.issuedDate = this.fromDate + ":" + this.toDate;
       } else {  
         if (this.toDate !== '') {   

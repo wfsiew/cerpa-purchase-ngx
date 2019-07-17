@@ -1,0 +1,125 @@
+<mat-toolbar>
+  <span>
+    <button class="custom-btn icon" [routerLink]="['/product-list']">
+      <mat-icon class="icon-align">arrow_back</mat-icon>
+    </button>
+  </span>
+</mat-toolbar>
+
+<div class="container-fluid mt-3" *ngIf = "product">
+  <div class="container">
+      <div class="row text-left my-4">
+        <div class="col-12 text-center text-md-left">
+          <div class="image">
+            <img [src]="blankImage(pictureUrl)">
+            <span *ngIf = "product.not_for_sale" class="not-for-sale">Not for Sale</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-2">{{'inventory.product.labels.product-name'| translate}}</div>
+        <div class="col-12 col-md-10">
+          {{product.name}}
+        </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-2"> {{'inventory.product.labels.description'| translate}}: </div>
+        <div class="col-12 col-md-10"> {{product.description}} </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-2"> {{'inventory.product.labels.category'| translate}}: </div>
+        <div class="col-12 col-md-10" *ngIf = "product.product_category"> {{product.product_category.name}} </div>
+      </div>
+
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.brand'| translate}}: </div>
+            <div class="col-12 col-md-8" *ngIf = "product.brand"> {{product.brand.name}} </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.model'| translate}}: </div>
+            <div class="col-12 col-md-8"> {{product.model ? product.model.name : "-"}} </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.optimum-qty'| translate}}: </div>
+            <div class="col-12 col-md-8"> {{product.optimum_level}} </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.par-level'| translate}}: </div>
+            <div class="col-12 col-md-8"> {{product.par_level}} </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="row text-left mt-md-1">
+        <div class="col-12 col-md-2"> {{'inventory.product.labels.qty-measure'| translate}}: </div>
+        <div class="col-12 col-md-10" *ngIf = "product.qty_measure"> {{product.qty_measure.name}} </div>
+      </div>
+
+
+      <div class="row mt-md-1 text-left">
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.price'| translate}}: </div>
+            <div class="col-12 col-md-8"> {{product.price}} </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="row">
+            <div class="col-12 col-md-4">{{'inventory.product.labels.commission'| translate}}:</div>
+            <div class="col-12 col-md-8"> {{product.commission}} </div>
+          </div>
+        </div>
+      </div>
+
+      <br>
+
+      <div class="promo-card" *ngIf="product.promotions?.length > 0">
+        <div class="promo-header">
+          <div class="row">
+            <div class="col-6">
+              <span> {{'inventory.product.labels.promo'| translate}} </span>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-md-1 text-left">
+            <div class="col-12 col-md-2"></div>
+            <div class="col-12 col-md-3"> From </div>
+            <div class="col-12 col-md-3"> To </div>
+            <div class="col-10 col-md-3"> Price </div>
+          </div>
+          <hr>
+          <div class="row mt-md-1 text-left" *ngFor = "let o of product.promotions">
+            <div class="col-12 col-md-2"></div>
+            <div class="col-12 col-md-3"> {{o.from_date |date:"MMMM d, yyyy"}} </div>
+            <div class="col-12 col-md-3"> {{o.to_date |date:"MMMM d, yyyy"}} </div>
+            <div class="col-10 col-md-3"> RM {{o.price}} </div>
+          </div>
+      </div>
+
+      <div class="form-check mt-3">
+        <span [class]="isAutoAddStock(product.auto_stock_up)">
+            <mat-icon *ngIf = "product.auto_stock_up">check_circle</mat-icon>
+            <mat-icon *ngIf = "!product.auto_stock_up">cancel</mat-icon>
+        </span>
+        {{'inventory.product.labels.auto-add-stock'| translate}}
+      </div>
+  </div>
+  <br>
+</div>

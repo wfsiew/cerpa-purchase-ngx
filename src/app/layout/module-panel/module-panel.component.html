@@ -8,16 +8,16 @@
     </div>
 
     <div class="c-row mt-1">
-      <div *ngFor="let tile of tiles">
-        <div [ngClass]="activeModule(tile.text)" *ngIf="tile.text === currentUser" role="list"
+      <div *ngFor="let tile of tiles" (click)="tileClick(tile)">
+        <a>
+        <div [ngClass]="activeModule(tile.text)" *ngIf="currentUser.indexOf(tile.text) > -1" role="list"
           (click)="leftsidenav.close(); showApp = tile.text; changeToolbarModuleName();">
-          <a (click)="tileClick()" [routerLink]="tile.link">
             <span role="listitem">
               <img class="module-icon" src="{{imgUrl}}/{{tile.icon}}">
             </span>
             <p class="tile-text">{{tile.text}}</p>
-          </a>
-        </div>
+          </div>
+        </a>
       </div>
     </div>
 

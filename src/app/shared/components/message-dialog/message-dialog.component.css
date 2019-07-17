@@ -1,0 +1,28 @@
+.title {
+    text-align: center;
+    background: darkslateblue;
+    color: aliceblue;
+    padding: 10px;
+    margin-top: -20px;
+    margin-left: -20px;
+    margin-right: -20px;
+
+}
+textarea{
+    overflow: auto;
+    resize: vertical;
+    width: 100%;
+    max-height: 100px;
+    min-height: 100px;
+    outline: none;
+    border: 2px solid #4900a3;
+    border-radius: 5px;
+    padding: 5px;
+}
+textarea :focus{
+    outline: none;
+}
+.custom-auto-input {
+    padding: 5px;
+    width: 100%;
+  }

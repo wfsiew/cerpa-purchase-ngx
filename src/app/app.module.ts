@@ -42,6 +42,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { DashboardModule } from './components/dashboard/dashboard.component';
 import { InventoryRoleGuardServiceGuard } from './shared/services/inventory/inventory-role-guard-service.guard';
+import { RaisePoDialogComponent } from './components/purchase/product-pricing/raise-po-dialog/raise-po-dialog.component';
 
 const config = {
   apiKey: 'AIzaSyDtXP0vt8uWm6Jwrie2jRvDk3TuGwt2HH0',
@@ -56,6 +57,7 @@ const config = {
   declarations: [
     AppComponent,
     ItemListingComponent,
+    RaisePoDialogComponent,
   ],
   imports: [
     SharedModule,
@@ -108,7 +110,10 @@ const config = {
     DatePipe
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ConfirmCompleteDialogComponent]
+  entryComponents: [
+    ConfirmCompleteDialogComponent,
+    RaisePoDialogComponent
+  ]
 })
 export class AppModule {
   constructor() {}

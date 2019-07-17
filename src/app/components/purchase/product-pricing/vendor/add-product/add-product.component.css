@@ -2,13 +2,23 @@
     display: inherit;
 }
 .cer-row{
-display: grid;
-grid-template-columns:15% 75% 10%;
-text-align: center;
+    display: grid;
+    grid-template-columns:30% 70%;
+    text-align: center;
+    background: white;
+    border: 1px solid;
 }
-.example-card{
-    margin-right: 10px;
+.cer-col{    
+    display: grid;
+    grid-template-rows:30% 40% 30%;
+}
+
+
+mat-card.example-card{
     height: auto;
+    box-shadow: none;
+    margin: 1px;
+    padding: 15px;
 }
 .example-card >img{
     cursor: pointer;
@@ -16,21 +26,14 @@ text-align: center;
     height: 100%;
     object-fit: contain;
 }
-.pricing-containt{
+/* .pricing-containt{
     display: grid;
     grid-template-columns: 31% 32% 32% 3%;
 }
 .pricing-containt >div{
     padding: 2%;
-}
-.Promotions-containt{
-    display: grid;
-    grid-template-columns: 31% 32% 32% 3%;
-}
+} */
 
-.Promotions-containt > div{
-    padding: 2%;
-}
 .save-btn{
     display: grid;
     align-items: center;
@@ -108,4 +111,37 @@ text-align: center;
     color: #483D8B;
     width: 100%;
     min-width: 200px;
+}
+
+
+.item-qty{
+  margin-top: 12px;
+}
+.qty-chip-box-sm{
+  display: inline-flex;
+  width: 215px;
+  min-width: 240;
+  padding: 0px;
+  color: #483D8B;
+}
+.qty-seletor-icon{
+  line-height: 1.5;
+}
+.qty-seletor-icon .material-icons{
+  font-size: 26px;
+  /* line-height: 1; */
+}
+.qty-no{
+  margin-top: 5px;
+}
+
+::ng-deep .mat-checkbox .mat-checkbox-frame { 
+    border-color: #483D8B; 
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+
+   opacity: 1;
+
 }

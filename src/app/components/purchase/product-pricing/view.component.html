@@ -5,122 +5,116 @@
             <mat-icon class="icon-align">arrow_back</mat-icon>
         </button>
         &nbsp;
-        <span>
-            <button class="custom-btn icon" (click)="viewProductHistory()">
-                <mat-icon class="icon-align">history</mat-icon>
-            </button>
-        </span>
-
+        <button class="custom-btn icon" (click)="viewProductHistory()">
+            <mat-icon class="icon-align">history</mat-icon>
+        </button>
         <span class="example-spacer"></span>
         <span>{{'purchase.product-pricing.view-product-pricing.title' | translate}} </span>
         <span class="example-spacer"></span>
     </mat-toolbar-row>
 </mat-toolbar>
-
-<br>
-<div class="container-fluid pb-5" *ngIf="product">
-
-    <div class="d-flex flex-row">
-        <div class="example-card" *ngIf="product.material.material_picture">
-            <mat-card class="example-card-img">
-                <img mat-card-image [src]="product.material.material_picture" alt="cerpa material picture">
+<div class="container-fluid" *ngIf="product">
+    <div class="cer-row">
+        <div *ngIf="product.material.material_picture">
+            <mat-card class="example-card m-1" style="box-shadow: none; padding: 0px;">
+                <img [src]="product.material.material_picture" alt="cerpa material picture">
             </mat-card>
         </div>
-
-        <div>
-            <p>
-                <strong>Material Name : </strong> <small>{{product.material.name |titlecase}}</small>
-            </p>
-            <hr>
-            <p>
-                <strong>Default Price: </strong> <small> {{'purchase.currency.type.ringgit' | translate}}
-                    {{product.price}}</small>
-            </p>
-            <hr>
-            <p>
-                <strong>Tax Scheme: </strong>
-                <small *ngIf="product.tax_scheme === 0">
-                    {{'purchase.product-pricing.add_product_pricing.tax_scheme.listed_price_is_tax_inclusive' |
-                                translate}}
-                </small>
-                <small *ngIf="product.tax_scheme === 1">{{'purchase.product-pricing.add_product_pricing.tax_scheme.subject_to_tax'
-                                | translate}}</small>
-                <small *ngIf="product.tax_scheme === 2">{{'purchase.product-pricing.add_product_pricing.tax_scheme.non_taxable_item'
-                                | translate}}</small>
-            </p>
-            <hr>
-        </div>
-
-    </div>
-    <br> 
-    <mat-toolbar>
-        {{'purchase.product-pricing.add_product_pricing.sub_title.tier_pricing' | translate}}
-        <div class="tooltips">
-            <mat-icon mat-raised-button style="color: #5959f1">help_outline</mat-icon>
-            <div class="right">
-                <strong>{{'purchase.product-pricing.add_product_pricing.sub_title.tier_pricing' | translate}}</strong><br>
-                {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln1' | translate}} <br>
-                <strong>{{'purchase.product-pricing.add_product_pricing.tooltips.example' | translate}}</strong> <br>
-                {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln1' | translate}} <br>
-                {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln3' | translate}} <br>
-                {{'purchase.product-pricing.add_product_pricing.tooltips.tier-pricing.ln4' | translate}} <br>
-                <i></i>
+        <div class="cer-col">
+            <div class="custom-label pt-3">
+                <div class="block-with-text">{{product.material.name |titlecase}}</div>
             </div>
-        </div>
-    </mat-toolbar>
-
-    <div *ngFor="let pricing of product.pricings" class="pricing-containt">
-        <div>
-            From Quantity: &nbsp; {{pricing.from_qty}}
-            <hr>
-        </div>
-        <div>
-            To Quantity: &nbsp; {{pricing.to_qty}}
-
-            <hr>
-        </div>
-        <div>
-            Price: &nbsp; {{'purchase.currency.type.ringgit' | translate}} {{pricing.price}}
-            <hr>
-        </div>
-    </div>
-
-    <mat-toolbar>
-        <span>
-            {{'purchase.product-pricing.add_product_pricing.sub_title.promotion' | translate}}
-            <div class="tooltips">
-                <mat-icon mat-raised-button style="color: #5959f1">help_outline</mat-icon>
-                <div class="right">
-                    <strong>
-                        {{'purchase.product-pricing.add_product_pricing.sub_title.promotion' | translate}}</strong><br>
-                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln1' | translate}} <br>
-                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln2' | translate}} <br>
-                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln3' | translate}} <br>
-                    <strong>{{'purchase.product-pricing.add_product_pricing.tooltips.example' | translate}}</strong>
-                    <br>
-                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln4' | translate}} <br>
-                    {{'purchase.product-pricing.add_product_pricing.tooltips.promotion.ln5' | translate}} <br>
-                    <i></i>
+            <div>
+                <p *ngIf="promoPrice" class="custom-label">
+                    <sup class="alert-color">{{'purchase.currency.type.ringgit' | translate}}
+                        <del class="disabled">{{product.price}}</del>
+                    </sup>
+                    <span class="alert-color" style="font-size:32px"> {{promoPrice}}</span>
+                </p>
+                <p *ngIf="!promoPrice" class="custom-label contrast">
+                    <sup>{{'purchase.currency.type.ringgit' | translate}}</sup><span style="font-size:32px"> {{product.price}}</span>
+                </p>
+            </div>
+            <div class="tax-container">
+                <div class="custom-selected-box dark d-inline-block">
+                    <p *ngIf="product.tax_scheme === 0" class="text-truncate">
+                        {{'purchase.product-pricing.add_product_pricing.tax_scheme.listed_price_is_tax_inclusive' | translate}}
+                    </p>
+                    <p *ngIf="product.tax_scheme === 1" class="text-truncate">
+                        {{'purchase.product-pricing.add_product_pricing.tax_scheme.subject_to_tax' | translate}}
+                    </p>
+                    <p *ngIf="product.tax_scheme === 2" class="text-truncate">
+                        {{'purchase.product-pricing.add_product_pricing.tax_scheme.non_taxable_item' | translate}}
+                    </p>
+                </div>
+                <div class="custom-selected-box dark" style="max-width:175px" *ngIf="product.use_lowest_price">
+                    <div class="text-truncate">Cheapest Guaranteed</div>
                 </div>
             </div>
-        </span>
-    </mat-toolbar>
-
-
-    <div *ngFor="let promo of product.promotions" class="Promotions-containt">
-        <div>
-            To Date: &nbsp; {{promo.from_date | date}}
-            <hr>
         </div>
-        <div>
-            From Date: &nbsp; {{promo.to_date | date}}
-            <hr>
+        <div class="m-1" style="background:#F4F4F4; margin: 0">
+            <mat-card style="margin:10px; box-shadow: none; padding: 0">
+                <img id="vendor-logo" class="mat-card-img" mat-card-image *ngIf="product.vendor.company_logo != null"
+                    [src]="product.vendor.company_logo">
+                <img id="default-logo" class="mat-card-img" mat-card-image *ngIf="product.vendor.company_logo == null"
+                    [src]="defaultImage">
+            </mat-card>
+            <div>
+                <p style="margin:0">{{product.vendor.company_name}}</p>
+            </div>
+            <div>
+                <p style="margin:0" class="payment-term">
+                    <span *ngIf="product.vendor.payment_term != 0">{{ product.vendor.payment_term }} Day(s)</span>
+                    <span *ngIf="product.vendor.payment_term == 0">Cash on delivery </span>
+                </p>
+            </div>
+            <div class="px-3">
+                <button class="custom-btn white text-truncate" (click)="goViewVendor(product.vendor.id)">
+                    {{ 'app.action.view' | translate }}
+                </button>
+            </div>
         </div>
-        <div>
-            Price: &nbsp; {{'purchase.currency.type.ringgit' | translate}} {{promo.price}}
-            <hr>
+
+    </div>
+    <div *ngIf="promoNow == true" class="row" style="margin:0; max-height: 50px">
+        <div class="col-3 custom-selected-box alert text-truncate" style="max-width: 180px;">
+            <label style="margin:0">Promotion Now</label>
+        </div>
+        <div class="col custom-label secondary" style="margin:auto 0">
+            <p style="font-size: 16px"><i>valid until {{validDate | date:'mediumDate'}}</i></p>
         </div>
     </div>
-    <mat-checkbox disabled [checked]="product.use_lowest_price">Always use lowest price</mat-checkbox>
-    <br><br>
+    <div class="upcoming-promo" *ngIf="upcomingDate">
+        Next upcoming promotion starts on {{upcomingDate | date:'mediumDate'}}
+    </div>
+    <div *ngIf="product.pricings.length>0" class="row" style="padding-top:40px; margin: -5px">
+        <div *ngFor="let pricing of product.pricings" class="col-11 col-sm-6 col-md-4 col-lg-3 row pb-3">
+            <div class="custom-selected-box quantity col-4 text-center">
+                {{pricing.from_qty}}
+            </div>
+            <div class="col" style="padding:0;margin: -5px;">
+                <div class="custom-label contrast" style="margin: -5px;text-align: center;">
+                    <sup>{{'purchase.currency.type.ringgit' | translate}}</sup> {{pricing.price}}
+                </div>
+                <div style="height: 8px;background: #777777;"></div>
+            </div>
+        </div>
+        <div class="col-xs-1 p-0">
+            <div style="
+            content: url(assets/module-icon/arrow-up-bold-circle-outline.png);
+            margin-top: -3px;
+            margin-left: 0px;">
+            </div>
+        </div>
+    </div>
+    <mat-toolbar-row>
+        <span class="example-spacer"></span>
+        <button *ngIf="product.vendor.payment_term != null" mat-raised-button (click)="openDialog()" color="primary">
+            {{'app.button.raise_po' | translate}}
+        </button>
+        <button *ngIf="product.vendor.payment_term == null" mat-raised-button disabled>
+            {{'app.button.insufficient' | translate}}
+        </button>
+        <span class="example-spacer"></span>
+    </mat-toolbar-row>
 </div>

@@ -80,6 +80,7 @@ export class PurchaseRequestListComponent implements OnInit, OnDestroy {
   ]
   chosenDate = this.dateType[0].name;
   todayDate = new Date();
+  today = this.datePipe.transform(this.todayDate,"yyyy-MM-dd");
   checkedDateType: any = 'Single';
 
 
@@ -447,7 +448,7 @@ export class PurchaseRequestListComponent implements OnInit, OnDestroy {
       if (this.fromDate !== '') {
         this.isSearch = true;
         if (this.toDate === '') {
-          this.issuedDate = this.fromDate + ":" + this.datePipe.transform(this.todayDate,"yyyy-MM-dd");
+          this.issuedDate = this.fromDate + ":" + this.today;
         } else this.issuedDate = this.fromDate + ":" + this.toDate;
       } else {
         if (this.toDate !== '') {
@@ -457,8 +458,7 @@ export class PurchaseRequestListComponent implements OnInit, OnDestroy {
           this.issuedDate = '';
         }
       }
-    }
-    
+    }    
 
     this.page = page;
     this.searchData = { term: this.keyword, status: this.prStatus, issuedDate: this.issuedDate, saved_po: this.saved_po }

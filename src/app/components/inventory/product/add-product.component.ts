@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { InventoryService } from '../inventory.service';
 import { AppConstant } from '../../../shared';
 import * as _ from 'lodash';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 @Component({
   selector: 'app-add-product',
   templateUrl: './add-product.component.html',
@@ -36,6 +37,7 @@ export class AddProductComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
+    private spinnerService: Ng4LoadingSpinnerService,
     private translateService: TranslateService,
     private inventoryService: InventoryService
   ) {
@@ -43,13 +45,16 @@ export class AddProductComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.craeteForm();
+    this.createForm();
     this.loadQtyMeasure();
     this.searchCategory(null);
     this.searchBrand(null);
     this.fGroup.get('product_type').setValue(0);
     const id = this.route.snapshot.params.id;
     if (_.isEmpty(id)) {
+      if (!this.isEditMode) {
+        this.promotions.removeAt(0);
+      }
       this.isEditMode = false;
     } else {
       this.isEditMode = true;
@@ -70,7 +75,7 @@ export class AddProductComponent implements OnInit {
   }
 
   reloadProduct(id) {
-    this.inventoryService.get_product(id).subscribe((res) => {
+    this.inventoryService.get_product(id).subscribe((res: any) => {
       this.patchValues(res);
     });
   }
@@ -86,30 +91,46 @@ export class AddProductComponent implements OnInit {
       not_for_sale: data.not_for_sale,
       commission: data.commission,
       auto_stock_up: data.auto_stock_up
-      });
+    });
 
-      if (!_.isNull(data.brand)) {
-        this.fGroup.get('brand').setValue(data.brand.id);
-        this.brandName = data.brand.name;
-      }
-      if (!_.isNull(data.model)) {
-        this.fGroup.get('model').setValue(data.model.id);
-        this.modelName = data.model.name;
-      }
-      if (!_.isNull(data.product_category)) {
-        this.fGroup.get('product_category').setValue(data.product_category.id);
-        this.fGroup.get('ctr').setValue(data.product_category.name);
-        this.productCategoryName = data.product_category.name;
-      } else {
-        console.log('dont have product category');
-      }
-      if (!_.isNull(data.qty_measure)) {
-        this.fGroup.get('qty_measure').setValue(data.qty_measure.id);
-        this.modelQtyMeasure = data.qty_measure.name;
-      }
+    if (!_.isNull(data.brand)) {
+      this.fGroup.get('brand').setValue(data.brand.id);
+      this.brandName = data.brand.name;
+    }
+    if (!_.isNull(data.model)) {
+      this.fGroup.get('model').setValue(data.model.id);
+      this.modelName = data.model.name;
+    }
+    if (!_.isNull(data.product_category)) {
+      this.fGroup.get('product_category').setValue(data.product_category.id);
+      this.fGroup.get('ctr').setValue(data.product_category.name);
+      this.productCategoryName = data.product_category.name;
+    } else {
+      console.log('dont have product category');
+    }
+    if (!_.isNull(data.qty_measure)) {
+      this.fGroup.get('qty_measure').setValue(data.qty_measure.id);
+      this.modelQtyMeasure = data.qty_measure.name;
+    }
+    if (data.promotions.length === 0) {
+      this.promotions.removeAt(0);
+    } else {
+      let counter = 0;
+      const entity: SubmitModel = Object.assign({}, data);
+      const addPromotionsArray: FormArray = <FormArray> this.fGroup.get('promotions');
+      counter = 0;
+      entity.promotions.forEach(addPromo => {
+        if (counter === 0) {
+          addPromotionsArray.at(0).patchValue(addPromo);
+        } else {
+          addPromotionsArray.push(this.fb.group(addPromo));
+        }
+        counter++;
+      });
+    }
   }
 
-  craeteForm() {
+  createForm() {
     this.fGroup = this.fb.group(
       {
         product_type: ['', [Validators.required]],
@@ -121,33 +142,64 @@ export class AddProductComponent implements OnInit {
         par_level: 0,
         optimum_level: 0,
         qty_measure: ['', [Validators.required]],
-        price: 0,
+        price: [0.00, [Validators.required, Validators.pattern(this.appConstant.CUSTOM_VALIDATIONS.PRICE)]],
         not_for_sale: [false],
-        commission: 0,
+        commission: [0.00, [Validators.pattern(this.appConstant.CUSTOM_VALIDATIONS.PRICE)]],
         product_category: [null, [Validators.required]],
         auto_stock_up: [false],
-        promotions: []
+        promotions: this.fb.array([this.initPromotion()]),
       });
   }
 
-  uploadImage(evet: FileList) {
-    if (evet.length > 0) {
-      this.picture = evet.item(0);
+  handlePrice() {
+    if (this.fGroup.value.commission > this.fGroup.value.price) {
+      this.fGroup.get('commission').setValue(0.00);
+    }
+  }
+
+  handleCommission() {
+    if (this.fGroup.value.commission > this.fGroup.value.price) {
+      this.fGroup.get('commission').setValue(0.00);
+    }
+  }
+
+  setPromoPrice(i): number {
+    let n = null;
+    if (this.fGroup.value.price < this.fGroup.value.promotions[i].price) {
+      n = this.fGroup.value.price;
+    } else {
+      n = this.fGroup.value.promotions[i].price;
+    }
+    return n;
+  }
+
+  handlePromoPrice(i) {
+    if (this.fGroup.value.promotions[i].price > this.fGroup.value.price) {
+      this.promotions.controls[i].get('price').setValue(this.fGroup.value.price);
+    }
+  }
+  maxPromoPrice(): number {
+    return this.fGroup.value.price;
+  }
+
+  uploadImage(event: FileList) {
+    if (event.length > 0) {
+      this.picture = event.item(0);
       const reader = new FileReader();
-      this.pictureUrl = evet;
-      reader.readAsDataURL(evet[0]);
+      this.pictureUrl = event;
+      reader.readAsDataURL(event[0]);
       reader.onload = (_event) => {
         this.pictureUrl = reader.result;
       };
       const id = null;
-      if (this.isEditMode) {
-        const formData = new FormData();
-        formData.append('picture', this.picture);
-        const prdId = this.route.snapshot.params.id;
-        this.inventoryService.post_addProductPicture(formData, prdId, this.pictureId).subscribe((res) => {
-          console.log(res);
-        });
-      }
+      // if (this.isEditMode) {
+      //   const formData = new FormData();
+      //   formData.append('picture', this.picture);
+      //   const prdId = this.route.snapshot.params.id;
+      //   this.inventoryService.post_addProductPicture(formData, prdId, this.pictureId).subscribe((res) => {
+      //     console.log(res);
+      //   });
+      // }
     }
   }
 
@@ -263,9 +315,13 @@ export class AddProductComponent implements OnInit {
   onChangeQtyMeasure(ev) {
     this.fGroup.value.qty_measure = ev;
   }
-
+  maxCommission() {
+    return this.fGroup.value.price;
+  }
   submitForm(data) {
+    this.spinnerService.show();
     const formData = new FormData();
+
     const o = {
       product_type: data.product_type,
       name: data.name,
@@ -277,15 +333,16 @@ export class AddProductComponent implements OnInit {
       qty_measure: data.qty_measure,
       price: data.price,
       not_for_sale: data.not_for_sale,
-      // commission: data.commission,
+      commission: data.commission,
       product_category: {
         id: data.product_category
       },
       auto_stock_up: data.auto_stock_up,
-      promotions: []
+      promotions: data.promotions
     };
     formData.append('data', JSON.stringify(o));
-    if (!this.isEditMode && this.picture != null) {
+
+    if (this.picture != null && !this.isEditMode) {
       /** @see to-add-new product */
       formData.append('pictures', this.picture);
       this.inventoryService.post_addProduct(formData).subscribe((res) => {
@@ -293,8 +350,9 @@ export class AddProductComponent implements OnInit {
       });
     } else if (this.isEditMode) {
       /** @see to-update the product */
-      const id  = this.route.snapshot.params.id;
+      const id = this.route.snapshot.params.id;
       this.inventoryService.put_product(id, formData).subscribe((res) => {
+        this.spinnerService.hide();
         this.router.navigate(['product-list']);
       });
     } else {
@@ -324,11 +382,17 @@ export class AddProductComponent implements OnInit {
   }
 
   addOptimumLevel() {
-    this.fGroup.value.optimum_level += 1;
+    this.fGroup.controls['optimum_level'].setValue(this.fGroup.controls['optimum_level'].value + 1);
   }
+
   rmOptimumLevel() {
-    if (this.fGroup.value.optimum_level > 1) {
-      this.fGroup.value.optimum_level -= 1;
+    if (this.fGroup.value.optimum_level > 0) {
+      if (this.fGroup.value.optimum_level > this.fGroup.value.par_level + 1
+        && this.fGroup.value.optimum_level > 0) {
+          this.fGroup.controls['optimum_level'].setValue(this.fGroup.controls['optimum_level'].value - 1);
+      } else {
+        return;
+      }
     } else {
       return;
     }
@@ -336,14 +400,17 @@ export class AddProductComponent implements OnInit {
 
   addParLevel() {
     if (this.fGroup.value.par_level < this.fGroup.value.optimum_level - 1) {
-      this.fGroup.value.par_level += 1;
+      this.fGroup.controls['par_level'].setValue(this.fGroup.controls['par_level'].value + 1);
     } else {
+      // let ob = this.fGroup.value.optimum_level + 1;
+      this.fGroup.controls['optimum_level'].setValue(this.fGroup.controls['optimum_level'].value + 1);
+      this.fGroup.controls['par_level'].setValue(this.fGroup.controls['par_level'].value + 1);
       return;
     }
   }
   rmParLevel() {
     if (this.fGroup.value.par_level >= 1) {
-      this.fGroup.value.par_level -= 1;
+      this.fGroup.controls['par_level'].setValue(this.fGroup.controls['par_level'].value - 1);
     } else {
       return;
     }
@@ -351,7 +418,6 @@ export class AddProductComponent implements OnInit {
 
   addDiscount() {
     this.fGroup.value.price += 1;
-    console.log(this.fGroup.value.price);
   }
 
   rmDiscount() {
@@ -377,10 +443,100 @@ export class AddProductComponent implements OnInit {
   maxParLevel() {
     return this.fGroup.value.optimum_level - 1;
   }
+
+  initPromotion() {
+    return this.fGroup = this.fb.group({
+      id: [0],
+      from_date: [null, [Validators.required, Validators.pattern(this.appConstant.CUSTOM_VALIDATIONS.DATE)]],
+      to_date: [null, [Validators.required, , Validators.pattern(this.appConstant.CUSTOM_VALIDATIONS.DATE)]],
+      price: [null, [Validators.required, Validators.min(0.01), , Validators.pattern(this.appConstant.CUSTOM_VALIDATIONS.PRICE)]]
+    });
+  }
+
+  setFromDate(i) {
+    let d = null;
+    if (i < 1) {
+      d = new Date();
+    } else {
+      d = new Date(this.myForm.promotions.value[i - 1].to_date);
+      // this.promotions.controls[i].get('from_date').setValue(d);
+      d = d.setDate(d.getDate() + 1);
+    }
+    return d;
+  }
+
+  setToDate(i) {
+    return new Date();
+  }
+  get promotions(): FormArray {
+    return this.fGroup.get('promotions') as FormArray;
+  }
+  addNewPromo(): void {
+    this.promotions.push(this.fb.group(new Promotion()));
+  }
+  removePromo(idx): void {
+    this.promotions.removeAt(idx);
+  }
+  isValidDate(value) {
+    return this.appConstant.CUSTOM_VALIDATIONS.DATE.test(value);
+  }
+
+  isValidPrice(value) {
+    return this.appConstant.CUSTOM_VALIDATIONS.PRICE.test(value);
+  }
+
+  maxDate(dei, idx) {
+    let d = null;
+    if (idx < 1) {
+      d = '';
+    } else {
+      d = '';
+    }
+    return d;
+  }
+
+  minFromDate(de, idx) {
+    let d = null;
+    if (idx < 1) {
+      d = new Date();
+    } else {
+      d = new Date(this.myForm.promotions.value[idx - 1].to_date);
+      d = d.setDate(d.getDate() + 1);
+    }
+    return d;
+  }
+
+  minToDate(de, idx) {
+    let d = null;
+    d = new Date(this.myForm.promotions.value[idx].from_date);
+    d = d.setDate(d.getDate() + 1);
+    // this.promotions.controls[idx].get('to_date').setValue(this.myForm.promotions.value[idx].from_date);
+    return d;
+  }
 }
 export enum ProductType {
   Rebranded = 0,
   Divided = 1,
   Repackaged = 2,
   Service = 3
+}
+
+export class SubmitModel {
+  promotions: Promotions[];
+  constructor () {
+    this.promotions = [new Promotions()];
+  }
+}
+export class Promotions {
+  id: number;
+  from_date: string;
+  to_date: string;
+  price: number;
+}
+
+export class Promotion {
+  id = 0;
+  from_date = '';
+  to_date = '';
+  price = null;
 }

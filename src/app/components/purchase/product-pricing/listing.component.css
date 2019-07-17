@@ -33,12 +33,3 @@
     text-align: center
 }
 
-
-.selected-box {
-    height: 36px;
-    font-size: 16px;
-    background: #F4F4F4;
-    border: 2px solid #483D8B;
-    padding: 5px;
-    border-radius: 5px;
-}

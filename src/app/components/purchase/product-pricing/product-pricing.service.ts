@@ -1,11 +1,9 @@
+import { map, finalize } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { ResponseWrapper, ResUtil, Pager, createRequestParams, OptionalSortingTerms, SortOptions, CategorySort, TermSort } from '../../../shared';
 import { HttpClient, HttpResponse, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Product, ProductPricingData, PromotionHistoryList, TierPricingHistoryList } from './product-pricing.model';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 import { LookUpData } from './vendor/look-up/look-up.model';
 import { environment } from '../../../../environments/environment';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
@@ -20,7 +18,7 @@ export class ProductPricingService {
   /** @see inventory_urls */
   private lookUpProductPricingUrl = `${this.inventoryUrl}` + '/material/lookup';   //Look Up 
   private lookUpSearchUrl = this.inventoryUrl + '/material/autocomplete';  //Look Up;
-  private autoComplateCategoryUrl = this.inventoryUrl + '/material/category/autocomplete'
+  private autoComplateCategoryUrl = this.purchaseUrl + '/material/category/autocomplete'
 
   /** @see purchase_urls */
   private currentUserUrl = `${this.purchaseUrl}/api/admin/current-user`;     // currentUser Url
@@ -77,7 +75,7 @@ export class ProductPricingService {
   queryGetSortingList(): Observable<object> {
     this.showLoader();
     return this.http.get(`${this.sortOptionUrl}`)
-      .finally(() => this.hideLoader());
+      .pipe( finalize(() => this.hideLoader()));
   }
   queryGetTermList(): Observable<object> {
     return this.http.get(`${this.creditTermUrl}`);
@@ -100,9 +98,9 @@ export class ProductPricingService {
     this.showLoader();
     const httpParams: HttpParams = createRequestParams(pager);
     httpParams.append('status', status.toString())
-    return this.http.get(`${this.lookUpProductPricingUrl}?term=${term}`, { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<LookUpData>(res, LookUpData))
-      .finally(() => this.hideLoader());
+    return this.http.get(`${this.lookUpProductPricingUrl}?term=${term}`, { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<LookUpData>(res, LookUpData)))
+      .pipe( finalize(() => this.hideLoader()));
   }
 
   /**
@@ -110,8 +108,8 @@ export class ProductPricingService {
    */
   queryViewProducts(id): Observable<ResponseWrapper> { //
     const httpParams: HttpParams = createRequestParams();
-    return this.http.get(this.editProductPricingUrl + `/${id}`, { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product));
+    return this.http.get(this.editProductPricingUrl + `/${id}`, { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product)));
   }
 
   /**
@@ -124,19 +122,19 @@ export class ProductPricingService {
     } else {
       console.log('invalid');
     }
-    return this.http.get(this.productHistoryUrl + `/${id}`, { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<Product>(res, Product));
+    return this.http.get(this.productHistoryUrl + `/${id}`, { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<Product>(res, Product)));
   }
 
   queryTierPricingHistory(pager: Pager, id): Observable<object> {
     const httpParams: HttpParams = createRequestParams(pager);
-    return this.http.get(`${this.productHistoryUrl}/${id}/tier-history`, { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<TierPricingHistoryList>(res, TierPricingHistoryList));
+    return this.http.get(`${this.productHistoryUrl}/${id}/tier-history`, { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<TierPricingHistoryList>(res, TierPricingHistoryList)));
   }
   queryPromotionHistory(pager: Pager, id): Observable<object> {
     const httpParams: HttpParams = createRequestParams(pager);
-    return this.http.get(`${this.productHistoryUrl}/${id}/promotion-history`, { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<PromotionHistoryList>(res, PromotionHistoryList));
+    return this.http.get(`${this.productHistoryUrl}/${id}/promotion-history`, { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<PromotionHistoryList>(res, PromotionHistoryList)));
   }
   /**
    * @param status 
@@ -147,11 +145,11 @@ export class ProductPricingService {
     const httpParams: HttpParams = createRequestParams(pager);
     httpParams.append('status', status.toString());
     if (optionalSort.term == '') {
-      return this.http.get(`${this.productPricingListUrl}?categories=${optionalSort.category}`, { params: httpParams, observe: 'response' })
-        .map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData));
+      return this.http.get(`${this.productPricingListUrl}?categories=${optionalSort.category}`, { params: httpParams, observe: 'response' }).pipe(
+        map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData)));
     } else {
-      return this.http.get(`${this.productPricingListUrl}?categories=${optionalSort.category}&term=${optionalSort.term}`, { params: httpParams, observe: 'response' })
-        .map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData));
+      return this.http.get(`${this.productPricingListUrl}?categories=${optionalSort.category}&term=${optionalSort.term}`, { params: httpParams, observe: 'response' }).pipe(
+        map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData)));
     }
   }
 
@@ -159,8 +157,8 @@ export class ProductPricingService {
     const httpParams: HttpParams = createRequestParams(pager);
     const body = new HttpParams()
       .set('keyword', keyword)
-    return this.http.post(this.productPricingUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData));
+    return this.http.post(this.productPricingUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData)));
   }
 
   /**
@@ -168,8 +166,8 @@ export class ProductPricingService {
    */
   queryAdd(data?: Product): Observable<ResponseWrapper> {
     const httpParams = new HttpParams();
-    return this.http.post(`${this.addProductPricingUrl}`, data, { params: httpParams, observe: 'response' }).
-      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product))
+    return this.http.post(`${this.addProductPricingUrl}`, data, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product)))
   }
 
   /**
@@ -178,8 +176,8 @@ export class ProductPricingService {
    */
   queryEiditData(id: number): Observable<ResponseWrapper> {
     const httpParams = new HttpParams();
-    return this.http.get(`${this.retrieveProductToEdit}/${id}`, { params: httpParams, observe: 'response' }).
-      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product))
+    return this.http.get(`${this.retrieveProductToEdit}/${id}`, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product)))
   }
 
   /**
@@ -188,14 +186,14 @@ export class ProductPricingService {
    */
   queryUpdateData(id, data: Product): Observable<ResponseWrapper> {
     const httpParams = new HttpParams();
-    return this.http.put(`${this.editProductPricingUrl}/${id}`, data, { params: httpParams, observe: 'response' }).
-      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product));
+    return this.http.put(`${this.editProductPricingUrl}/${id}`, data, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product)));
   }
 
   queryDeleteProduct(id?: number): Observable<ResponseWrapper> {
     const httpParams = new HttpParams();
-    return this.http.delete(this.deleteProductPricingUrl + `/${id}`, { params: httpParams, observe: 'response' }).
-      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product));
+    return this.http.delete(this.deleteProductPricingUrl + `/${id}`, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<Product>(res, Product)));
   }
 
   /**
@@ -207,8 +205,8 @@ export class ProductPricingService {
     const body = new HttpParams()
       .set('cust_sort_by', cust_sort_by)
       .set('status', status.toString());
-    return this.http.post(this.productPricingUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData));
+    return this.http.post(this.productPricingUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData)));
   }
 
   /**
@@ -220,8 +218,8 @@ export class ProductPricingService {
     const body = new HttpParams()
       .set('category_by', category_by)
       .set('status', status.toString());
-    return this.http.post(this.productPricingUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData));
+    return this.http.post(this.productPricingUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<ProductPricingData>(res, ProductPricingData)));
   }
 
   search(keyword: string, filter?, sort?, pager?: Pager): Observable<ResponseWrapper> {
@@ -230,8 +228,8 @@ export class ProductPricingService {
     .set('term', keyword)
     .set('current_promo', filter.isPromoItems)
     .set('tier', filter.hasTierPrice);
-    return this.http.post(this.productSearchUrl + `?categories=${filter.category}&term=${filter.paymentTerms}`, body.toString(), { params: httpParams, observe: 'response', headers: this.headers })
-    .map((res: HttpResponse<any>) => ResUtil.convertResponseList<Product>(res, Product));
+    return this.http.post(this.productSearchUrl + `?categories=${filter.category}&term=${filter.paymentTerms}`, body.toString(), { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+    map((res: HttpResponse<any>) => ResUtil.convertResponseList<Product>(res, Product)));
   }
 
   private showLoader(): void {

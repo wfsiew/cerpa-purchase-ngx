@@ -4,7 +4,7 @@
     <mat-icon class="icon-align">add</mat-icon>
   </button>
   <span class="example-spacer"></span>
-  <div class="custom-search-input">
+  <div class="custom-input">
     <input id="search-pr-input" class="search-box" placeholder="Search" (keyup)="searchPR($event)" [value]="keyword">
     <mat-icon class="search-icon">search</mat-icon>
   </div>
@@ -28,10 +28,16 @@
         <div id="single-date-container" class="custom-date-container" *ngIf="chosenDate === 'Single'">
           <input id="single-date-input" type="date" class="custom-date"
             placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
-            (change)="setFromDate($event)" [value]="fromDate">
+            (change)="setFromDate($event)" [value]="toDate" max="{{today}}">
         </div>
         <div id="range-date-container" *ngIf="chosenDate === 'Range'">
-          <div class="custom-date-container">
+          <div class="custom-date-container" *ngIf="!toDate">
+            <label for="">From</label>
+            <input id="range-date-from-input" type="date" class="custom-date"
+              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
+              (change)="setFromDate($event)" [value]="fromDate" max="{{today}}">
+          </div>
+          <div class="custom-date-container" *ngIf="toDate">
             <label for="">From</label>
             <input id="range-date-from-input" type="date" class="custom-date"
               placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
@@ -41,7 +47,7 @@
             <label for="">To</label>
             <input id="date-to-input" type="date" class="custom-date"
               placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}"
-              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}">
+              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}" max="{{today}}">
           </div>
           <div id="disabled-date-to-container" class="custom-date-container disabled" *ngIf="!fromDate">
             <label for="">To</label>

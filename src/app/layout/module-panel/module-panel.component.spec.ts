@@ -22,4 +22,6 @@ describe('ModulePanelComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+
 });

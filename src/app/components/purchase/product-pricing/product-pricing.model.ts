@@ -8,16 +8,16 @@ export class Vendor implements BaseEntity {
 
 export class Pricing {
     id = 0;
-    from_qty = 0;
+    from_qty = null;
     to_qty = 0;
-    price = '0.00';
+    price = '';
 }
 
 export class Promotion {
     id = 0;
     from_date = 0;
     to_date = 0;
-    price = '0.00';
+    price = '';
 }
 export class Product implements BaseEntity {
     id?: number

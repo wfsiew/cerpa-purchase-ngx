@@ -8,7 +8,7 @@
     </button>
   </div>
   <span class="example-spacer"></span>
-  <div id="search-vendor-container" *ngIf="!isvendor" class="custom-search-input">
+  <div id="search-vendor-container" *ngIf="!isvendor" class="custom-input">
     <input id="search-vendor-input" class="search-box" placeholder="Search" [(ngModel)]="keyword"
       (keyup)="searchVendor($event)">
     <mat-icon class="search-icon">search</mat-icon>

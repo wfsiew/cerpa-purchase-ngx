@@ -48,14 +48,13 @@ export class LookUpComponent implements OnInit {
     this.initRole();
     this.searchTerm.valueChanges.subscribe((data: any = []) => {
         this.term = data;
-        if (data.length < 3) {
+        if (data.length < 1) {
           return this.autoSearch('');
         } else {
          return this.autoSearch(data);
         }
       })
       this.autoSearch('');
-      
   }
 
   selectedItem(data){
@@ -74,7 +73,7 @@ export class LookUpComponent implements OnInit {
         }
       })
   }
-  setTermValue(){
+  setTermValue() {
     this.LoadList();
   }
 
@@ -141,6 +140,17 @@ export class LookUpComponent implements OnInit {
 
   goto(ev) {
       this.LoadList(ev.pageIndex + 1);
+  }
+
+  productSelected(termParam, page: number = 1) {
+    this.page = page;
+    this.isSearching = true;
+
+    this.productService.queryLookUpList(new Pager(this.page,
+      AppConstant.PAGE_SIZE), termParam).subscribe(
+        (res: ResponseWrapper) => this.onSuccess(res),
+        (res: ResponseWrapper) => this.onError(res)
+      )
   }
 
   private onSuccess(res: ResponseWrapper) {

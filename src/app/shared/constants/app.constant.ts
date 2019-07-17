@@ -19,11 +19,6 @@ export class AppConstant {
     ROLE_PRODUCT_COORDINATOR: 'ROLE_PRODUCT_COORDINATOR',
     ROLE_STOCK_OBSERVER: 'ROLE_STOCK_OBSERVER'
   };
-  public static INVENTORY_ROLE = {
-    ROLE_PRODUCT_MANAGER: 'ROLE_PRODUCT_MANAGER',
-    ROLE_PRODUCT_COORDINATOR: 'ROLE_PRODUCT_COORDINATOR',
-    ROLE_STOCK_OBSERVER: 'ROLE_STOCK_OBSERVER'
-  };
 
   public static ERROR_CODE_URL: String = 'purchase.vendor.invite.error.error_code';
 
@@ -32,7 +27,7 @@ export class AppConstant {
     IN_VALID: 'in-valid-input'
   };
   public static DEFAULT_ICONS = {
-    USER_ICON: 'assets/images/default-m-icon/default-m-icon.png',
+    USER_ICON: 'assets/images/default-m-icon/product-icon.png',
   };
   public static LAST_STEP = {
     STEP1 : 0,
@@ -95,7 +90,7 @@ export class AppConstant {
     GEN_0007: 'GEN_0007', // Form validation failed
     GEN_0008: 'GEN_0008', // Upload failed
     GEN_0009: 'GEN_0009', // Password dose not matched
-
+    VND_0034: 'VND_0034',
     VND_0001: 'VND_0001', // The email address has already exist.
     VND_0002: 'VND_0002', // Vendor profile does not exist
     VND_0003: 'VND_0003', // Failed blacklist vendor.
@@ -153,7 +148,10 @@ export class AppConstant {
     BANK: /(^\d{5,17}$)/, // not yet
     ACCOUNT_NO: /^\d{5,17}$/, // done,
     PASSWORD_VALIDATION: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-    SPACE: /^[\w+\s]+[\w][\S]/
+    SPACE: /^[\w+\s]+[\w][\S]/,
+    PRICE: /^\d+(?:\.\d{0,2})?$/,
+    DATE: /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/,
+    QTY: /^[1-9]/,
   };
 }
 

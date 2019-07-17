@@ -1,16 +1,11 @@
+
+import {empty as observableEmpty, throwError as observableThrowError,  Observable ,  BehaviorSubject, TimeoutError } from 'rxjs';
+
+import {take, filter, catchError, switchMap, finalize,  timeout } from 'rxjs/operators';
 import { Injectable, InjectionToken, Inject } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject, TimeoutError } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from '../../account/services/auth.service';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/finally';
-import 'rxjs/add/observable/empty';
-import 'rxjs/add/observable/throw';
-import 'rxjs/add/operator/filter';
-import { timeout } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConstant } from '../constants';
 import { ErrorMessageService } from '../services/error.message.service';
@@ -37,8 +32,8 @@ export class AuthInterceptor implements HttpInterceptor {
     request = this.applyCredentials(request, this.authService.getToken());
     const timeoutValue = Number(request.headers.get('timeout')) || this.defaultTimeout;
     return next.handle(request)
-      .pipe(timeout(AppConstant.NETWORK_TIME_OUT))
-      .catch(error => {
+      .pipe(timeout(AppConstant.NETWORK_TIME_OUT)).pipe(
+      catchError(error => {
         if (error instanceof HttpErrorResponse) {
           console.log('error instanceof HttpErrorResponse');
           this.mapErrorMessges(error);
@@ -53,15 +48,15 @@ export class AuthInterceptor implements HttpInterceptor {
               case 403:
                 return this.handle401Error(request, next);
             }
-            return Observable.throw(error);
+            return observableThrowError(error);
           }
 
         }
         else {
           this.mapErrorMessges({error:'G_ERROR'});
-          return Observable.throw(error);
+          return observableThrowError(error);
         }
-      });
+      }));
   }
  
   applyCredentials(request: HttpRequest<any>, token: string) {
@@ -82,22 +77,22 @@ export class AuthInterceptor implements HttpInterceptor {
       this.isRefreshingToken = true;
       this.tokenSubject.next(null);
 
-      return this.authService.refreshToken()
-        .switchMap((token: string) => {
+      return this.authService.refreshToken().pipe(
+        switchMap((token: string) => {
           if (token) {
             this.tokenSubject.next(token);
             return next.handle(this.applyCredentials(req, token));
           }
           console.log('refreshToken return null')
           return this.logoutUser(req, next);
-        })
-        .catch(error => {
+        }),
+        catchError(error => {
           console.log('refreshToken error')
           return this.logoutUser(req, next);
-        })
-        .finally(() => {
+        }),
+        finalize(() => {
           this.isRefreshingToken = false;
-        });
+        }),);
     }
 
     else {
@@ -107,12 +102,12 @@ export class AuthInterceptor implements HttpInterceptor {
         return this.logoutUser(req, next);
       }
 
-      return this.tokenSubject
-        .filter(token => token != null)
-        .take(1)
-        .switchMap(token => {
+      return this.tokenSubject.pipe(
+        filter(token => token != null),
+        take(1),
+        switchMap(token => {
           return next.handle(this.applyCredentials(req, token));
-        });
+        }),);
     }
   }
 
@@ -122,7 +117,7 @@ export class AuthInterceptor implements HttpInterceptor {
     this.authService.handleError(req);
     this.router.navigate(['/login']);
     //this.events.publish(AppConstant.EVENT_USER_LOGOUT);
-    return Observable.empty();
+    return observableEmpty();
   }
 
   mapErrorMessges(error) {

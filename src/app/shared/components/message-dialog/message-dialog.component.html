@@ -1,0 +1,25 @@
+<div class="title">
+  <strong>{{title |translate}}</strong>
+</div>
+<br>
+<div style="text-align: center">
+  <form>
+      <textarea 
+      [formControl]="myControl"
+      required
+      [matAutocomplete]="auto"
+      matInput 
+      class="custom-input"
+      placeholder="Message"></textarea>
+
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
+          {{option.name}}
+        </mat-option>
+      </mat-autocomplete>
+  </form>
+  <button [disabled]="myControl.invalid" mat-raised-button color="primary" *ngIf="button_yes !=''" (click)="submit()"
+    cdkFocusInitial>{{ button_yes | translate }}</button>
+  <button mat-raised-button color="default" *ngIf="button_no !='' "
+    [mat-dialog-close]>{{ button_no | translate }}</button>
+</div>

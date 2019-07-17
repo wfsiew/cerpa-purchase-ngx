@@ -25,6 +25,7 @@
     border: 1px solid;
     border-radius: 5px;
     height: 200px;
+    object-fit: cover;
     width: 200px;
 }
 .image-upload{
@@ -53,4 +54,40 @@
 }
 .valid-input{
     border: 1px solid rgb(119, 226, 18);
+}
+.promo-header{
+    width: 100%;
+    padding: 12px 0px;
+}
+.promo-card{
+    border: 1px solid #DBDBDB;
+    margin: 1px 0px 3px;
+    padding: 10px 6px;
+}
+.custom-cerpa-btn{
+    color: white;
+    background-color: #483D8B;
+}
+
+.custom-tqy-selector-btn.qty-icon {
+    background: #483D8B;
+    width: 36px;
+    display: inline-flex;
+    color: #F4F4F4;
+}
+.custom-tqy-selector-btn{
+    margin: 1px;
+    cursor: pointer;
+    height: 36px;
+    border: 2px solid #483D8B;
+    border-radius: 3px;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+
+.custom-number {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    margin: 0;
 }

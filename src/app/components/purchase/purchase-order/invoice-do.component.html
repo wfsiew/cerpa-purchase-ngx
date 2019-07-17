@@ -11,8 +11,8 @@
         <mat-icon class="icon-align">save_alt</mat-icon>
     </button>
 
-    <span class="example-spacer"></span> {{'purchase.invoice.title' | translate | titlecase}} <span
-        class="example-spacer"></span>
+    <div class="example-spacer"></div> {{'purchase.invoice.title' | translate | titlecase}} <div
+        class="example-spacer"></div>
 </mat-toolbar>
 
 <mat-toolbar class="error-message" *ngIf="hasError">
@@ -28,23 +28,20 @@
                     {{'purchase.delivery-order.labels.supplier' | translate | titlecase}}
                 </p>
             </strong>
-
             <div class="p-3 mt-4 table-bordered">
-
-                <span>{{invoiceList.vendor.company_name}}</span> <br>
-                <span>{{invoiceList.vendor.biz_reg_num}}</span> <br>
-                <span
-                    *ngIf="invoiceList.vendor.vendor_address.addr_line_1 != ''">{{invoiceList.vendor.vendor_address.addr_line_1}}</span><br>
-                <span
-                    *ngIf="invoiceList.vendor.vendor_address.addr_line_2 != ''">{{invoiceList.vendor.vendor_address.addr_line_2}}<br></span>
-                <span
-                    *ngIf="invoiceList.vendor.vendor_address.addr_line_3 != ''">{{invoiceList.vendor.vendor_address.addr_line_3}}<br></span>
-                <span>{{invoiceList.vendor.vendor_address.postcode}},</span>
-                <span>{{invoiceList.vendor.vendor_address.city}},</span>
-                <span>{{invoiceList.vendor.vendor_address.state.name}},</span> <br>
-                <span>{{'purchase.delivery-order.labels.tel' | translate}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:
-                    {{invoiceList.vendor.office_phone}}</span> <br>
-                <span>{{'purchase.delivery-order.labels.sst_no' | translate}}: {{invoiceList.vendor.tax_num}}</span>
+                <div>{{invoiceList.vendor.company_name}}</div>
+                <div>{{invoiceList.vendor.biz_reg_num}}</div>
+                <div
+                    *ngIf="invoiceList.vendor.vendor_address.addr_line_1 != ''">{{invoiceList.vendor.vendor_address.addr_line_1}}</div>
+                <div
+                    *ngIf="invoiceList.vendor.vendor_address.addr_line_2 != ''">{{invoiceList.vendor.vendor_address.addr_line_2}}</div>
+                <div
+                    *ngIf="invoiceList.vendor.vendor_address.addr_line_3 != ''">{{invoiceList.vendor.vendor_address.addr_line_3}}</div>
+                <div>{{invoiceList.vendor.vendor_address.postcode}},</div>
+                <div>{{invoiceList.vendor.vendor_address.city}},</div>
+                <div>{{invoiceList.vendor.vendor_address.state.name}},</div>
+                <div>{{'purchase.delivery-order.labels.tel' | translate}}: {{invoiceList.vendor.office_phone}}</div>
+                <div>{{'purchase.delivery-order.labels.sst_no' | translate}}: {{invoiceList.vendor.tax_num}}</div>
             </div>
 
         </div>
@@ -52,11 +49,11 @@
             <div class="">
                 <h3>{{'purchase.invoice.title' | translate | titlecase}}</h3>
                 <label> {{'purchase.invoice.labels.invoice-ref' | translate | titlecase}} : </label>
-                <span>{{invoiceList.invoice_ref}}</span> <br>
+                <div>{{invoiceList.invoice_ref}}</div>
                 <label> {{'purchase.invoice.labels.invoice-date' | translate | titlecase}}: </label>
-                <span>{{invoiceList.issued_date | date: 'mediumDate'}}</span><br>
+                <div>{{invoiceList.issued_date | date: 'mediumDate'}}</div>
                 <label> {{'purchase.invoice.labels.due-date' | translate | titlecase}} : </label>
-                <span>{{invoiceList.due_date | date : 'mediumDate'}}</span>
+                <div>{{invoiceList.due_date | date : 'mediumDate'}}</div>
             </div>
         </div>
     </div>
@@ -68,21 +65,20 @@
     </strong>
 
     <div class="p-3 table-bordered">
-        <span>{{invoiceList.issued_by.company.name | titlecase}}</span> <br>
-        <span>{{invoiceList.issued_by.company.biz_reg_num}}</span> <br>
-        <span
-            *ngIf="invoiceList.issued_by.company.address.addr_line_1 != ''">{{invoiceList.issued_by.company.address.addr_line_1}}</span><br>
-        <span
-            *ngIf="invoiceList.issued_by.company.address.addr_line_2 != ''">{{invoiceList.issued_by.company.address.addr_line_2}}<br></span>
-        <span
-            *ngIf="invoiceList.issued_by.company.address.addr_line_3 != ''">{{invoiceList.issued_by.company.address.addr_line_3}}<br></span>
-        <span>{{invoiceList.issued_by.company.address.postcode}},</span>
-        <span>{{invoiceList.issued_by.company.address.city}},</span>
-        <span>{{invoiceList.issued_by.company.address.state.name}},</span> <br>
+        <div>{{invoiceList.issued_by.company.name | titlecase}}</div>
+        <div>{{invoiceList.issued_by.company.biz_reg_num}}</div>
+        <div
+            *ngIf="invoiceList.issued_by.company.address.addr_line_1 != ''">{{invoiceList.issued_by.company.address.addr_line_1}}</div>
+        <div
+            *ngIf="invoiceList.issued_by.company.address.addr_line_2 != ''">{{invoiceList.issued_by.company.address.addr_line_2}}</div>
+        <div
+            *ngIf="invoiceList.issued_by.company.address.addr_line_3 != ''">{{invoiceList.issued_by.company.address.addr_line_3}}</div>
+        <div>{{invoiceList.issued_by.company.address.postcode}},</div>
+        <div>{{invoiceList.issued_by.company.address.city}},</div>
+        <div>{{invoiceList.issued_by.company.address.state.name}},</div>
 
     </div>
 
-    <br>
     <table class="table table-bordered" style="border:none!important; text-align: center">
         <tr>
             <th> {{'purchase.invoice.labels.bill-to.lbs.item' | translate | titlecase}}</th>
@@ -98,7 +94,7 @@
             <td>{{do.price | currency:'RM '}}</td>
         </tr>
         <tr style="border:none!important">
-            <td style="border:none!important" colspan="3"></td>
+            <td style="border:none!important" coldiv="3"></td>
             <td>
                 <div class="row">
                     <div class="col-xl-5 col-md-6 px-2 pt-2" style="text-align: right">Total Tax: RM</div>
@@ -123,9 +119,9 @@
     </table>
 
     <mat-toolbar-row *ngIf="isvendor">
-        <span class="example-spacer"></span>
+        <div class="example-spacer"></div>
         <button [disabled]="invoiceList.status == 1" (click)="issueInvoice()" mat-raised-button
             color="primary">{{'purchase.invoice.btns.issue-invoice' | translate | titlecase}} </button>
-        <span class="example-spacer"></span>
+        <div class="example-spacer"></div>
     </mat-toolbar-row>
 </div>

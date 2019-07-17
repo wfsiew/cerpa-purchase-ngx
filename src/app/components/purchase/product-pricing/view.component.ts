@@ -10,6 +10,7 @@ import { ProductPricingHistoryComponent } from './product-pricing.history.compon
 import { MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { RaisePoDialogComponent } from './raise-po-dialog/raise-po-dialog.component';
 @Component({
   selector: 'app-view',
   templateUrl: './view.component.html',
@@ -19,6 +20,12 @@ export class ViewComponent implements OnInit {
   isvendor: boolean;
   product: Product[];
   tabs = PurchaseTabs.tabs;
+  defaultImage: string = 'assets/images/default-m-icon/default-m-icon.png';
+
+  promoNow: boolean = false;
+  validDate: any;
+  upcomingDate: any;
+  promoPrice: any;
   constructor(
     private productService: ProductPricingService,
     private location: Location,
@@ -70,6 +77,12 @@ export class ViewComponent implements OnInit {
     }
   }
 
+  
+  goViewVendor(id) {
+    console.log('view vendor');
+    this.router.navigate([`/vendor`, id]);
+  }
+
   getViewId() {
     this.viewProducts(this.route.snapshot.params.id);
   }
@@ -81,6 +94,24 @@ export class ViewComponent implements OnInit {
       )
     }else{
       this.location.back();
+    }
+  }
+  openDialog() {
+    var id = this.route.snapshot.params.id;
+    if (/^\d+$/.test(id)) {
+      const dialogRef = this.dialog.open(RaisePoDialogComponent, {
+        width: '50%',
+        height: '40%',
+        autoFocus: false,
+        data: { id: id }
+      });
+      dialogRef.afterClosed().subscribe(
+        (res) => {
+          console.log(res);
+        }
+      );
+    } else {
+      return this.back();
     }
   }
 
@@ -105,12 +136,25 @@ export class ViewComponent implements OnInit {
 
   private onSuccess(res: ResponseWrapper) {
     this.product = res.data;
+    for (let i = 0; i < res.data.promotions.length; i++) {
+      if(res.data.promotions[i].current_promotion == true) {        
+        this.promoNow = true;
+        this.promoPrice = res.data.promotions[i].price;
+        this.validDate = res.data.promotions[i].to_date;
+      }
+      else {
+        this.upcomingDate = res.data.promotions[i].from_date;
+      }  
+    }
+    console.log(res.data.pricings);    
   }
 
   private onError(error: ResponseWrapper) {
     console.log(error);
     // update error handling..
   }
+
+  
 
   back() {
     this.location.back();

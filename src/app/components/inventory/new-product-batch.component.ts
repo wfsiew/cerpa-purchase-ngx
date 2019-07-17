@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { InventoryService } from './inventory.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as _ from 'lodash';
+import { AppConstant } from '../../shared';
 @Component({
   selector: 'app-new-product-batch',
   templateUrl: './new-product-batch.component.html',
@@ -14,36 +15,57 @@ export class NewProductBatchComponent implements OnInit {
   productId = null;
   batchId = null;
   isEditMode = false;
+  viewOnly = false;
+  batchData: any;
+  readonly appConstant = AppConstant;
   constructor(
     private inventoryService: InventoryService,
     private route: ActivatedRoute,
     private router: Router,
     private fb: FormBuilder,
-    ) { }
+  ) { }
 
-    ngOnInit() {
+  ngOnInit() {
     this.createForm();
     this.productId = this.route.snapshot.params.prd_id;
     this.productName = this.route.snapshot.params.productName;
     this.batchId = this.route.snapshot.params.id;
-    if (!_.isEmpty(this.batchId)) {
+    // && this.initPath() === 'add-batch')
+    if (this.initPath() === 'add-batch') {
+      this.isEditMode = false;
+      this.viewOnly = false;
+      // this.loadBatch(this.productId, this.batchId);
+    } else if (this.initPath() === 'view-batch') {
+      this.viewOnly = true;
+      this.isEditMode = false;
+      this.loadBatch(this.productId, this.batchId);
+    } else if (this.initPath() === 'edit-batch') {
+      this.viewOnly = false;
       this.isEditMode = true;
-      this.loadBatch( this.productId, this.batchId);
+      this.loadBatch(this.productId, this.batchId);
     } else {
+      this.viewOnly = false;
       this.isEditMode = false;
     }
   }
 
+  initPath() {
+    let p = null;
+    this.route.url.subscribe((res) => {
+      p = res[0].path;
+    });
+    return p;
+  }
+
   loadBatch(prdId, batchId) {
-    this.inventoryService.get_productBatch(prdId, batchId).subscribe(( res) => {
+    this.inventoryService.get_productBatch(prdId, batchId).subscribe((res) => {
       this.patchData(res);
+      this.batchData = res;
     });
   }
   patchData(data) {
-    const r = this.fGroup.get('product_name').valid;
     this.fGroup.patchValue(
       {
-        product_name: this.productName,
         cost: data.cost,
         quantity: data.quantity,
         expiry_date: data.expiry_date
@@ -59,9 +81,8 @@ export class NewProductBatchComponent implements OnInit {
   createForm() {
     this.requiredField();
     this.fGroup = this.fb.group({
-      product_name: [null, Validators.required],
       quantity: [1, [Validators.required, Validators.min(1)]],
-      cost: [null, [Validators.required, Validators.min(0)]],
+      cost: [null, [Validators.required, Validators.min(0), Validators.pattern(this.appConstant.CUSTOM_VALIDATIONS.PRICE)]],
       manufactureDate: '',
       received_date: '',
       expiry_date: [null]
@@ -76,21 +97,21 @@ export class NewProductBatchComponent implements OnInit {
   }
 
   maxQty() {
-    this.fGroup.value.quantity = this.fGroup.value.quantity + 1;
+    this.fGroup.controls['quantity'].setValue(this.fGroup.controls['quantity'].value + 1);
   }
   minQty() {
     if (this.fGroup.value.quantity > 1) {
-      this.fGroup.value.quantity = this.fGroup.value.quantity - 1;
+      this.fGroup.controls['quantity'].setValue(this.fGroup.controls['quantity'].value - 1);
     }
   }
 
   submitForm(data) {
     if (this.isEditMode) {
-      this.inventoryService.put_newProductBatch(data, this.productId, this.batchId).subscribe( (res) => {
+      this.inventoryService.put_newProductBatch(data, this.productId, this.batchId).subscribe((res) => {
         this.router.navigate(['batch-list', this.productId, this.productName]);
       });
     } else {
-      this.inventoryService.post_newProductBatch(data, this.productId).subscribe( (res) => {
+      this.inventoryService.post_newProductBatch(data, this.productId).subscribe((res) => {
         this.router.navigate(['batch-list', this.productId, this.productName]);
       });
     }

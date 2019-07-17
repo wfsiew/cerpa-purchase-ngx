@@ -17,19 +17,8 @@
 <div class="custom-section">
 
   <mat-card class="custom-card">
-    
-    <div class="custom-card-border">
-      <div style="text-align: center; font-weight: bold">Category</div>
-      <div class="custom-card-title">
-        <mat-select class="selected-box" (change)="onCategory($event.value)" placeholder="Category">
-          <mat-option *ngFor="let o of categoryList" [value]="o.id">
-            <span>{{o.name}}</span>
-          </mat-option>
-        </mat-select>
-      </div>
-    </div>
 
-    <div class="custom-card-border">
+    <!-- <div class="custom-card-border">
       <div style="text-align: center; font-weight: bold">Product Type</div>
       <div class="custom-card-title">
         <mat-select class="selected-box" (change)="onProductType($event.value)" placeholder="Product Type">
@@ -38,23 +27,35 @@
           </mat-option>
         </mat-select>
       </div>
-    </div>
+    </div> -->
 
+    <div class="custom-card-border">
+        <div style="text-align: center; font-weight: bold">Category</div>
+        <div class="custom-card-title">
+          <mat-select class="selected-box" (selectionChange)="onCategory($event.value)" [value] = "category" placeholder="Category">
+            <mat-option *ngFor="let o of categoryList" [value]="o.id">
+              <span>{{o.name}}</span>
+            </mat-option>
+          </mat-select>
+        </div>
+      </div>
+      
     <div class="custom-card-border card-white-space-text">
       <div class="custom-card-title">
-        <mat-checkbox (change) = "belowPar($event)" [(ngModel)]="belowParLevel">Below Par Level </mat-checkbox>
+        <mat-checkbox [checked]="belowParLevel" (change)="belowPar($event)" [(ngModel)]="belowParLevel">Below Par Level </mat-checkbox>
       </div>
 
       <div class="custom-card-title">
-        <mat-checkbox (change) = "itemExpiredStock($event)" [(ngModel)]="expiredStock">Expired Stock</mat-checkbox>
+        <mat-checkbox (change)="itemExpiredStock($event)" [(ngModel)]="expiredStock">Expired Stock</mat-checkbox>
       </div>
 
       <div class="custom-card-title">
-        <mat-checkbox (change) = "itemNotForSale($event)" [(ngModel)]="notForSale">Not For Sale </mat-checkbox>
+        <mat-checkbox (change)="itemNotForSale($event)" [(ngModel)]="notForSale">Not For Sale </mat-checkbox>
       </div>
 
       <div class="custom-card-title">
-        <mat-checkbox (change) = "itemCurrentPromotion($event)" [(ngModel)]="currentPromotion">Current Promotion</mat-checkbox>
+        <mat-checkbox (change)="itemCurrentPromotion($event)" [(ngModel)]="currentPromotion">Current Promotion
+        </mat-checkbox>
       </div>
     </div>
 
@@ -66,26 +67,35 @@
   <div class="cerpa-container">
     <mat-paginator [length]="pagination.totalRecords" [pageSize]="pagesize" [pageIndex]="page - 1"
       [showFirstLastButtons]="true" (page)="goto($event)"></mat-paginator>
+    <div *ngIf='list.length == 0' class="cerpa-card-list">
+        <p>
+            No Record Found
+        </p>
+    </div>
     <div class="cerpa-card-list">
-      <mat-card *ngFor = 'let o of list' class="cerpa-card" (click)="ViewCard($event,{'options': 'view','value': 'list'})">
+      <mat-card *ngFor='let o of list' class="cerpa-card"
+        (click)="ViewCard($event,{'options': 'view','value': 'list'})">
         <mat-card-header class="cerpa-more-icon">
           <div>
             <button mat-icon-button [matMenuTriggerFor]="menu">
               <mat-icon>more_horiz</mat-icon>
             </button>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="edit(o.id)">Edit</button>
-              <button mat-menu-item (click)="addProductBatch(o)">Add Product Batch</button>
-              <button mat-menu-item (click)="viewProductBatchList(o)">View Product List</button>
-              <button mat-menu-item (click)="deleteProduct(o.id)">Delete</button>
+              <button *ngIf = "!isStockObserver" mat-menu-item (click)="edit(o.id)">Edit</button>
+              <button *ngIf = "!isStockObserver && ispManager" mat-menu-item (click)="addProductBatch(o)">Add Product Batch</button>
+              <button mat-menu-item (click)="viewProductBatchList(o)">View Product BatchList</button>
+              <button *ngIf = "isStockObserver" mat-menu-item (click)="viewProduct(o)">View Product</button>
+              <button *ngIf = "ispManager" mat-menu-item (click)="deleteProduct(o)">Delete Product</button>
+              <!-- <button *ngIf = "!isStockObserver" mat-menu-item (click)="deleteProduct(o.id)">Delete</button> -->
             </mat-menu>
           </div>
         </mat-card-header>
-          <img class="mat-card-img" [src]="blankPicture(o.pictures)">
+        <img class="mat-card-img" [src]="blankPicture(o.pictures)">
         <mat-card-content class="card-desc">
-          <p class="card-title" style="margin-bottom:1px">{{o.name}}</p>
+          <p class="card-title" style="margin-bottom:1px" [title]="o.name">{{o.name}}</p>
+
         </mat-card-content>
       </mat-card>
     </div>
   </div>
-</div> 
+</div>

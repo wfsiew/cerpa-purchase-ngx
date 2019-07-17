@@ -40,18 +40,16 @@
       
               <div class="manage-material float-right">
                 <!-- <div class="pr-4"> -->
-                <div class="ctr btn-block text-center">
-                  <span class="ff btn-block rounded">
-                    <button [disabled]="qty <=1" (click)="lessQyt()" class="btn btn-sm ctr-btn float-left">
+                <div class="ctr text-center">
+                  <span class="ff rounded">
+                    <button type="button" [disabled]="qty <=1" (click)="lessQyt()" class="btn btn-sm float-left">
                       <mat-icon class="qty-seletor-icon">remove</mat-icon>
-                    </button>
-      
+                    </button>      
                     <input min="0" maxlength="5" hidden type="number" formControlName="qty" [(ngModel)]="qty">
                     <span class="btn qty-no">
                       {{qty}}
-                    </span>
-      
-                    <button (click)="addQyt()" class="btn btn-sm ctr-btn float-right">
+                    </span>      
+                    <button (click)="addQyt()" class="btn btn-sm float-right">
                       <mat-icon class="qty-seletor-icon">add</mat-icon>
                     </button>
                   </span>

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ErrorMessageService } from '../../services/error.message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { AppConstant } from '../../constants';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 
 @Component({
   selector: 'app-error',

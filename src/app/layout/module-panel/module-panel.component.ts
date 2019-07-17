@@ -11,6 +11,7 @@ import { PageStateService, ModuleServices } from '../../shared/services/page-sta
 import { AuthService } from '../../account/services/auth.service';
 import { AppConstant } from '../../shared';
 import * as _ from 'lodash';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-module-panel',
   templateUrl: './module-panel.component.html',
@@ -44,12 +45,13 @@ export class ModulePanelComponent implements OnInit {
   readonly USER_ROLE = AppConstant.ROLE;
   gridlistcount = 3;
   moduleName = null;
-  currentUser = null;
+  currentUser = [];
 
   constructor (
     private moduleService: ModuleServices,
     private messageService: MessageService,
     private authService: AuthService,
+    private router: Router,
     private pageStateService: PageStateService) { }
 
   ngOnInit() {
@@ -82,14 +84,14 @@ export class ModulePanelComponent implements OnInit {
         k.name === this.USER_ROLE.PURCHASER
       ) {
         // purchasing
-        this.currentUser = this.tiles[0].text;
+        this.currentUser.push(this.tiles[0].text);
       } else if (
         k.name === this.USER_ROLE.ROLE_PRODUCT_COORDINATOR ||
         k.name === this.USER_ROLE.ROLE_PRODUCT_MANAGER ||
         k.name === this.USER_ROLE.ROLE_STOCK_OBSERVER
       ) {
         // inventory
-        this.currentUser = this.tiles[1].text;
+        this.currentUser.push(this.tiles[1].text);
       }
     });
   }
@@ -107,10 +109,12 @@ export class ModulePanelComponent implements OnInit {
     this.rightsidenav.close();
   }
 
-  tileClick() {
+  tileClick(tl) {
+    this.router.navigate([tl.link]);
     this.pageStateService.init();
     this.messageService.sendMessage('search:loadstate', null);
   }
+
   activeModule(link): string {
     let cls = null;
     this.moduleName = localStorage.getItem('module-name');

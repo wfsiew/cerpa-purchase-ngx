@@ -9,15 +9,20 @@ import { AppConstant } from '../../shared';
 import { NewProductBatchComponent } from './new-product-batch.component';
 import { BatchListingComponent } from './batch-listing.component';
 import { ProductListingComponent } from './product-listing.component';
+import { ViewProductComponent } from './product/view-product.component';
 
 export const INVENTORY_ROUTES: Routes = [
   {
     path: 'inventory',
-    component: InventoryComponent,
+    component: ProductListingComponent,
     canActivate: [InventoryRoleGuardServiceGuard],
     data: {
       authorities: [],
-      roles: [AppConstant.INVENTORY_ROLE],
+      roles: [
+        AppConstant.ROLE.ROLE_PRODUCT_MANAGER,
+        AppConstant.ROLE.ROLE_PRODUCT_COORDINATOR,
+        AppConstant.ROLE.ROLE_STOCK_OBSERVER
+      ],
       pageTitle: 'inventory.title'
     }
   },
@@ -44,7 +49,20 @@ export const INVENTORY_ROUTES: Routes = [
     component: AddProductComponent,
     canActivate: [InventoryRoleGuardServiceGuard],
     data: {
-      roles: AppConstant.ROLE.ROLE_PRODUCT_MANAGER,
+      roles: [AppConstant.ROLE.ROLE_PRODUCT_MANAGER],
+      authorities: [],
+      pageTitle: 'material.title'
+    }
+  },
+  {
+    path: 'view-product/:id',
+    component: ViewProductComponent,
+    canActivate: [InventoryRoleGuardServiceGuard],
+    data: {
+      roles: [
+        AppConstant.ROLE.ROLE_STOCK_OBSERVER,
+        AppConstant.ROLE.ROLE_PRODUCT_COORDINATOR
+      ],
       authorities: [],
       pageTitle: 'material.title'
     }
@@ -54,7 +72,7 @@ export const INVENTORY_ROUTES: Routes = [
     component: AddProductComponent,
     canActivate: [InventoryRoleGuardServiceGuard],
     data: {
-      roles: AppConstant.ROLE.ROLE_PRODUCT_MANAGER,
+      roles: [AppConstant.ROLE.ROLE_PRODUCT_MANAGER],
       authorities: [],
       pageTitle: 'material.title'
     }
@@ -73,7 +91,11 @@ export const INVENTORY_ROUTES: Routes = [
     component: BatchListingComponent,
     canActivate: [InventoryRoleGuardServiceGuard],
     data: {
-      roles: [AppConstant.ROLE],
+      roles: [
+        AppConstant.ROLE.ROLE_PRODUCT_MANAGER,
+        AppConstant.ROLE.ROLE_PRODUCT_COORDINATOR,
+        AppConstant.ROLE.ROLE_STOCK_OBSERVER
+      ],
       authorities: [],
       pageTitle: 'material.title'
     }
@@ -83,7 +105,11 @@ export const INVENTORY_ROUTES: Routes = [
     component: ProductListingComponent,
     canActivate: [InventoryRoleGuardServiceGuard],
     data: {
-      roles: [AppConstant.ROLE],
+      roles: [
+        AppConstant.ROLE.ROLE_PRODUCT_MANAGER,
+        AppConstant.ROLE.ROLE_PRODUCT_COORDINATOR,
+        AppConstant.ROLE.ROLE_STOCK_OBSERVER
+      ],
       authorities: [],
       pageTitle: 'material.title'
     }
@@ -93,7 +119,22 @@ export const INVENTORY_ROUTES: Routes = [
     component: NewProductBatchComponent,
     canActivate: [InventoryRoleGuardServiceGuard],
     data: {
-      roles: [AppConstant.ROLE],
+      roles: [
+        AppConstant.ROLE.ROLE_PRODUCT_MANAGER,
+        AppConstant.ROLE.ROLE_PRODUCT_COORDINATOR,
+      ],
+      authorities: [],
+      pageTitle: 'material.title'
+    }
+  },
+  {
+    path: 'view-batch/:prd_id/:id/:productName',
+    component: NewProductBatchComponent,
+    canActivate: [InventoryRoleGuardServiceGuard],
+    data: {
+      roles: [
+        AppConstant.ROLE.ROLE_STOCK_OBSERVER
+      ],
       authorities: [],
       pageTitle: 'material.title'
     }
@@ -103,7 +144,11 @@ export const INVENTORY_ROUTES: Routes = [
     component: NewProductBatchComponent,
     canActivate: [InventoryRoleGuardServiceGuard],
     data: {
-      roles: [AppConstant.ROLE],
+      roles: [
+        AppConstant.ROLE.ROLE_PRODUCT_MANAGER,
+        AppConstant.ROLE.ROLE_PRODUCT_COORDINATOR,
+        AppConstant.ROLE.ROLE_STOCK_OBSERVER
+      ],
       authorities: [],
       pageTitle: 'material.title'
     }

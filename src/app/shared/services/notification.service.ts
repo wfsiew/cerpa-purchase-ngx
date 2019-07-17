@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase';
-import 'rxjs/add/operator/take';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import { take } from 'rxjs/operators';
+import { BehaviorSubject ,  Observable, Subject } from 'rxjs'
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, Subject } from 'rxjs';
 import { Pager } from '../models';
 import { createRequestParams } from '../utils';
 import { environment } from '../../../environments/environment';
@@ -39,7 +38,7 @@ export class NotificationService {
 
  
   updateToken(token) {
-    return this.afAuth.authState.take(1).subscribe(user => {
+    return this.afAuth.authState.pipe(take(1)).subscribe(user => {
       if (!user) return;
       const data = { [user.uid]: token }
     })

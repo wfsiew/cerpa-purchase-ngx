@@ -11,18 +11,8 @@
 </mat-toolbar>
 
 <div class="container-fluid mt-3">
-
-  <div class="container">
+  <div *ngIf = "!viewOnly" class="container">
     <form [formGroup]="fGroup" #frm="ngForm">
-
-
-      <div *ngIf = "!isEditMode" class="row mt-md-1 text-left">
-        <div class="col-12 col-sm-3 mb-1 mb-sm-0">Product Name</div>
-        <div class="col-12 col-md-9">
-          <input class="custom-input"
-            [ngClass]="{'in-valid-input':myForm.product_name.invalid && myForm.product_name.touched}" maxlength="100"
-            formControlName="product_name" type="text" placeholder="Product Name"> </div>
-      </div>
 
       <div class="row mt-md-1 text-left">
         <div class="col-12">
@@ -35,7 +25,7 @@
                     <mat-icon class="icon-align">remove</mat-icon>
                   </button>
                 </div>
-                <input formControlName="quantity" type="number" [value]="fGroup.value.quantity" required placeholder="Quantity" min="0" id="qty_input"
+                <input readonly formControlName="quantity" type="number" [value]="fGroup.value.quantity" required placeholder="Quantity" min="0" id="qty_input"
                   class="form-control form-control-sm text-center" value="1" min="1">
                 <div class="input-group-prepend">
                   <button class="custom-btn icon" (click) = "maxQty()" id="plus-btn">
@@ -98,4 +88,35 @@
     </form>
   </div>
   <br>
+
+   <!-- view product batch -->
+
+  <div *ngIf = "viewOnly" class="container">
+    <div *ngIf = "batchData" class="bordered">
+        <div class="row mt-md-1 text-left">
+            <div class="col-12">
+              <div class="row">
+                <div class="col-12 col-md-3 mb-1 mt-sm-0">Quantity:</div>
+                <div class="col-12 col-md-4">
+                  {{batchData.quantity}}
+                </div>
+              </div>
+            </div>
+          </div>
+    
+          <div class="row mt-md-1 text-left">
+            <div class="col-12 col-sm-3 mb-1 mt-sm-0">
+              <span>Cost:</span>
+            </div>
+            <div class="col-12 col-md-9 my-2">
+              {{batchData.cost}}
+              </div>
+          </div>
+          <div class="row mt-md-1 text-left">
+            <div class="col-12 col-sm-3 mb-1 mt-sm-0">Expire Date: </div>
+            <div class="col-12 col-md-4"> {{batchData.expiry_date| date: 'MMMM d, yyyy'}} </div>
+          </div>
+    </div>
+  </div>
+
 </div>

@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpResponse, HttpHeaders } from '@angular/common/http';
 // import { ENV } from '@environment';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import { catchError, map, tap, } from 'rxjs/operators';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+
+
+import { catchError, map, tap, finalize } from 'rxjs/operators';
 import { ResponseWrapper, createRequestParams, Pager, ResUtil } from '../../../shared';
 import { Vendor, VendorDetails, State } from './vendor.model';
 import { VendorInvite } from './vendor-invite.model';
-import { of } from 'rxjs/observable/of';
 import { environment } from '../../../../environments/environment';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Ng4LoadingSpinnerService } from 'ng4-loading-spinner';
 @Injectable()
 export class VendorService {
@@ -70,14 +68,14 @@ export class VendorService {
     if (status >= 0) {
       url = `${url}?status=${status}`;
     }
-    return this.http.get(url, { params: httpParams, observe: 'response' })
-    .map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor))
-    .finally(() => this.hideLoader());
+    return this.http.get(url, { params: httpParams, observe: 'response' }).pipe(
+    map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor)))
+    .pipe(finalize(() => this.hideLoader()));
   }
 
   queryNext(url: string): Observable<ResponseWrapper> {
-    return this.http.get(url, { observe: 'response' })
-    .map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor));
+    return this.http.get(url, { observe: 'response' }).pipe(
+    map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor)));
   }
 
   /**
@@ -96,8 +94,8 @@ export class VendorService {
     .set('status', status)
     .set('payment_term', paymentTerm);
     return this.http.post(this.resourceUrl + '/search', body.toString(), { params: httpParams, observe: 'response', headers: this.headers })
-    .map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor))
-    .finally(() => this.hideLoader());
+      .pipe(map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor)))
+      .pipe(finalize(() => this.hideLoader()));
   }
 
   /**
@@ -108,8 +106,8 @@ export class VendorService {
   queryDetails(id: number): Observable<ResponseWrapper> { /** used */
     const httpParams: HttpParams = createRequestParams();
     const url = `${this.detailsResourceUrl}/${id}`;
-    return this.http.get(url, { params: httpParams, observe: 'response' })
-    .map((res: HttpResponse<any>) => ResUtil.convertResponse<VendorDetails>(res, VendorDetails));
+    return this.http.get(url, { params: httpParams, observe: 'response' }).pipe(
+    map((res: HttpResponse<any>) => ResUtil.convertResponse<VendorDetails>(res, VendorDetails)));
   }
 
   /**
@@ -154,8 +152,8 @@ export class VendorService {
   queryEdit(id: number): Observable<ResponseWrapper> { /** used */
     const httpParams: HttpParams = createRequestParams();
     const url = `${this.editResourceUrl}/${id}`;
-    return this.http.get(url, { params: httpParams, observe: 'response' })
-    .map((res: HttpResponse<any>) => ResUtil.convertResponse<VendorDetails>(res, VendorDetails));
+    return this.http.get(url, { params: httpParams, observe: 'response' }).pipe(
+    map((res: HttpResponse<any>) => ResUtil.convertResponse<VendorDetails>(res, VendorDetails)));
   }
 
   /**
@@ -172,8 +170,8 @@ export class VendorService {
   querystates(country_id: number) {
     const httpParams: HttpParams = createRequestParams();
     const url = `${this.statesResourceUrl}/${country_id}`;
-    return this.http.get(url, { params: httpParams, observe: 'response' })
-    .map((res: HttpResponse<any>) => ResUtil.convertResponseList<State>(res, State));
+    return this.http.get(url, { params: httpParams, observe: 'response' }).pipe(
+    map((res: HttpResponse<any>) => ResUtil.convertResponseList<State>(res, State)));
   }
 
   find(id: number): Observable<Vendor> {

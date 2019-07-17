@@ -13,7 +13,7 @@ import {
 import { Vendor, VendorStatus } from './vendor.model';
 import { VendorConstant } from './vendor.constant';
 import { VendorLocaleConstant, VendorErrorLocalConstant } from './vendor-locale.constant';
-import { Subscription } from 'rxjs/Subscription';
+import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../../../shared/components';
 import { PurchaseTabs } from '../purchase.tabs';
 import { VendorInviteDialogComponent } from './vendor-invite-dialog.component';
@@ -98,15 +98,13 @@ export class VendorComponent implements OnInit, OnDestroy {
     this.authService.queryUserDetails().subscribe(
       user => {
         this.spinnerService.hide();
-        if (user.id && user.groups[0].name === AppConstant.ROLE.PURCHASER) {
-          this.authService.hasGroup(AppConstant.ROLE.PURCHASER);
+        if (user.id && this.authService.hasGroup(AppConstant.ROLE.PURCHASER)) {
           this.tabs = PurchaseTabs.tabs;
           this.isvendor = false;
           this.isSearchMode(); // change , keep the load state 
           this.loadState();
         }
-        else {
-          this.authService.hasGroup(AppConstant.ROLE.VENDOR);
+        else if (this.authService.hasGroup(AppConstant.ROLE.VENDOR)) {
           this.tabs = PurchaseTabs.tabs_vendor;
           this.isvendor = true;
           this.vendor_content = '_';

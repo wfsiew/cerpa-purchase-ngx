@@ -15,8 +15,8 @@ export const environment = {
   // baseEnvUrl: 'http://192.168.0.154',
 
   /** @see Wing_fe production */
-  // baseUrl: 'http://192.168.0.78/cerpa-purchase',
-  // baseEnvUrl: 'http://192.168.0.78/cerpa-purchase',
+  // baseUrl: 'http://192.168.0.53:8080/cerpa',
+  // baseEnvUrl: 'http://192.168.0.53:8080/cerpa',
 
   /** @see  faiz  */
   //  baseUrl: 'http://192.168.0.41:8100',
@@ -36,7 +36,6 @@ export const environment = {
 
   /** Inventory */
 
-
-  baseUrl: 'https://192.168.0.78/cerpa-inventory',
-  baseEnvUrl: 'https://192.168.0.78/cerpa-inventory'
+  baseUrl: 'http://localhost:8080/cerpa',
+  baseEnvUrl: 'http://localhost:8080/cerpa'
 };

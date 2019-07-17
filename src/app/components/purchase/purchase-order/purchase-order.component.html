@@ -1,7 +1,7 @@
 <app-tab id="po-tabs" [tabs]="tabs" [selected]="'description'"></app-tab>
 <mat-toolbar>
   <span class="example-spacer"></span>
-  <div class="custom-search-input">
+  <div class="custom-input">
     <input id="search-po-input" class="search-box" (keyup)="searchPO($event)" placeholder="Search" [value]="keyword">
     <mat-icon class="search-icon">search</mat-icon>
   </div>
@@ -23,27 +23,34 @@
           </mat-radio-button>
         </mat-radio-group>
         <div id="single-date-container" class="custom-date-container" *ngIf="chosenDate === 'Single'">
-          <input id="single-date-input" type="date" class="custom-date"
-            placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
-            (change)="setFromDate($event)" [value]="fromDate">
+          <input id="single-date-input" *ngIf="!fromDate" type="date" class="custom-date hide-placeholder"
+            (change)="setFromDate($event)" [value]="fromDate" max="{{today}}">
+          <input id="single-date-input" *ngIf="fromDate" type="date" class="custom-date"
+            (change)="setFromDate($event)" [value]="fromDate" max="{{today}}">
         </div>
         <div id="range-date-container" *ngIf="chosenDate === 'Range'">
-          <div class="custom-date-container">
+          <div class="custom-date-container" *ngIf="!toDate">
+            <label for="">From</label>
+            <input id="range-date-from-input" *ngIf="!fromDate" type="date" class="custom-date hide-placeholder"
+              (change)="setFromDate($event)" [value]="fromDate" max="{{today}}">
+            <input id="range-date-from-input" *ngIf="fromDate" type="date" class="custom-date"
+              (change)="setFromDate($event)" [value]="fromDate" max="{{today}}">
+          </div>
+          <div class="custom-date-container" *ngIf="toDate">
             <label for="">From</label>
             <input id="range-date-from-input" type="date" class="custom-date"
-              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.from_date' | translate}}"
               (change)="setFromDate($event)" [value]="fromDate" max="{{toDate}}">
           </div>
           <div id="date-to-container" class="custom-date-container" *ngIf="fromDate">
             <label for="">To</label>
-            <input id="date-to-input" type="date" class="custom-date"
-              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}"
-              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}">
+            <input id="date-to-input" *ngIf="!toDate" type="date" class="custom-date hide-placeholder"
+              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}" max="{{today}}">
+            <input id="date-to-input" *ngIf="toDate" type="date" class="custom-date"
+              (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}" max="{{today}}">
           </div>
           <div class="custom-date-container disabled" *ngIf="!fromDate">
-            <label for="">To</label>
-            <input id="disabled-date-to-input" type="date" class="custom-date" disabled
-              placeholder="{{'purchase.product-pricing.add_product_pricing.labels.to_date' | translate}}"
+            <label for="" style="color:#D6D4D6">To</label>
+            <input id="disabled-date-to-input" type="date" class="custom-date disabled hide-placeholder" disabled
               (change)="setToDate($event)" [value]="toDate" min="{{fromDate}}">
           </div>
         </div>

@@ -1,13 +1,15 @@
+
+import {of as observableOf,  Observable ,  Subject, BehaviorSubject } from 'rxjs';
+
+import {catchError, map} from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/observable/of';
+
+
+
 import { environment } from '../../../environments/environment';
 import { Group, User } from '..';
-import { Subject, BehaviorSubject } from 'rxjs';
-
+import * as _ from 'lodash';
 @Injectable()
 export class AuthService {
   private baseUrl = environment.baseUrl;
@@ -54,7 +56,7 @@ export class AuthService {
   refreshToken(): Observable<string> {
     if (!this.getRefreshToken()) {
       this.clear();
-      return Observable.of(null);
+      return observableOf(null);
     }
 
     // console.log('=== refresh-token ===', this.getRefreshToken());
@@ -66,11 +68,11 @@ export class AuthService {
     };
     const body = new HttpParams()
       .set('refresh_token', this.getRefreshToken())
-      .set('client_id', 'ElHqJ96DlTJ93uOVBr5Bgmf2pBiojpaGbrQm5dsp')
+      .set('client_id', 'knMT2DWVsQHYD3JvR0N76UUO1uNIes15VIGgDYGI')
       .set('grant_type', 'refresh_token');
-    return this.http.post(this.tokenUrl, body.toString(), httpOptions)
-      .map((res: HttpResponse<any>) => this.extractToken(res))
-      .catch(e => this.handleError(e));
+    return this.http.post(this.tokenUrl, body.toString(), httpOptions).pipe(
+      map((res: HttpResponse<any>) => this.extractToken(res)),
+      catchError(e => this.handleError(e)),);
   }
 
   authenticate(username: string, password: string): Observable<string> {
@@ -82,11 +84,11 @@ export class AuthService {
     const body = new HttpParams()
       .set('username', username)
       .set('password', password)
-      .set('client_id', 'ElHqJ96DlTJ93uOVBr5Bgmf2pBiojpaGbrQm5dsp')
+      .set('client_id', 'knMT2DWVsQHYD3JvR0N76UUO1uNIes15VIGgDYGI')
       .set('grant_type', 'password');
-    return this.http.post(this.tokenUrl, body.toString(), httpOptions)
-      .map((res: HttpResponse<any>) => this.extractToken(res))
-      .catch(e => this.handleError(e));
+    return this.http.post(this.tokenUrl, body.toString(), httpOptions).pipe(
+      map((res: HttpResponse<any>) => this.extractToken(res)),
+      catchError(e => this.handleError(e)),);
   }
 
   handleError(e): string {
@@ -139,15 +141,15 @@ export class AuthService {
   }
 
   queryUserDetails(): Observable<User> {
-    return this.http.get(this.userDetailsUrl)
-      .map((res: any) => {
+    return this.http.get(this.userDetailsUrl).pipe(
+      map((res: any) => {
         const entity: User = Object.assign(new User(), res);
         this.user = entity;
         this.authenticated.next(1);
         localStorage.setItem('currentUserEmail', res.email);
         localStorage.setItem('userGroup', JSON.stringify(this.user.groups));
         return entity;
-      });
+      }));
   }
   onNotify(event) {
     // console.log();
@@ -164,14 +166,25 @@ export class AuthService {
     const body = new FormData();
     body.append('token', token);
     const clientId = {
-      purchasing: 'ElHqJ96DlTJ93uOVBr5Bgmf2pBiojpaGbrQm5dsp',
-      inventory: '0CpdlwEZFpnozEPOGUH5BJKqIbsa1PV7q0QO86Y0'};
-    body.append('client_id', clientId.inventory);
+      purchasing: 'knMT2DWVsQHYD3JvR0N76UUO1uNIes15VIGgDYGI',
+      inventory: 'knMT2DWVsQHYD3JvR0N76UUO1uNIes15VIGgDYGI'};
+    body.append('client_id', clientId.purchasing);
     this.authenticated.next(9);
     return this.http.post(`${this.baseUrl}/o/revoke_token/`, body);
   }
 
   checkLockedAccount(username): Observable<object> {
     return this.http.get(`${this.baseUrl}/api/cerpa-admin/user/fail-count?username=${username}`);
+  }
+
+  hasRole(givenRole) {
+    const userRoles: any = JSON.parse(localStorage.getItem('userGroup'));
+    const s = _.some(userRoles, (value, i, ls) => {
+      const b = _.findIndex(givenRole, (k) => {
+        return k === value.name;
+      });
+      return b >= 0;
+    });
+    return s;
   }
 }

@@ -17,9 +17,9 @@
 <!-- autocomplate  -->
 <form class="example-form" (ngSubmit)="setTermValue()" #frm="ngForm">
   <mat-form-field class="example-full-width search">
-    <input type="text" (change)="setTermValue()" placeholder="{{'purchase.product-pricing.look-up.content.search.search-pl' | translate}}"
+    <input type="text" placeholder="{{'purchase.product-pricing.look-up.content.search.search-pl' | translate}}"
       aria-label="Number" matInput [formControl]="searchTerm" [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="productSelected($event.option.value)">
       <mat-option *ngIf="isSearching" value=''>
         {{'purchase.product-pricing.look-up.content.search.searching' | translate}}</mat-option>
       <mat-option *ngIf="isEmpty" value=''> {{'purchase.product-pricing.look-up.content.search.no-result' | translate}}

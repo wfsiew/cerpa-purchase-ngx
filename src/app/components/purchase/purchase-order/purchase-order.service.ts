@@ -1,9 +1,7 @@
+import { map, finalize } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { createRequestParams, ResponseWrapper, Pager, ResUtil } from '../../../shared';
 import { PurchaseOrderList, RejectPo } from './purchase-order.model';
@@ -59,8 +57,8 @@ export class PurchaseOrderService {
   queryVendorLookUpList(pager?: Pager, term?, prId?: number): Observable<ResponseWrapper> {
     const httpParams: HttpParams = createRequestParams(pager);
     httpParams.append('status', status.toString())
-    return this.http.get(`${this.purchaseUrl}/vendor/lookup?term=${term}&pr=${prId}`, { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<LookUpData>(res, LookUpData));
+    return this.http.get(`${this.purchaseUrl}/vendor/lookup?term=${term}&pr=${prId}`, { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<LookUpData>(res, LookUpData)));
   }
 
   queryAutolookUp(term, pr_id): Observable<object> {
@@ -83,8 +81,8 @@ export class PurchaseOrderService {
 
   queryListing(status?: number, pager?: Pager): Observable<ResponseWrapper> {
     const httpParams: HttpParams = createRequestParams(pager);
-    return this.http.get(`${this.poListUrl}`, { params: httpParams, observe: 'response' })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<PurchaseOrderList>(res, PurchaseOrderList));
+    return this.http.get(`${this.poListUrl}`, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<PurchaseOrderList>(res, PurchaseOrderList)));
   }
 
   /**
@@ -99,15 +97,15 @@ export class PurchaseOrderService {
       .set('term', keyword)
       .set('status', statusList)
       .set('issued_date', issuedDate);
-    return this.http.post(this.searchPOUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<PurchaseOrderList>(res, PurchaseOrderList))
-      .finally(() => this.hideLoader());
+    return this.http.post(this.searchPOUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<PurchaseOrderList>(res, PurchaseOrderList)))
+      .pipe( finalize(() => this.hideLoader()));
   }
 
   queryGetPOItems(poID: number, vendor: number): Observable<ResponseWrapper> {
     const httpParams: HttpParams = createRequestParams();
-    return this.http.get(`${this.purchaseUrl}/product-quotation?pr=${poID}&vendor=${vendor}`, { params: httpParams, observe: 'response' })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponse<IssuePO>(res, IssuePO));
+    return this.http.get(`${this.purchaseUrl}/product-quotation?pr=${poID}&vendor=${vendor}`, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<IssuePO>(res, IssuePO)));
   }
 
   queryLoadDefualtVendor(prId: number) {
@@ -119,8 +117,8 @@ export class PurchaseOrderService {
   queryGetDefualtVendor(prId: number, pager?: Pager) {
     const httpParams: HttpParams = createRequestParams(pager);
     var url = 'vendor/lookup';
-    return this.http.get(`${this.purchaseUrl}/${url}?pr=${prId}`, { params: httpParams, observe: 'response' })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<LookUpData>(res, LookUpData));
+    return this.http.get(`${this.purchaseUrl}/${url}?pr=${prId}`, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<LookUpData>(res, LookUpData)));
   }
 
   /**
@@ -138,8 +136,8 @@ export class PurchaseOrderService {
    */
   queryIssuePO(data): Observable<ResponseWrapper> {
     const httpParams: HttpParams = createRequestParams();
-    return this.http.post(`${this.purchaseUrl}/purchase-order`, data, { params: httpParams, observe: 'response' })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponse<IssuePO>(res, IssuePO));
+    return this.http.post(`${this.purchaseUrl}/purchase-order`, data, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<IssuePO>(res, IssuePO)));
   }
 
   queryChartInfo(id): Observable<Object> {
@@ -152,8 +150,8 @@ export class PurchaseOrderService {
 
   updateDoItems(id, data): Observable<ResponseWrapper> {
     const httpParams = new HttpParams();
-    return this.http.put(`${this.purchaseUrl}/purchase-order/${id}/delivery-order/current`, data, { params: httpParams, observe: 'response' }).
-      map((res: HttpResponse<any>) => ResUtil.convertResponse<VendorDoProduct>(res, VendorDoProduct));
+    return this.http.put(`${this.purchaseUrl}/purchase-order/${id}/delivery-order/current`, data, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<VendorDoProduct>(res, VendorDoProduct)));
   }
 
   queryItemsHistory(id): Observable<Object> {
@@ -184,8 +182,8 @@ export class PurchaseOrderService {
    */
   queryRejectReasonList(): Observable<object> {
     const httpParams: HttpParams = createRequestParams();
-    return this.http.get(`${this.purchaseUrl}/purchase-order/reject-reasons`, { params: httpParams, observe: 'response' })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<RejectReason>(res, RejectReason));
+    return this.http.get(`${this.purchaseUrl}/purchase-order/reject-reasons`, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<RejectReason>(res, RejectReason)));
   }
 
   /**
@@ -201,8 +199,8 @@ export class PurchaseOrderService {
   queryRejectPurchaseOrder(poId: number, rejReason: string): Observable<ResponseWrapper> {
     const httpParams: HttpParams = createRequestParams();
     let body = { reason: rejReason }
-    return this.http.post(`${this.rejectUrl}/${poId}/reject`, body, { params: httpParams, observe: 'response' })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponse<RejectPo>(res, RejectPo));
+    return this.http.post(`${this.rejectUrl}/${poId}/reject`, body, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponse<RejectPo>(res, RejectPo)));
   }
 
   /**

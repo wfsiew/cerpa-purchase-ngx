@@ -23,6 +23,7 @@ import { BatchListingComponent } from './batch-listing.component';
 import { ProductListingComponent } from './product-listing.component';
 import { InventoryPageService, BatchesPageService } from '../../shared/services/inventory/inventory-state.service';
 import { MessageDialogComponent } from '../../shared/components/message-dialog';
+import { ViewProductComponent } from './product/view-product.component';
 
 @NgModule({
     imports: [
@@ -53,6 +54,7 @@ import { MessageDialogComponent } from '../../shared/components/message-dialog';
       NewProductBatchComponent,
       BatchListingComponent,
       ProductListingComponent,
+      ViewProductComponent
     ],
     entryComponents: [
       MessageDialogComponent

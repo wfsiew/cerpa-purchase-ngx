@@ -12,6 +12,9 @@
             "cancel": "Cancel",
             "ok": "OK",
             "save": "Save",
+            "publish": "Publish the product pricing information",
+            "raise_po": "Raise Purchase Order for This Product",
+            "insufficient": "Insufficient Credit Limit to continue",
             "yes": "Yes",
             "no": "No",
             "browse": "Browse",
@@ -167,6 +170,7 @@
                         "VND_0015": "Cancel purchase request failed",
                         "VND_0016": "Material does not exist",
                         "VND_0017": "PO already issued",
+                        "VND_0034": "This item already exist",
                         "VND_0018": "Vendor detail not exist",
                         "VND_0019": "Issue purchase order fail",
                         "VND_0020": "Total price mismatch in issue purchase order",
@@ -362,18 +366,15 @@
                 },
                 "tooltips": {
                     "example": "Example",
-                    "tier-pricing": {
-                        "ln1": "Specify the tier pricing as trade offer for bulk purchase by customer.",
-                        "ln2": "Note that unspecified range will use default price instead.",
-                        "ln3": "Quantity ranging start from 100 up to 200, Trade Offer Price: RM150",
-                        "ln4": "Quantity ranging start from 201 up to 500, Trade Offer Price: RM148"
-                    },
                     "promotion": {
-                        "ln1": "Specify the promotion period as special offer for customer.",
-                        "ln2": "Note that unspecified promotion period will use default price or Tier Pricing trade offer instead.",
-                        "ln3": "If \"Always Use Lowest Price\" is not checked, then the matching promotion will always take effective.",
-                        "ln4": "Period start from 1/12/2018 to 31/12/2018, Promotion Price: RM128.",
-                        "ln5": "Period start from 1/2/2019 to 28/2/2019, Promotion Price RM128"
+                        "ln1": "You can specify the promotion period as special offer for the customer.",
+                        "ln2": "Note that unspecified promotion period use default listing price instead.",
+                        "ln3": "If Cheapest Guaranteed is not checked, then the matched promotion will always be taken effective."
+                    },
+                    "tier-pricing": {
+                        "ln1": "You can specify multiple tier pricing structure for the customer.",
+                        "ln2": "Each tier price set will apply for its base quantity number and above.",
+                        "ln3": "Tier price is always expected lower than previous tier or offer price by default"
                     }
                 },
                 "sub_title": {
@@ -383,13 +384,14 @@
                 "labels": {
                     "material_name": "Material name",
                     "default_price": "Default price",
+                    "rrp_price": "RRP price",
                     "tax_scheme": "Tax scheme",
                     "from_quantity": "From quantity",
                     "to_quantity": " To quantity",
                     "price": "Price",
                     "from_date": "From date",
                     "to_date": "To date",
-                    "always_use_lowest_price": "Always use lowest price"
+                    "always_use_lowest_price": "Cheapest Guaranteed"
                 },
                 "tax_scheme": {
                     "title": "Tax Scheme",
@@ -541,18 +543,18 @@
             "view-po": {
                 "title": "View Purchase Order",
                 "labels": {
-                    "status": "Status",
-                    "po-reference": "PO Reference",
+                    "status": "Status:",
+                    "po-reference": "PO Reference:",
                     "to": "To",
-                    "item-list": "Item List",
+                    "item-list": "Items:",
                     "item-sub-labels": {
-                        "item": "Item",
+                        "item": "Description",
                         "quantity": "Quantity",
                         "unit-price": "Unit Price (with Tax)",
                         "amount": "Amount"
                     },
                     "total": "Total",
-                    "deliver-to": "Deliver To"
+                    "deliver-to": "Deliver To:"
                 },
                 "buttons": {
                     "accept": "Accept",
@@ -617,11 +619,11 @@
         "delivery-order": {
             "title": "Delivery Order",
             "labels": {
-                "do-refrence": "PO Refrence",
-                "status": "Status",
+                "do-refrence": "PO Refrence:",
+                "status": "Status:",
                 "bill-to": "Bill To",
-                "deliver-to": "Deliver To",
-                "supplier": "Supplier",
+                "deliver-to": "Deliver To:",
+                "supplier": "Supplier:",
                 "items": "Items",
                 "item": "Item",
                 "tel": "TEL",
@@ -685,18 +687,24 @@
             "title": "Material"
         },
         "product": {
+            "delete": {
+                "message": "Continue to remove product?",
+                "title": "Delete"
+            },
             "title": "Product",
             "labels": {
                 "product-type": "Product Type",
                 "product-name": "Product Name",
-                "description": "description",
-                "category": "category",
-                "brand": "brand",
+                "description": "Description",
+                "category": "Category",
+                "promo": "Promotions",
+                "brand": "Brand",
                 "model": "Model",
                 "optimum-qty": "Optimum Quantity",
                 "par-level": "Par Level",
                 "qty-measure": "Quantity Measure",
                 "discount": "Discount",
+                "price": "Price",
                 "commission": "Commission",
                 "not-for-sale": "Not for sale",
                 "auto-add-stock": "Auto add stock for this product"

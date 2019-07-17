@@ -99,7 +99,7 @@
                     <div>
                         <mat-form-field *ngIf="banks">
                             <mat-select [placeholder]="'purchase.vendor.profile.form.bank.ph' | translate"
-                                (change)="getBankList($event.value)" [value]="bank_id">
+                                (selectionChange)="getBankList($event.value)" [value]="bank_id">
                                 <mat-option *ngFor="let o of banks" [value]="o.id">{{o.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -205,7 +205,7 @@
                         <div>
                             <!-- <label for="country">{{'purchase.vendor.profile.form.country.label' | translate}}</label> -->
                             <mat-form-field>
-                                <mat-select *ngIf="countries" placeholder="Country" (change)="getStates($event.value)"
+                                <mat-select *ngIf="countries" placeholder="Country" (selectionChange)="getStates($event.value)"
                                     [(value)]="selectedCountry">
                                     <mat-option *ngFor="let cn of countries" [value]="cn.id"> {{cn.name}} </mat-option>
                                 </mat-select>
@@ -215,7 +215,7 @@
                         <div>
                             <!-- <label for="state">{{'purchase.vendor.profile.form.state.label' | translate}}</label> -->
                             <mat-form-field>
-                                <mat-select *ngIf="states" placeholder="State" (change)="setStates($event.value)"
+                                <mat-select *ngIf="states" placeholder="State" (selectionChange)="setStates($event.value)"
                                     [(value)]="selectedState">
                                     <mat-option *ngFor="let st of states" [value]="st.id"> {{st.name}} </mat-option>
                                 </mat-select>

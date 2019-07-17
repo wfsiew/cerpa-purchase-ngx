@@ -1,9 +1,7 @@
+import { map, finalize } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpParams, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable ,  BehaviorSubject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { createRequestParams, Pager, ResponseWrapper, ResUtil } from '../../../shared';
 import { Vendor } from '../vendor';
@@ -51,9 +49,9 @@ export class PurchaseRequestService {
   queryPRList(status?: number, pager?: Pager): Observable<ResponseWrapper> {
     this.showLoader();
     const httpParams: HttpParams = createRequestParams(pager);
-    return this.http.get(this.purchaseRequestListUrl, { params: httpParams, observe: 'response' })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor))
-      .finally(() => this.hideLoader());
+    return this.http.get(this.purchaseRequestListUrl, { params: httpParams, observe: 'response' }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor)))
+      .pipe( finalize(() => this.hideLoader()));
   }
 
   queryViewPR(id, from): Observable<object> {
@@ -89,8 +87,8 @@ export class PurchaseRequestService {
       .set('status', data.status)
       .set('issued_date', data.issuedDate)
       .set('saved_po', data.saved_po);
-    return this.http.post(this.purchaseRequestSearchUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers })
-      .map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor));
+    return this.http.post(this.purchaseRequestSearchUrl, body.toString(), { params: httpParams, observe: 'response', headers: this.headers }).pipe(
+      map((res: HttpResponse<any>) => ResUtil.convertResponseList<Vendor>(res, Vendor)));
   }
 
   getSavedPO(id): Observable<Object> {
